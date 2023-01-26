@@ -6,7 +6,8 @@ function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, wav
 %addpath(genpath(DIR.EEGLAB_PATH));
 
 dataFilename = strcat(DIR.SET_PATH,pp,".set");
-EEG = load('-mat', dataFilename);
+% EEG = load('-mat', dataFilename);
+[EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
 
 %% remove online ref Cz
 
