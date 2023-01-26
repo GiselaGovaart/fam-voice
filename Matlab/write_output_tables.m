@@ -53,7 +53,7 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 
 colNames(length(Subj)+1) = ["placeholder"];
 colNames(1) = "Cond";
-colNames(2:16) = Subj;
+colNames(2:length(Subj)+1) = Subj;
 
 C = cellstr(outMatT);
 T = cell2table(C, 'VariableNames',cellstr(colNames));
