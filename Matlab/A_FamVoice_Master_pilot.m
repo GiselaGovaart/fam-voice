@@ -20,9 +20,9 @@ DIR.SET_PATH = '/data/p_02453/raw_eeg/pilot/raw-data-sets/';
 DIR.REFA_PATH = '/data/p_02453/packages/eeglab2021.0/plugins/refa8import_v1.3/';
 DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/Scripts/Matlab';
 
-%addpath(genpath(DIR.EEGLAB_PATH));  % this gives a warning
-cd(DIR.EEGLAB_PATH);
-eeglab; close;
+addpath(genpath(DIR.EEGLAB_PATH));  % this gives a warning
+% cd(DIR.EEGLAB_PATH);
+% eeglab; close;
 
 addpath(genpath(DIR.RAWEEG_PATH));
 addpath(DIR.REFA_PATH);
@@ -31,7 +31,7 @@ addpath(DIR.SCRIPTS);
 cd(DIR.RAWEEG_PATH);
 
 %Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
-Subj = ["01"];
+Subj = ["09"];
 
 %% preprocess EEG
 
