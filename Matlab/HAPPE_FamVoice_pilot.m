@@ -215,7 +215,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_interpolated.set'
 
 EEG.data(end+1,:,:) = 0;
 EEG.nbchan = size(EEG.data,1);
-EEG.chanlocs(end+1).label = 'Cz';
+EEG.chanlocs(end+1).labels = 'Cz';
 
 for chan=1:28
     EEG.chanlocs(chan).type = 'EEG';
