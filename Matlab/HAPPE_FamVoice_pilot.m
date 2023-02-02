@@ -5,7 +5,7 @@ function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, wav
 %% load the data
 %addpath(genpath(DIR.EEGLAB_PATH));
 
-dataFilename = strcat(DIR.SET_PATH,pp,".set");
+%dataFilename = strcat(DIR.SET_PATH,pp,".set");
 % EEG = load('-mat', dataFilename);
 [EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
 
@@ -34,6 +34,7 @@ lineNoiseIn = struct('lineNoiseMethod', 'clean', 'lineNoiseChannels', ...
 EEG = pop_eegfiltnew(EEG, [], 100, [], 0, [], 0) ;
 
 % Save the filtered dataset as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
     'filepath', convertStringsToChars(DIR.intermediateProcessing));
 
@@ -52,6 +53,7 @@ EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
 EEG = happe_waveletThreshold(EEG,wavThreshold,version);
 
 % Save the wavelet-thresholded EEG as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), ...
     'filepath', convertStringsToChars(DIR.waveletCleaned));
 
@@ -107,6 +109,7 @@ EEG = pop_firws(EEG, 'fcutoff', low_cutoff, 'ftype', 'lowpass', 'wtype', 'hammin
 EEG = eeg_checkset( EEG );
 
 % Save the ERP filtered EEG as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')), ...
     'filepath', convertStringsToChars(DIR.ERPfiltered));
 
@@ -142,12 +145,17 @@ EEG = pop_epoch(EEG, onsetTags, ...
     'no', 'epochinfo', 'yes') ;
 
 % Save the segmented EEG as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
 
 %% baseline correction
 EEG = pop_rmbase(EEG, [-140 0]);
+EEG = eeg_checkset(EEG);
+pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
+    'filepath', convertStringsToChars(DIR.segmenting));
+
 
 %% bad data interpolation
 % lieber rausnehmen. sonst macht es hier schon data interpol within
@@ -188,18 +196,12 @@ EEG = pop_eegthresh(EEG, 1, ...
                       [EEG.xmin], [EEG.xmax], 2, 1);
 
 % SIMILARITY CRITERIA
-num = 2;
+num = 2; % because we have low density data
 EEG = pop_jointprob(EEG, 1, ...
             ROI_indxs, num, num, 0, 1,0) ;
         
- 
-% HAPPE first only marks, then rejects, we immediately reject
-% gisela guck noch rein
-% EEG = pop_selectevent(EEG, 'status', 'good', 'deleteevents', ...
-%         'on', 'deleteepochs', 'on', 'invertepochs', 'off') ;
-
-
 % Save the post-artifact rejection data as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_postrej.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
@@ -208,6 +210,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_postrej
 EEG = happe_interpChan(EEG,pp,DIR);
 
 % Save the interpolated data as an intermediate output
+EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_interpolated.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
@@ -231,10 +234,11 @@ EEG.setname = strcat(pp,' loc');
 EEG = pop_reref(EEG,refchan,'keepref','on');
 EEG.setname = strcat(pp,' reref');
 
-% BUT YOU STILL NEED TO ADD Cz AGAIN. 
-% at the moment, there is a 28th channel, but there is no data in
-% .chanlocs and it is called "E" instead of Cz
+% Save the rereferences data as an intermediate output
 
+EEG = eeg_checkset(EEG);
+pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
+    'filepath', convertStringsToChars(DIR.segmenting));
 
 %% split by onset tags
 fprintf('Creating EEGs by tags...\n') ;
