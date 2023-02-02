@@ -193,12 +193,13 @@ maxAmp = maxAmpValue;
 
 EEG = pop_eegthresh(EEG, 1, ...
                       ROI_indxs, [minAmp], [maxAmp], ...
-                      [EEG.xmin], [EEG.xmax], 2, 1);
+                      [EEG.xmin], [EEG.xmax], 2, 1); %last 1: reject labeled trials
 
 % SIMILARITY CRITERIA
 num = 2; % because we have low density data
 EEG = pop_jointprob(EEG, 1, ...
-            ROI_indxs, num, num, 0, 1,0) ;
+            ROI_indxs, num, num, 0, 1,0) ;% second-to-last 1: reject labeled trials
+
         
 % Save the post-artifact rejection data as an intermediate output
 EEG = eeg_checkset(EEG);

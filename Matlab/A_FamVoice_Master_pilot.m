@@ -30,15 +30,17 @@ addpath(DIR.SCRIPTS);
 
 cd(DIR.RAWEEG_PATH);
 
-Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
-%Subj = ["01"];
+% Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
+% Subj = ["01" "02"];
+
+Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
 %% preprocess EEG
 
 % params to play with
 hpFreqValue = 0.3;
 hpStr=sprintf('%.2f',hpFreqValue);
-threshold = 150;
+threshold = 200;
 minAmpValue = -threshold; 
 maxAmpValue = threshold; 
 wavThreshold = 'Hard'; %can be 'Hard' or 'Soft'
