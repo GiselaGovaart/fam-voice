@@ -20,5 +20,6 @@ mkdir(strcat(DIR.overallPath,"/05-processed/"));
 DIR.processed =  strcat(DIR.overallPath,"/05-processed/");
 mkdir(strcat(DIR.overallPath,"/06-quality_assessment_outputs/"));
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
-
+mkdir(strcat(DIR.overallPath,"/07-grandaverage/"));
+DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
 end
