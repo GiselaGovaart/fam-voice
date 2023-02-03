@@ -13,6 +13,7 @@ DIR.ERPfiltered =  strcat(DIR.overallPath,"/03-ERP_filtered/");
 DIR.segmenting =  strcat(DIR.overallPath,"/04-segmenting/");
 DIR.processed =  strcat(DIR.overallPath,"/05-processed/");
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
+DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
 
 addpath(genpath(DIR.overallPath));
 
