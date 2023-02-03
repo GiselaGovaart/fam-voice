@@ -2,9 +2,6 @@
 
 cd('/data/tu_govaart/Experiment1_FamVoice/Scripts/Matlab')
 
-%HAPPE_PATH = '/data/p_02453/HAPPE-master';
-%DIR.EEGLAB_PATH = fullfile(HAPPE_PATH,'Packages','eeglab2021.0');
-
 clear all; path(pathdef); clc; %reset session to clean
 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -30,6 +27,8 @@ addpath(DIR.SCRIPTS);
 
 cd(DIR.RAWEEG_PATH);
 
+
+%% Set subjects
 % Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
 % Subj = ["01" "02"];
 
@@ -60,7 +59,11 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp,DIR,hpFreqValue, minAmpValue, maxAmpValue,wavThreshold,version)
+
 end
+
+computeGrandAverage(DIR)
+plotERPs(DIR)
 
 write_output_tables(Subj, DIR);
 
