@@ -1614,6 +1614,56 @@ sgtitle('Novel speaker')
 %exportgraphics(gcf, strcat(DIR.grandaverage, 'Novelspeaker4_subplots.png'), 'Resolution', 200);
 
 
+%% Topoplots
+
+cd(DIR.EEGLAB_PATH);
+eeglab; close;
+
+
+% Training speaker
+fig = figure;
+
+% Define average of TW: 
+TIME1   = 0.215; % time after stimulus onset (in seconds)
+sample1 = round(eeg_lat2point(TIME1,1,GA_dev12.srate,[GA_dev12.xmin GA_dev12.xmax]));% convert TIME into EEG sampling point:
+TIME2   = 0.465; % time after Stimulus onset (in seconds)
+sample2 = round(eeg_lat2point(TIME2,1,GA_dev12.srate,[GA_dev12.xmin GA_dev12.xmax])); % convert TIME into EEG sampling point:
+
+DIFF1 = mean(GA_dev12.data,3) - mean(GA_stan12.data,3); % calculate difference across mean of all subjects
+DIFF_T1 = DIFF1(:,sample1:sample2); % neue Matrix mit Werten von TIME1-TIME2 ms ( sample3 / sample4)
+DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+
+% Make Topoplot 
+%topoplot(DIFF_TW1(:,:),GA_dev12.chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+topoplot(DIFF_TW1(:,:),GA_dev12.chanlocs, 'maplimits',[-8 8], 'style', 'fill', 'nosedir', '+X', ...
+    'electrodes', 'labels');
+colorbar
+title('Training speaker (Difference): 215-465 ms')
+
+exportgraphics(gcf, strcat(DIR.grandaverage, 'Trainingspeaker_topo.jpeg'), 'Resolution', 300);
+
+
+% Novel speaker 4
+fig = figure;
+
+% Define average of TW: 
+TIME1   = 0.215; % time after stimulus onset (in seconds)
+sample1 = round(eeg_lat2point(TIME1,1,GA_dev4.srate,[GA_dev4.xmin GA_dev4.xmax]));% convert TIME into EEG sampling point:
+TIME2   = 0.465; % time after Stimulus onset (in seconds)
+sample2 = round(eeg_lat2point(TIME2,1,GA_dev4.srate,[GA_dev4.xmin GA_dev4.xmax])); % convert TIME into EEG sampling point:
+
+DIFF1 = mean(GA_dev4.data,3) - mean(GA_stan4.data,3); % calculate difference across mean of all subjects
+DIFF_T1 = DIFF1(:,sample1:sample2); % neue Matrix mit Werten von TIME1-TIME2 ms ( sample3 / sample4)
+DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+
+% Make Topoplot 
+topoplot(DIFF_TW1(:,:),GA_dev4.chanlocs, 'maplimits',[-8 8], 'style', 'fill', 'nosedir', '+X', ...
+    'electrodes', 'labels');
+colorbar
+title('Novel speaker (Difference): 215-465 ms')
+
+exportgraphics(gcf, strcat(DIR.grandaverage, 'NovelSpeaker4_topo.jpeg'), 'Resolution', 300);
+
 
 
 %% EEGLAB plotting
