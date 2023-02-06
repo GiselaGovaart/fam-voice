@@ -159,3 +159,4 @@ C = cellstr(outMatT);
 T = cell2table(C, 'VariableNames',cellstr(colNames));
 T(1,:) = []; % this could be coded prettier, but it works
 writetable(T,strcat(DIR.qualityAssessment, 'amplitudes.txt'),'Delimiter','\t');
+end
