@@ -116,9 +116,6 @@ writetable(T,strcat(DIR.qualityAssessment,'channel_overview.txt'),'Delimiter','\
 % time window: 216-466 after stimulus onset
 % electrode: Fz
 
-% NB this code does not work when called from the master, but does work
-% when run in the script afterwards..
-
 setlist = dir(strcat(DIR.processed,"*_processed_*"));
 
 CondNr = ["101" "102" "103" "104"  ... % dev
