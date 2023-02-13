@@ -1,4 +1,4 @@
-function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, wavThreshold,version)
+function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, wavThreshold,version, baseline)
 %HAPPE_FamVoice_pilot(pp,DIR)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 
 
@@ -151,11 +151,12 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')),
 
 
 %% baseline correction
-EEG = pop_rmbase(EEG, [-100 0]);
-EEG = eeg_checkset(EEG);
-pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
-    'filepath', convertStringsToChars(DIR.segmenting));
-
+if baseline == "yes"
+    EEG = pop_rmbase(EEG, [-100 0]);
+    EEG = eeg_checkset(EEG);
+    pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
+        'filepath', convertStringsToChars(DIR.segmenting));
+end 
 
 %% bad data interpolation
 % lieber rausnehmen. sonst macht es hier schon data interpol within
