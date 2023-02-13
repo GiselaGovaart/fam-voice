@@ -46,7 +46,7 @@ hold on;
 
 % Set axes
 ylims = [-10 10]; 
-xlims = [-140 650];
+xlims = [-100 650];
 ylim(ylims);
 xlim(xlims);
 set(gca,'YDir','reverse'); % reverse axes
@@ -77,8 +77,8 @@ set(gcf,'color','white'); % white background. gcf = current figure handle
 %set(gca,'color','none'); % if you want transparent backrgound, set both here and above to 'none'
 
 % Ticks
-ax.XTick = [-140 -100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-140','','0','','','','','','','650'};
+ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
+ax.XTickLabel = {'-100','0','','','','','','600',''};
 ax.YTick = [-10 -5 0 5];
 ax.YTickLabel = {'-10','-5','0','5'};
 % ax.TickDir = 'out'; % I like tick direction in better (default)
@@ -95,7 +95,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
 exportgraphics(gcf, strcat(DIR.grandaverage, ...
-    'Trainingspeaker_F3FzF4_thickerLines.jpeg'), ...
+    'Trainingspeaker_F3FzF4_SABfinal.jpeg'), ...
     'Resolution', 300);
 
 
@@ -319,7 +319,7 @@ hold on;
 
 % Set axes
 ylims = [-10 10]; 
-xlims = [-140 650];
+xlims = [-100 650];
 ylim(ylims);
 xlim(xlims);
 set(gca,'YDir','reverse'); % reverse axes
@@ -350,8 +350,8 @@ set(gcf,'color','white'); % white background. gcf = current figure handle
 %set(gca,'color','none'); 
 
 % Ticks
-ax.XTick = [-140 -100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-140','','0','','','','','','','650'};
+ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
+ax.XTickLabel = {'-100','0','','','','','','600',''};
 ax.YTick = [-10 -5 0 5];
 ax.YTickLabel = {'-10','-5','0','5'};
 % ax.TickDir = 'out'; % I like tick direction in better (default)
@@ -369,7 +369,7 @@ set(gca,'LineWidth',1)
 
 % Save figure
 exportgraphics(fig, strcat(DIR.grandaverage, ...
-    'NovelSpeaker4_F3FzF4_thickerLines.jpeg'), ...
+    'NovelSpeaker4_F3FzF4_SABfinal.jpeg'), ...
     'Resolution', 300);
 
 %-------------------------------------------------------------------------
