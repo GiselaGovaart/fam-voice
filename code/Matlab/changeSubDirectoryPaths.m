@@ -1,7 +1,7 @@
-function DIR = changeSubDirectoryPaths(DIR,hpStr,threshold,wavThreshold,version)
+function DIR = changeSubDirectoryPaths(DIR,hpStr,threshold,wavThreshold,version,baseline)
 
 DIR.overallPath = strcat(DIR.SET_PATH,"01-output/hp",hpStr,"_Amp",int2str(threshold),...
-        "_wavThreshold", wavThreshold, "_version",int2str(version));
+        "_wavThreshold", wavThreshold, "_version", int2str(version), "_baseline-", baseline);
 % these single quatiations marks instead of double make sure that there is
 % no error for HAPPE_FamVoice_pilot.m:
 % pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
