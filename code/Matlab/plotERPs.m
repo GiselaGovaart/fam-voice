@@ -33,15 +33,15 @@ C4 = 14;
 fig = figure;
 h1 = plot(GA_dev12.times, ...
     mean(((DIFF_12(Fz,:,:)+DIFF_12(F3,:,:)+DIFF_12(F4,:,:))/3),3), ...
-    'Color', 'black', 'Linewidth', 2, 'LineStyle',':');
+    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev12.times, ...
     mean(((GA_dev12.data(Fz,:,:)+GA_dev12.data(F3,:,:)+GA_dev12.data(F4,:,:))/3),3), ...
-    'Color', '#f78d95', 'Linewidth', 1);
+    'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev12.times, ...
     mean(((GA_stan12.data(Fz,:,:)+GA_stan12.data(F3,:,:)+GA_stan12.data(F4,:,:))/3),3), ...
-    'Color', '#3b8dca', 'Linewidth', 1);
+    'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
 % Set axes
@@ -58,15 +58,15 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Training speaker')
-subtitle('F3, Fz, F4')
+%title('Training speaker')
+%subtitle('F3, Fz, F4')
 xlabel('msec')
 ylabel('µV')
-legend([h1, h2, h3], ...
-    {'Difference', ...
-    'Deviant (fɪ)', ...
-    'Standard (fɛ)'}, ...
-    'Location','northeast');
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (fɪ)', ...
+%     'Standard (fɛ)'}, ...
+%     'Location','northeast');
 
 % General make prettier
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
@@ -74,6 +74,7 @@ box(ax, 'off'); % remove box
 ax.FontSize = 10; 
 daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
+%set(gca,'color','none'); % if you want transparent backrgound, set both here and above to 'none'
 
 % Ticks
 ax.XTick = [-140 -100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
@@ -92,8 +93,10 @@ hYLabel.Position(2) = 0;
 
 set(gca,'LineWidth',1)
 
-% Save figure
-exportgraphics(gcf, strcat(DIR.grandaverage, 'Trainingspeaker_F3FzF4.jpeg'), 'Resolution', 300);
+% Save figure (for transparent figure, add 'BackgroundColor', 'none'
+exportgraphics(gcf, strcat(DIR.grandaverage, ...
+    'Trainingspeaker_F3FzF4_thickerLines.jpeg'), ...
+    'Resolution', 300);
 
 
 %-------------------------------------------------------------------------
@@ -303,15 +306,15 @@ exportgraphics(gcf, strcat(DIR.grandaverage, 'NovelSpeaker3_C3CzC4.jpeg'), 'Reso
 fig = figure;
 h1 = plot(GA_dev4.times, ...
     mean(((DIFF_4(Fz,:,:)+DIFF_4(F3,:,:)+DIFF_4(F4,:,:))/3),3), ...
-    'Color', 'black', 'Linewidth', 2, 'LineStyle','--');
+    'Color', 'black', 'Linewidth', 3, 'LineStyle','--');
 hold on;
 h2 = plot(GA_dev4.times, ...
     mean(((GA_dev4.data(Fz,:,:)+GA_dev4.data(F3,:,:)+GA_dev4.data(F4,:,:))/3),3), ...
-    'Color', '#f78d95', 'Linewidth', 1);
+    'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev4.times, ...
     mean(((GA_stan4.data(Fz,:,:)+GA_stan4.data(F3,:,:)+GA_stan4.data(F4,:,:))/3),3), ...
-    'Color', '#3b8dca', 'Linewidth', 1);
+    'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
 % Set axes
@@ -328,15 +331,15 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Novel speaker')
-subtitle('F3, Fz, F4')
+%title('Novel speaker')
+%subtitle('F3, Fz, F4')
 xlabel('msec')
-ylabel('µV')
-legend([h1, h2, h3], ...
-    {'Difference', ...
-    'Deviant (fɪ)', ...
-    'Standard (fɛ)'}, ...
-    'Location','northeast');
+ylabel(' µV')
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (fɪ)', ...
+%     'Standard (fɛ)'}, ...
+%     'Location','northeast');
 
 % General make prettier
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
@@ -344,6 +347,7 @@ box(ax, 'off'); % remove box
 ax.FontSize = 10; 
 daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
+%set(gca,'color','none'); 
 
 % Ticks
 ax.XTick = [-140 -100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
@@ -357,13 +361,16 @@ ax.YTickLabel = {'-10','-5','0','5'};
 % mchange orientation and location y-label
 hYLabel = get(gca,'YLabel'); % gca = current axes
 set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
+hYLabel.Position(1) = -200;
 hYLabel.Position(2) = 0;
 
 set(gca,'LineWidth',1)
 
+
 % Save figure
-exportgraphics(gcf, strcat(DIR.grandaverage, 'NovelSpeaker4_F3FzF4.jpeg'), 'Resolution', 300);
+exportgraphics(fig, strcat(DIR.grandaverage, ...
+    'NovelSpeaker4_F3FzF4_thickerLines.jpeg'), ...
+    'Resolution', 300);
 
 %-------------------------------------------------------------------------
 %Cz, C3, C4
@@ -1664,6 +1671,26 @@ title('Novel speaker (Difference): 215-465 ms')
 
 exportgraphics(gcf, strcat(DIR.grandaverage, 'NovelSpeaker4_topo.jpeg'), 'Resolution', 300);
 
+
+
+% Make empty head plot 
+% remove functional electrodes
+GA_dev12 = pop_loadset('ga_101-102.set');
+GA_dev12.chanlocs(1)=[]; %EOG
+GA_dev12.chanlocs(1)=[];%Fp1
+GA_dev12.chanlocs(1)=[];%FP2
+GA_dev12.chanlocs(6)=[];%F9
+GA_dev12.chanlocs(6)=[];%F10
+GA_dev12.chanlocs(14)=[];%FP9
+GA_dev12.chanlocs(14)=[];%FP10
+
+fig = figure;
+topoplot(DIFF_TW1(:,:),GA_dev12.chanlocs, 'style', 'blank', 'nosedir', '+X', ...
+    'electrodes', 'labels');
+
+exportgraphics(gcf, strcat(DIR.grandaverage, 'EmptyHead.jpeg'), 'Resolution', 300);
+
+GA_dev12 = pop_loadset('ga_101-102.set');
 
 
 %% EEGLAB plotting

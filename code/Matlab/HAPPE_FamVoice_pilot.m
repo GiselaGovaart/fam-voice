@@ -137,7 +137,7 @@ onsetTags = {11, 12, 21, 22, ... %training
 %     EEG.event(i).latency = EEG.event(i).latency + sampOffset;
 % end
 
-segmentStart = -0.140; 
+segmentStart = -0.100; 
 segmentEnd = 0.650;
 
 EEG = pop_epoch(EEG, onsetTags, ...
@@ -151,7 +151,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')),
 
 
 %% baseline correction
-EEG = pop_rmbase(EEG, [-140 0]);
+EEG = pop_rmbase(EEG, [-100 0]);
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
