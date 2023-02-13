@@ -5,23 +5,51 @@
 
 library(worcs)
 library(here)
+library(tidyr)
 
 here()
 
 # Read csv
-t=read.delim(here("/data/amplitudes.txt"), header = TRUE, sep = "\t", dec = ".")
+t=read.delim(here("data", "amplitudes.txt"), header = TRUE, sep = "\t", dec = ".")
 
-
-
-
-# Combine 101 and 102 
+# Combine 101 and 102, call it 101
 t[is.na(t)] <- 0
 t[1,] = t[1,] + t[2,]
 t[1,1] = 101
 t=t[-2,]
 
+# Combine 231 and 232, call it 231
 t[4,] = t[4,] + t[5,]
 t[4,1] = 231
 t=t[-5,]
 
-write.csv(t, here("amplitudes_pilot_famvoice.csv"), row.names=FALSE)
+# transpose
+t = t(t)
+
+# fix row and columnnames
+colnames(t) <- t[1,]
+t <- t[-1, ] 
+rownames(t) <- sub("X", "", rownames(t))
+t <- cbind(rownames(t), data.frame(t, row.names=NULL))
+colnames(t)[1]="subj"
+t$subj <- factor(t$subj)
+colnames(t) <- sub("X", "", colnames(t))
+
+# The arguments to gather():
+# - data: Data object
+# - key: Name of new key column (made from names of data columns)
+# - value: Name of new value column
+# - ...: Names of source columns that contain values
+# - factor_key: Treat the new key column as a factor (instead of character vector)
+data_long = gather(t, condition, amplitude, "101":"234", factor_key=TRUE)
+
+speaker = NA
+data_long <- cbind(data_long[,1:2], speaker, data_long[,3]) 
+colnames(data_long)[4]="amplitude"
+data_long$condition = as.character(data_long$condition)
+
+data_long$speaker = substr(data_long$condition, start = 3, stop = 3)
+data_long$condition = substr(data_long$condition, 1, nchar(data_long$condition)-1)
+
+# Save as csv
+write.csv(data_long, here("data","amplitudes_pilot_famvoice.csv"), row.names=FALSE)
