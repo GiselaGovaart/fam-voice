@@ -15,7 +15,7 @@ DIR.SET_PATH = '/data/p_02453/raw_eeg/pilot/raw-data-sets/';
 % DIR.qualityAssessment =  strcat(DIR.SET_PATH,"01-output/06-quality_assessment_outputs/");
 
 DIR.REFA_PATH = '/data/p_02453/packages/eeglab2021.0/plugins/refa8import_v1.3/';
-DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab';
+DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab/functions';
 
 addpath(genpath(DIR.EEGLAB_PATH));  % this gives a warning
 % cd(DIR.EEGLAB_PATH);
@@ -30,9 +30,9 @@ cd(DIR.RAWEEG_PATH);
 
 %% Set subjects
 % Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
-% Subj = ["01" "02"];
+Subj = ["01"];
 
-Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
+%Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
 %% preprocess EEG
 
@@ -46,7 +46,7 @@ wavThreshold = 'Hard'; %can be 'Hard' or 'Soft'
 version = 3; % HAPPE2 or HAPPE 3
 baseline = "yes";
 
-%if dir does not exist, create new one
+%if dir does not exist, create new one-+*
 if ~exist(strcat(DIR.SET_PATH,"01-output/hp",hpStr,"_Amp",int2str(threshold),...
         "_wavThreshold", wavThreshold, "_version",int2str(version),"_baseline-", baseline), 'dir')
     DIR = makeSubDirectory(DIR,hpStr,threshold,wavThreshold,version, baseline);
@@ -65,7 +65,6 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
-
 write_output_tables(Subj, DIR);
 
 %% analysis
