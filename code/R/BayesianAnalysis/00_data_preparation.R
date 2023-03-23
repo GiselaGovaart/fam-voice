@@ -6,17 +6,37 @@ set.seed(project_seed) # set seed
 
 # install packages --------------------------------------------------------------------
 
+# install.packages(worcs)
 # install.packages("here")
 # install.packages("tidyverse")
 
 # load packages --------------------------------------------------------------------
-
+library(worcs)
 library(here)
 library(tidyverse)
 
 # data cleaning --------------------------------------------------------------------
 
 # load data
+# this data is the pilot data, which has the amplitude
+# - per condition (standards (23), deviant (10))
+# - per speaker (1/2 coded as 1, 3 and 4)
+# - for each subject
+
+# I need this weird hack because otherwise it does not find the codebooks
+setwd(here("data"))
+load_data()
+setwd(here())
+
+
+
+
+
+
+
+
+
+
 # the data loaded here is the raw data from Katharina. This contains FRN and P3, the rest
 # of the analyses are only for P3.
 dat <-
