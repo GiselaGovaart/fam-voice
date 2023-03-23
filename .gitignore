@@ -83,3 +83,10 @@ Temporary Items
 ### macOS Patch ###
 # iCloud generated files
 *.icloud
+!data_long.csv
+!codebook_data_long.csv
+!amplitudes_pilot_famvoice.csv
+!data_pilot_famvoice.csv
+!data_pilot.csv
+!codebook_data_pilot.csv
+!data_pilot
