@@ -1,0 +1,8 @@
+data:
+  data_pilot.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    codebook: codebook_data_pilot.Rmd
+    labels: value_labels_data_pilot.yml
+checksums:
+  data_pilot.csv: 44776eb515be1f040015426703aee790
