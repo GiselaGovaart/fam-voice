@@ -55,6 +55,7 @@ priors <-
 # load data  --------------------------------------------------------------------
 
 load(here("data", "preprocessed", "P3_mean.RData"))
+load_data()
 
 # sampling: P3, mean amplitude --------------------------------------------------------------------
 
