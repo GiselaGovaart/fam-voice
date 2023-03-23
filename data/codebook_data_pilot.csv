@@ -1,0 +1,5 @@
+"name","type","n","missing","unique","mean","median","mode","mode_value","sd","v","min","max","range","skew","skew_2se","kurt","kurt_2se","category","description"
+"subj","factor",78,0,14,NA,NA,6,"01",NA,0.923076923076923,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"condition","character",78,0,3,NA,NA,39,"10",NA,0.5,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"speaker","character",78,0,4,NA,NA,26,"1",NA,0.666666666666667,NA,NA,NA,NA,NA,NA,NA,NA,NA
+"amplitude","numeric",78,0,78,1.97487678205128,3.17875,3.17875,NA,8.44782487132831,NA,-21.0774,19.259,40.3364,-0.540381205490848,-0.992578359283598,-0.0740538727015867,-0.0688007409861036,NA,NA
