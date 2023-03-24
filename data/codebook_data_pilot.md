@@ -1,4 +1,4 @@
-Codebook created on 2023-03-23 at 2023-03-23 14:36:51
+Codebook created on 2023-03-24 at 2023-03-24 15:14:36
 ================
 
 A codebook contains documentation and metadata describing the contents,
@@ -6,16 +6,15 @@ structure, and layout of a data file.
 
 ## Dataset description
 
-The data contains 78 cases and 4 variables.
+The data contains 39 cases and 3 variables.
 
 ## Codebook
 
-| name      | type      |   n | missing | unique | mean | median |  mode | mode_value |   sd |    v |    min |   max | range |  skew | skew_2se |  kurt | kurt_2se |
-|:----------|:----------|----:|--------:|-------:|-----:|-------:|------:|-----------:|-----:|-----:|-------:|------:|------:|------:|---------:|------:|---------:|
-| subj      | factor    |  78 |       0 |     14 |      |        |  6.00 |          1 |      | 0.92 |        |       |       |       |          |       |          |
-| condition | character |  78 |       0 |      3 |      |        | 39.00 |         10 |      | 0.50 |        |       |       |       |          |       |          |
-| speaker   | character |  78 |       0 |      4 |      |        | 26.00 |          1 |      | 0.67 |        |       |       |       |          |       |          |
-| amplitude | numeric   |  78 |       0 |     78 | 1.97 |   3.18 |  3.18 |            | 8.45 |      | -21.08 | 19.26 | 40.34 | -0.54 |    -0.99 | -0.07 |    -0.07 |
+| name        | type    |   n | missing | unique | mean | median |  mode | mode_value |    sd |    v |    min |   max | range | skew | skew_2se |  kurt | kurt_2se |
+|:------------|:--------|----:|--------:|-------:|-----:|-------:|------:|-----------:|------:|-----:|-------:|------:|------:|-----:|---------:|------:|---------:|
+| Subj        | factor  |  39 |       0 |     14 |      |        |  3.00 |          1 |       | 0.92 |        |       |       |      |          |       |          |
+| TestSpeaker | factor  |  39 |       0 |      4 |      |        | 13.00 |          1 |       | 0.67 |        |       |       |      |          |       |          |
+| MMR         | numeric |  39 |       0 |     39 | 2.27 |   1.82 |  1.82 |            | 11.74 |      | -22.75 | 27.56 |  50.3 | 0.01 |     0.01 | -0.39 |    -0.26 |
 
 ### Legend
 
