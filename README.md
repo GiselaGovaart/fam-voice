@@ -15,7 +15,7 @@ README.md                 | Description of project           | Human editable
 FamVoiceWORCS.Rproj       | Project file                     | Loads project 
 LICENSE                   | User permissions                 | Read only     
 .worcs                    | WORCS metadata YAML              | Read only     
-prepare_data.R            | Script to process raw data       | Human editable
+code/Rprepare_data.R      | Script to process raw data       | Human editable
 manuscript/manuscript.rmd | Source code for paper            | Human editable
 manuscript/references.bib | BibTex references for manuscript | Human editable
 renv.lock                 | Reproducible R environment       | Read only     
