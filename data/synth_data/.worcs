@@ -1,0 +1,10 @@
+data:
+  data_pilot.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    synthetic: synthetic_data_pilot.csv
+    codebook: codebook_data_pilot.Rmd
+    labels: value_labels_data_pilot.yml
+checksums:
+  data_pilot.csv: 6c3776b89bba7514cf6a1f2e9eee12ac
+  synthetic_data_pilot.csv: ece3d000b2afd2b1001c91301495c2ff
