@@ -21,7 +21,7 @@ library(brms)
 # - per TestSpeaker (1/2 coded as 1, 3 and 4)
 # - for each subject
 
-# I need this weird hack because otherwise it does not find the codebooks
+# I need this weird hack because otherwise it does not find the codebooks to load the data
 setwd(here("data"))
 load_data()
 setwd(here())
@@ -44,7 +44,7 @@ dat$MMRsim <- rnorm(nrow(dat),10,10)
 # visualize data
 plot(density(dat$MMRsim),
      main="FamVoice",xlab="MMRsim")
-# it looks normally distributed, so we assume normal distr for the likelihood
+# it looks normally distributed (a big surprise), so we assume normal distr for the likelihood 
 
 
 # Priors:
@@ -85,7 +85,7 @@ pp <- posterior_predict(pm1)
 pp <- t(pp)
 # distribution of mean MMR
 hist(colMeans(pp))
-# distribution of word frequency effects
+# distribution of TestSpeaker effect
 effectTestSpeaker <- colMeans(pp[dat$TestSpeaker=="train",]) - colMeans(pp[dat$TestSpeaker=="novel",])
 hist(effectTestSpeaker)
 
@@ -118,7 +118,30 @@ hist(effectTestSpeaker)
 # --> this seems to work! but now you also want to think about how to interpret these effects
 # and try to add an effet for group via the priors
 
+priors <- c(set_prior("normal(0, 10)",  # sd=20 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu
+                      # in other words: # - I expect the mean of my data somewhere between -10 and 10. 
+                      class = "Intercept"),
+            set_prior("normal(0,15)",  # 
+                      class = "b",
+                      coef="TestSpeaker_n"),
+            set_prior("normal(0, 20)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case
+                      # the mean of sigma = 0 means that we expect a mean SD of the MMR of 0, with and SD of the SD of 20 (that's how much uncertainty we have about the value zero)
+                      class = "sigma", 
+                      lb=0)) # I think this should be truncated, because the residual noise cant be negative
 
+
+pm3 <- brm(MMRsim ~ 1  + TestSpeaker_n * Group, data = dat,   # You prob have to add group here
+           prior = priors,
+           iter = 8000, chains = 4,family = gaussian(), 
+           sample_prior = "only",
+           control = list(adapt_delta = 0.99))
+pp <- posterior_predict(pm3) 
+pp <- t(pp)
+# distribution of mean MMR
+hist(colMeans(pp))
+# distribution of word frequency effects
+effectTestSpeaker <- colMeans(pp[dat$TestSpeaker=="train",]) - colMeans(pp[dat$TestSpeaker=="novel",])
+hist(effectTestSpeaker)
 
 
 
