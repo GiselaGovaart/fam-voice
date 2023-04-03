@@ -20,10 +20,10 @@ for i = 1:length(EEG.chanlocs)
 end
 
 % Find index of crucial electrodes (eyes and mastoids) 
-% NB why include F9 and F10 here? (they are used as horizonatal eye
-% electrodes)
-% you need the eye electrodes for the WICA (because that takes out the
-% parts with peaks)
+% (F9 and F10 are used as horizonatal eye electrodes)
+% also the eye electrodes, because we want the wavelet thresholds to be
+% set accordingly, such that we have a higher chance to correct the trials
+% that have eye contamination
 crucialNames = {'Fp2','EOG1','TP9','TP10','F9','F10'};
 for i = 1:length(crucialNames)
     if ismember(crucialNames(i),elecName)
@@ -46,6 +46,7 @@ EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', 300, ...
 % methods optimized in HAPPILEE.
 
 %remove channels that do not correlate with other channels
+% in HAPPE 3.0, 'LineNoiseCriterion' is 2.5 instead of 'off'
 EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', ...
     'off', 'ChannelCriterion', .7, 'LineNoiseCriterion', ...
     'off', 'Highpass', 'off', 'BurstCriterion', 'off', ...
