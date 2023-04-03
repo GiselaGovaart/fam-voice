@@ -61,8 +61,15 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), 
 
 %% MUSCIL
 if muscIL == "on"
-    EEG = happe_muscIL(EEG, pp, DIR) ;
+    EEG = happe_muscIL(EEG, dataQC, FileNames, ...
+            currFile, inputExt) ;
+
+else
+    dataQC{currFile, 7} = 'NA' ;
+    dataQC{currFile, 8} = 'NA' ;
 end
+
+
 
 
 %% filter for ERP
