@@ -30,9 +30,9 @@ cd(DIR.RAWEEG_PATH);
 
 %% Set subjects
 % Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
-%Subj = ["01"];
+Subj = ["01"];
 
-Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
+%Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
 %% preprocess EEG
 
@@ -45,6 +45,7 @@ maxAmpValue = threshold;
 wavThreshold = 'Hard'; %can be 'Hard' or 'Soft'
 version = 3; % HAPPE2 or HAPPE 3
 baseline = "yes";
+muscIL = "on"; % can be on or off
 
 %if dir does not exist, create new one-+*
 if ~exist(strcat(DIR.SET_PATH,"01-output/hp",hpStr,"_Amp",int2str(threshold),...
