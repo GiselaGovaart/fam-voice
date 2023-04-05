@@ -1,4 +1,5 @@
-function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, wavThreshold,version, baseline)
+function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, minAmpValue, maxAmpValue, ...
+    wavThreshold,version, baseline, muscIL)
 %HAPPE_FamVoice_pilot(pp,DIR)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 
 
@@ -15,9 +16,11 @@ EEG = pop_select(EEG, 'nochannel', {'Cz'}); %remove online Ref Cz from data
 EEG = eeg_checkset(EEG);
 
 %% detrend data --> not necessary, I take a high-pass filter already
-% EEGdata = EEG.data;
-% EEGdata = detrend(EEGdata')';
-% EEG.data = EEGdata;
+if detrend == "on"
+    EEGdata = EEG.data;
+    EEGdata = detrend(EEGdata')';
+    EEG.data = EEGdata;
+end
 
 %% filter data 
 % These two filters help the artifact correction later on.
@@ -32,7 +35,9 @@ lineNoiseIn = struct('lineNoiseMethod', 'clean', 'lineNoiseChannels', ...
 
 %100 Hz filter
 % this filter is not used in HAPPE 3.0
-EEG = pop_eegfiltnew(EEG, [], 100, [], 0, [], 0) ;
+if version == 2 
+    EEG = pop_eegfiltnew(EEG, [], 100, [], 0, [], 0) ;
+end 
 
 % Save the filtered dataset as an intermediate output
 EEG = eeg_checkset(EEG);
@@ -137,7 +142,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     103, 213, 223, 233, 243,...%testS3
     104, 214, 224, 234, 244}; %testS4
 
-% WHY COMMENTED OUT?
+% WHY COMMENTED OUT? --> because the value is zero. doesn't do anything
 % segmentOffset = 0;
 %     
 % sampOffset = EEG.srate*segmentOffset/1000 ;
@@ -209,7 +214,6 @@ num = 2; % because we have low density data
 EEG = pop_jointprob(EEG, 1, ...
             ROI_indxs, num, num, 0, 1,0) ;% second-to-last 1: reject labeled trials
 
-        
 % Save the post-artifact rejection data as an intermediate output
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_postrej.set')), ...
@@ -269,6 +273,9 @@ for i=1:length(eegByTags)
          fileName);
 end
 
+%% generate visualizations
+% figure; pop_timtopo(EEG, [1 374], NaN) ;
+% saveas(gcf, convertStringsToChars(strcat(DIR.processed,pp,'_processedERPspectrum.jpeg')));
 
 
 
