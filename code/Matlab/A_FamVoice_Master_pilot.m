@@ -37,6 +37,7 @@ Subj = ["01"];
 %% preprocess EEG
 
 % params to play with
+% TODO CREATE FOLDER STRUCUTRES
 hpFreqValue = 0.3;
 hpStr=sprintf('%.2f',hpFreqValue);
 threshold = 200;
@@ -44,8 +45,11 @@ minAmpValue = -threshold;
 maxAmpValue = threshold; 
 wavThreshold = 'Hard'; %can be 'Hard' or 'Soft'
 version = 3; % HAPPE2 or HAPPE 3
-baseline = "yes";
-muscIL = "on"; % can be on or off
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "on"; % can be on or off
+
+% TODO: add muscIL to makeSubdirectory etc, and add to folder names.
 
 %if dir does not exist, create new one-+*
 if ~exist(strcat(DIR.SET_PATH,"01-output/hp",hpStr,"_Amp",int2str(threshold),...
@@ -60,7 +64,8 @@ end
 %for pp = Subj(1)
 for pp = Subj
     makeSetsEEG(pp,DIR)
-    HAPPE_FamVoice_pilot(pp,DIR,hpFreqValue, minAmpValue, maxAmpValue,wavThreshold,version, baseline)
+    HAPPE_FamVoice_pilot(pp,DIR,hpFreqValue, minAmpValue, maxAmpValue, ...
+        wavThreshold,version, baseline,muscIL)
 
 end
 
