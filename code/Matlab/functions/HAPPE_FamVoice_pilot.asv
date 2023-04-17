@@ -51,7 +51,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_filtered_lnreduce
     'filepath', convertStringsToChars(DIR.intermediateProcessing));
 
 %% visualize
-close all
+closeall
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
 exportgraphics(gcf, strcat(DIR.processed, ...
     strcat('spectopo_afterlinenoise_',pp,'.png')), ...
@@ -76,7 +76,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), 
     'filepath', convertStringsToChars(DIR.waveletCleaned));
 
 %% visualize
-close all
+closeall
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
 exportgraphics(gcf, strcat(DIR.processed, ...
     strcat('spectopo_afterwaveletting_',pp,'.png')), ...
@@ -157,7 +157,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')
     'filepath', convertStringsToChars(DIR.ERPfiltered));
 
 %% visualize
-close all
+closeall
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
 exportgraphics(gcf, strcat(DIR.processed, ...
     strcat('spectopo_afterfiltering_',pp,'.png')), ...
@@ -284,7 +284,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
 
 
 %% visualize
-close all
+closeall
 pop_spectopo(EEG, 1, [], 'ERP', 'freq', [0.5 10 25], 'percent', 50)
 exportgraphics(gcf, strcat(DIR.processed, ...
     strcat('spectopo_clean_',pp,'.png')), ...

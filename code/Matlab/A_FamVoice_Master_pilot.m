@@ -29,49 +29,561 @@ cd(DIR.RAWEEG_PATH);
 
 
 %% Set subjects
-% Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
-Subj = ["01"];
+Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
+% Subj = ["02"];
 
 %Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
-%% preprocess EEG
+%% params to play with
 
-% params to play with
-% TODO CREATE FOLDER STRUCUTRES
+% STANDARD
 hpFreqValue = 0.3;
 hpStr=sprintf('%.2f',hpFreqValue);
-threshold = 200;
-minAmpValue = -threshold; 
-maxAmpValue = threshold; 
-wavThreshold = 'Hard'; %can be 'Hard' or 'Soft'
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
 version = 3; % HAPPE2 or HAPPE 3
 baseline = "yes"; % can be yes or no
 muscIL = "off"; % can be on or off
-detrend = "on"; % can be on or off
-
-% TODO: add muscIL to makeSubdirectory etc, and add to folder names.
+detrend = "off"; % can be on or off
 
 %if dir does not exist, create new one-+*
-if ~exist(strcat(DIR.SET_PATH,"01-output/hp",hpStr,"_Amp",int2str(threshold),...
-        "_wavThreshold", wavThreshold, "_version",int2str(version),"_baseline-", baseline), 'dir')
-    DIR = makeSubDirectory(DIR,hpStr,threshold,wavThreshold,version, baseline);
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
 else
-    DIR = changeSubDirectoryPaths(DIR,hpStr,threshold,wavThreshold,version, baseline);
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
     % to make sure that the DIR variable is also correct if the directory
     % previously existed.
 end
 
-%for pp = Subj(1)
 for pp = Subj
     makeSetsEEG(pp,DIR)
-    HAPPE_FamVoice_pilot(pp,DIR,hpFreqValue, minAmpValue, maxAmpValue, ...
-        wavThreshold,version, baseline,muscIL)
-
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
 write_output_tables(Subj, DIR);
+
+% filter 2
+hpFreqValue = 0.2;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% filter 3
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'kaiser '; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% filter 4
+hpFreqValue = 0.2;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'kaiser '; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% filter 5
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'kaiser '; % hamming or kaiser
+beta = 5.653; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% filter 6
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'kaiser '; % hamming or kaiser
+beta = 5.653; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% threshold 200
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 200;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% threshold 100
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 100;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% soft
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Soft'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% soft + 200
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 200;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Soft'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% version 2
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 2; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% no baseline
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "no"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% muscil on
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "on"; % can be on or off
+detrend = "off"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+% detrend on
+hpFreqValue = 0.3;
+hpStr=sprintf('%.2f',hpFreqValue);
+window = 'hamming'; % hamming or kaiser
+beta = 7.857; % 7.857 or 5.653
+betaStr=sprintf('%.2f',beta);
+threshold = 150;
+minAmpValue = -threshold;
+maxAmpValue = threshold;
+wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+version = 3; % HAPPE2 or HAPPE 3
+baseline = "yes"; % can be yes or no
+muscIL = "off"; % can be on or off
+detrend = "on"; % can be on or off
+
+
+%if dir does not exist, create new one-+*
+if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr,"_amp-",int2str(threshold),...
+        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+        "_muscIL-", muscIL,"detrend-", detrend), 'dir')
+    DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+else
+    DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
+        baseline, muscIL, detrend);
+    % to make sure that the DIR variable is also correct if the directory
+    % previously existed.
+end
+
+for pp = Subj
+    makeSetsEEG(pp,DIR)
+    HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue,window, beta, minAmpValue, maxAmpValue, ...
+        wavThreshold, version, baseline, muscIL, detrend)
+end
+
+computeGrandAverage(DIR);
+plotERPs(DIR);
+write_output_tables(Subj, DIR);
+
+
+
+
+
+
+
 
 %% analysis
 % Subj = (defined above)
@@ -82,6 +594,16 @@ write_output_tables(Subj, DIR);
 
 
 %% Vizualization
+
+% open filter figs
+% fig1 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/hamming_015_5500_all.fig');
+% fig2 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/hamming_02_8250_all.fig');
+% fig3 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/kaiser_56_015_6038_all.fig');
+% fig4 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/kaiser_56_02_9056_all.fig');
+% fig5 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/kaiser_78_015_8360_all.fig');
+% fig6 = openfig('/data/p_02453/raw_eeg/pilot/Filter pics/kaiser_78_02_12540_all.fig');
+
+
 
 
 
