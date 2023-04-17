@@ -1,6 +1,6 @@
-function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-    wavThreshold,version, baseline, muscIL,detrend)
-
+function HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, ...
+    minAmpValue, maxAmpValue, wavThreshold, version, baseline, blvalue, ...
+    muscIL, detrend)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 and 3.3 
 
 %% load the data
@@ -10,12 +10,13 @@ function HAPPE_FamVoice_pilot(pp,DIR, hpFreqValue, window, beta, minAmpValue, ma
 % EEG = load('-mat', dataFilename);
 [EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
 
-%% visualize
+% visualize
 close all
+figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.processed, ...
-    strcat('spectopo_raw_',pp,'.png')), ...
-    'Resolution', 300);
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_raw_',pp,'.png')));
+
 %% remove online ref Cz
 
 EEG = pop_select(EEG, 'nochannel', {'Cz'}); %remove online Ref Cz from data
@@ -50,10 +51,11 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
     'filepath', convertStringsToChars(DIR.intermediateProcessing));
 
-%% visualize
+% visualize
 close all
+figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.processed, ...
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_afterlinenoise_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -75,10 +77,11 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), ...
     'filepath', convertStringsToChars(DIR.waveletCleaned));
 
-%% visualize
+% visualize
 close all
+figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.processed, ...
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_afterwaveletting_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -156,10 +159,11 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')), ...
     'filepath', convertStringsToChars(DIR.ERPfiltered));
 
-%% visualize
+% visualize
 close all
+figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.processed, ...
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_afterfiltering_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -178,7 +182,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     103, 213, 223, 233, 243,...%testS3
     104, 214, 224, 234, 244}; %testS4ss
 
-segmentStart = -0.100; 
+segmentStart = blvalue/1000; 
 segmentEnd = 0.650;
 
 EEG = pop_epoch(EEG, onsetTags, ...
@@ -193,7 +197,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')),
 
 %% baseline correction
 if baseline == "yes"
-    EEG = pop_rmbase(EEG, [-100 0]);
+    EEG = pop_rmbase(EEG, [blvalue 0]);
     EEG = eeg_checkset(EEG);
     pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
         'filepath', convertStringsToChars(DIR.segmenting));
@@ -283,10 +287,11 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
 
-%% visualize
+% visualize
 close all
+figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'ERP', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.processed, ...
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_clean_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -309,11 +314,6 @@ for i=1:length(eegByTags)
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
-
-%% generate visualizations
-% figure; pop_timtopo(EEG, [1 374], NaN) ;
-% saveas(gcf, convertStringsToChars(strcat(DIR.processed,pp,'_processedERPspectrum.jpeg')));
-
 
 
 end
