@@ -1,6 +1,6 @@
 function HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, ...
-    minAmpValue, maxAmpValue, wavThreshold, version, baseline, blvalue, ...
-    muscIL, detrend)
+    minAmpValue,maxAmpValue, wavThreshold, version, baseline, blvalue, ...
+    muscIL, detr)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 and 3.3 
 
 %% load the data
@@ -9,6 +9,36 @@ function HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, ...
 %dataFilename = strcat(DIR.SET_PATH,pp,".set");
 % EEG = load('-mat', dataFilename);
 [EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
+
+
+%% vizualize
+addpath /data/p_02453/packages/fieldtrip-20230422
+ft_defaults
+
+% fieldtrip
+fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
+
+cfg = [];
+cfg.length = 5;
+cfg.overlap = 0;
+data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
+
+cfg = [];
+cfg.method     = 'mtmfft';
+cfg.taper      = 'hanning';
+cfg.foilim     = [1 30];
+cfg.keeptrials = 'no';
+freq_segmented = ft_freqanalysis(cfg, data_segmented);
+
+close all
+figure;
+hold on;
+plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+ylim([0 40]);
+xlabel('Frequency (Hz)');
+ylabel('absolute power (uV^2)');
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_ft_raw_',pp,'.png')));
 
 % visualize
 close all
@@ -23,7 +53,7 @@ EEG = pop_select(EEG, 'nochannel', {'Cz'}); %remove online Ref Cz from data
 EEG = eeg_checkset(EEG);
 
 %% detrend data --> not necessary, I take a high-pass filter already
-if detrend == "on"
+if detr == "on"
     EEGdata = EEG.data;
     EEGdata = detrend(EEGdata')';
     EEG.data = EEGdata;
@@ -51,7 +81,33 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
     'filepath', convertStringsToChars(DIR.intermediateProcessing));
 
-% visualize
+%% visualize
+% fieldtrip
+fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
+
+cfg = [];
+cfg.length = 5;
+cfg.overlap = 0;
+data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
+
+cfg = [];
+cfg.method     = 'mtmfft';
+cfg.taper      = 'hanning';
+cfg.foilim     = [1 30];
+cfg.keeptrials = 'no';
+freq_segmented = ft_freqanalysis(cfg, data_segmented);
+
+close all
+figure;
+hold on;
+plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+ylim([0 40]);
+xlabel('Frequency (Hz)');
+ylabel('absolute power (uV^2)');
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_ft_afterlinenoise_',pp,'.png')));
+
+% spectopo
 close all
 figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
@@ -77,8 +133,34 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), ...
     'filepath', convertStringsToChars(DIR.waveletCleaned));
 
-% visualize
+%% visualize
+% fieldtrip
+fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
+
+cfg = [];
+cfg.length = 5;
+cfg.overlap = 0;
+data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
+
+cfg = [];
+cfg.method     = 'mtmfft';
+cfg.taper      = 'hanning';
+cfg.foilim     = [1 30];
+cfg.keeptrials = 'no';
+freq_segmented = ft_freqanalysis(cfg, data_segmented);
+
 close all
+figure;
+hold on;
+plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+ylim([0 40]);
+xlabel('Frequency (Hz)');
+ylabel('absolute power (uV^2)');
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_ft_afterwaveletting_',pp,'.png')));
+
+% spectopo
+% close all
 figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
 exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
@@ -159,7 +241,33 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')), ...
     'filepath', convertStringsToChars(DIR.ERPfiltered));
 
-% visualize
+%% visualize
+% fieldtrip
+fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
+
+cfg = [];
+cfg.length = 5;
+cfg.overlap = 0;
+data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
+
+cfg = [];
+cfg.method     = 'mtmfft';
+cfg.taper      = 'hanning';
+cfg.foilim     = [1 30];
+cfg.keeptrials = 'no';
+freq_segmented = ft_freqanalysis(cfg, data_segmented);
+
+close all
+figure;
+hold on;
+plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+ylim([0 40]);
+xlabel('Frequency (Hz)');
+ylabel('absolute power (uV^2)');
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_ft_afterfiltering_',pp,'.png')));
+
+% spectopo
 close all
 figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
@@ -194,6 +302,12 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
+% plottopo
+close all
+pop_plottopo(EEG, [1:EEG.nbchan] , 'after segmentation', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_afterSegm_',pp,'.png')), ...
+    'Resolution', 300);
 
 %% baseline correction
 if baseline == "yes"
@@ -201,7 +315,15 @@ if baseline == "yes"
     EEG = eeg_checkset(EEG);
     pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
         'filepath', convertStringsToChars(DIR.segmenting));
+
+    % plottopo
+    close all
+    pop_plottopo(EEG, [1:EEG.nbchan] , 'after baseline', 0, 'ydir',1)
+    exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+        strcat('plottopo_afterBaseline_',pp,'.png')), ...
+        'Resolution', 300);
 end 
+
 
 %% bad data interpolation
 % lieber rausnehmen. sonst macht es hier schon data interpol within
@@ -251,6 +373,12 @@ EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_postrej.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
+% plottopo
+close all
+pop_plottopo(EEG, [1:EEG.nbchan] , 'after artifact rej', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_afterArtifactRej_',pp,'.png')), ...
+    'Resolution', 300);
 
 %% bad channel interpolation
 EEG = happe_interpChan(EEG,pp,DIR);
@@ -259,6 +387,14 @@ EEG = happe_interpChan(EEG,pp,DIR);
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_interpolated.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
+
+% plottopo
+close all
+pop_plottopo(EEG, [1:EEG.nbchan] , 'after bad channel interperpolation', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_afterBadChanInt_',pp,'.png')), ...
+    'Resolution', 300);
+
 
 %% rereferencing
 % This code comes from Maren's script "makeSetsEEG.m"
@@ -287,7 +423,33 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));
 
 
-% visualize
+%% visualize
+% fieldtrip
+fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
+
+cfg = [];
+cfg.length = 5;
+cfg.overlap = 0;
+%data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
+
+cfg = [];
+cfg.method     = 'mtmfft';
+cfg.taper      = 'hanning';
+cfg.foilim     = [1 30];
+cfg.keeptrials = 'no';
+freq_segmented = ft_freqanalysis(cfg, data_segmented);
+
+close all
+figure;
+hold on;
+plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+ylim([0 40]);
+xlabel('Frequency (Hz)');
+ylabel('absolute power (uV^2)');
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('spectopo_ft_clean_',pp,'.png')));
+
+% spectopo
 close all
 figure('units','normalized','outerposition',[0 0 1 1])
 pop_spectopo(EEG, 1, [], 'ERP', 'freq', [0.5 10 25], 'percent', 50)
@@ -295,6 +457,27 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_clean_',pp,'.png')), ...
     'Resolution', 300);
 
+% plottopo
+close all
+pop_plottopo(EEG, [1:EEG.nbchan] , 'after reref (clean)', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_clean_',pp,'.png')), ...
+    'Resolution', 300);
+
+
+% plot mastoids
+leftMas = find(strcmpi({EEG.chanlocs.labels}, 'TP9'));
+rightMas = find(strcmpi({EEG.chanlocs.labels}, 'TP10'));
+close all
+pop_plottopo(EEG, leftMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_leftMas_clean',pp,'.png')), ...
+    'Resolution', 300);
+
+pop_plottopo(EEG, rightMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
+exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+    strcat('plottopo_rightMas_clean',pp,'.png')), ...
+    'Resolution', 300);
 
 %% split by onset tags
 fprintf('Creating EEGs by tags...\n') ;
