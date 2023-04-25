@@ -29,8 +29,8 @@ cd(DIR.RAWEEG_PATH);
 
 
 %% Set subjects
-%Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
- Subj = ["02"];
+Subj = ["01" "02" "03" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "14" "15"];
+% Subj = ["02"];
 
 %Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
@@ -50,17 +50,17 @@ version = 3; % HAPPE2 or HAPPE 3
 baseline = "yes"; % can be yes or no
 blvalue = -200;
 muscIL = "off"; % can be on or off
-detrend = "off"; % can be on or off
+detr = "off"; % can be on or off
 
 %if dir does not exist, create new one
 if ~exist(strcat(DIR.SET_PATH,"01-output/hp-",hpStr, "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
-        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detrend), 'dir')
+        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr), 'dir')
     DIR = makeSubDirectory(DIR, hpStr, window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detrend);
+        baseline, blvalue, muscIL, detr);
 else
     DIR = changeSubDirectoryPaths(DIR, hpStr,window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detrend);
+        baseline, blvalue, muscIL, detr);
     % to make sure that the DIR variable is also correct if the directory
     % previously existed.
 end
@@ -68,8 +68,9 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detr)
 end
+
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
@@ -107,7 +108,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -146,7 +147,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -185,7 +186,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -224,7 +225,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -263,7 +264,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -302,7 +303,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -341,7 +342,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -380,7 +381,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -419,7 +420,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -458,7 +459,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -497,7 +498,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -536,7 +537,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -575,7 +576,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);
@@ -653,7 +654,7 @@ end
 for pp = Subj
     makeSetsEEG(pp,DIR)
     HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, muscIL, detrend)
+        wavThreshold, version, baseline, blvalue, muscIL, detrend)
 end
 
 computeGrandAverage(DIR);

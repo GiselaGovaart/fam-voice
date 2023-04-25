@@ -1,9 +1,9 @@
 function DIR = makeSubDirectory(DIR,hpStr,window, betaStr, threshold, ...
-    wavThreshold, version, baseline, blvalue, muscIL, detrend)
+    wavThreshold, version, baseline, blvalue, muscIL, detr)
 
 DIR.overallPath = strcat(DIR.SET_PATH,"01-output/hp-",hpStr, "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
-        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detrend);
+        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr);
 
 mkdir(DIR.overallPath);
 mkdir(strcat(DIR.overallPath,"/01-intermediate_processing/"));
