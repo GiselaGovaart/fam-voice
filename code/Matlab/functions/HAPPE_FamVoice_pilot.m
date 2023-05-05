@@ -12,8 +12,6 @@ function HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, ...
 
 
 %% vizualize
-addpath /data/p_02453/packages/fieldtrip-20230422
-ft_defaults
 
 % fieldtrip
 fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
@@ -41,11 +39,11 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_ft_raw_',pp,'.png')));
 
 % visualize
-close all
-figure('units','normalized','outerposition',[0 0 1 1])
-pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('spectopo_raw_',pp,'.png')));
+% close all
+% figure('units','normalized','outerposition',[0 0 1 1])
+% pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
+% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+%     strcat('spectopo_raw_',pp,'.png')));
 
 %% remove online ref Cz
 
@@ -108,12 +106,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_ft_afterlinenoise_',pp,'.png')));
 
 % spectopo
-close all
-figure('units','normalized','outerposition',[0 0 1 1])
-pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('spectopo_afterlinenoise_',pp,'.png')), ...
-    'Resolution', 300);
+% close all
+% figure('units','normalized','outerposition',[0 0 1 1])
+% pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
+% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+%     strcat('spectopo_afterlinenoise_',pp,'.png')), ...
+%     'Resolution', 300);
 
 %% detect bad channels
 % find ROI channels
@@ -161,11 +159,11 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 
 % spectopo
 % close all
-figure('units','normalized','outerposition',[0 0 1 1])
-pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('spectopo_afterwaveletting_',pp,'.png')), ...
-    'Resolution', 300);
+% figure('units','normalized','outerposition',[0 0 1 1])
+% pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
+% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+%     strcat('spectopo_afterwaveletting_',pp,'.png')), ...
+%     'Resolution', 300);
 
 %% MUSCIL
 if muscIL == "on"
@@ -213,9 +211,9 @@ low_cutoff = lpfreq + (low_transband/2);
 % Performing high pass filtering
 EEG = eeg_checkset( EEG );
 
-if window == 'hamming'
+if window == "hamming"
     EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'hamming', 'forder', hp_fl_order, 'minphase', 0);
-elseif window == 'kaiser'
+elseif window == "kaiser"
     EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'kaiser','warg', beta, 'forder', hp_fl_order, 'minphase', 0);
 end
 
@@ -268,12 +266,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_ft_afterfiltering_',pp,'.png')));
 
 % spectopo
-close all
-figure('units','normalized','outerposition',[0 0 1 1])
-pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('spectopo_afterfiltering_',pp,'.png')), ...
-    'Resolution', 300);
+% close all
+% figure('units','normalized','outerposition',[0 0 1 1])
+% pop_spectopo(EEG, 1, [], 'EEG', 'freq', [0.5 10 25], 'percent', 50)
+% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+%     strcat('spectopo_afterfiltering_',pp,'.png')), ...
+%     'Resolution', 300);
 
 %% segmentation
 % For the test phase:
@@ -450,12 +448,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('spectopo_ft_clean_',pp,'.png')));
 
 % spectopo
-close all
-figure('units','normalized','outerposition',[0 0 1 1])
-pop_spectopo(EEG, 1, [], 'ERP', 'freq', [0.5 10 25], 'percent', 50)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('spectopo_clean_',pp,'.png')), ...
-    'Resolution', 300);
+% close all
+% figure('units','normalized','outerposition',[0 0 1 1])
+% pop_spectopo(EEG, 1, [], 'ERP', 'freq', [0.5 10 25], 'percent', 50)
+% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+%     strcat('spectopo_clean_',pp,'.png')), ...
+%     'Resolution', 300);
 
 % plottopo
 close all
@@ -473,7 +471,7 @@ pop_plottopo(EEG, leftMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
 exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('plottopo_leftMas_clean',pp,'.png')), ...
     'Resolution', 300);
-
+close all
 pop_plottopo(EEG, rightMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
 exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     strcat('plottopo_rightMas_clean',pp,'.png')), ...
