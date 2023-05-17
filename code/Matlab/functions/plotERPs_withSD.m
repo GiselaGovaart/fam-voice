@@ -1,0 +1,38 @@
+function plotERPs_withSD(DIR)
+% Vizualization ERPs with standard diff to check whether the basline
+% correction induces artifacts
+
+
+
+%% Load datasets
+% load the necessary datasets
+
+addpath(genpath(DIR.EEGLAB_PATH));
+cd(DIR.grandaverage);
+
+GA_dev12 = pop_loadset('ga_101-102.set');
+GA_dev3 = pop_loadset('ga_103.set');
+GA_dev4 = pop_loadset('ga_104.set');
+GA_stan12 = pop_loadset('ga_231-232.set');
+GA_stan3 = pop_loadset('ga_233.set');
+GA_stan4 = pop_loadset('ga_234.set');
+
+% remove EEGlab path again to be able to run the plot code
+rmpath(genpath(DIR.EEGLAB_PATH)); 
+
+
+plot_erp({ ...
+    {GA_dev4}, ...
+    {GA_stan4}}, ...
+    'Fz', ...
+    'plotdiff', 0, ...
+    'plotstd', 'fill', ...
+    'permute', 1000, ...  % funktioniert gerade noch nicht 
+    'avgmode', 'auto', ... 
+    'labels', {'deviant', 'standard'} ...
+    );
+
+
+
+
+end

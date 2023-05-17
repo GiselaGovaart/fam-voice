@@ -1,4 +1,4 @@
-function HAPPE_FamVoice_pilot(pp, DIR, hpFreqValue, window, beta, ...
+function HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, ...
     minAmpValue,maxAmpValue, wavThreshold, version, baseline, blvalue, ...
     muscIL, detr)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 and 3.3 
@@ -182,14 +182,16 @@ end
 % df = transition band width, dF = normalized transition width, fs = sampling rate
 % dF is specific for the window type. Hamming window dF = 3.3
     
-hpfreq = hpFreqValue; % MADE uses 0.1, but HAPPE 0.3. I use 0.3 because of Burkhardt's arguments
+%hpfreq = hpFreqValue; % MADE uses 0.1, but HAPPE 0.3. I use 0.3 because of Burkhardt's arguments
 lpfreq = 30;
 
-high_transband = hpfreq; % high pass transition band. 
+high_transband = hptrans; % high pass transition band. 
 low_transband = 10; % low pass transition band
 
 hp_fl_order = 3.3 / (high_transband / EEG.srate);
 lp_fl_order = 3.3 / (low_transband / EEG.srate);
+% NB: the value of 3.3 for the filter order is based on the hamming
+% window, you'd need to change that for the kaiser window
 
 % Round filter order to next higher even integer. Filter order is always even integer.
 if mod(floor(hp_fl_order),2) == 0
@@ -205,7 +207,7 @@ elseif mod(floor(lp_fl_order),2) == 1
 end
 
 % Calculate cutoff frequency
-high_cutoff = hpfreq/2;
+high_cutoff = hpcutoff;
 low_cutoff = lpfreq + (low_transband/2);
 
 % Performing high pass filtering
@@ -216,16 +218,6 @@ if window == "hamming"
 elseif window == "kaiser"
     EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'kaiser','warg', beta, 'forder', hp_fl_order, 'minphase', 0);
 end
-
-% MADE uses "hamming"
-% Burkhardt recommended to use kaiser, because  Andreas Widmann likes kaiser 
-% and he wrote pop_firws. Burkhardt says it filters steeper in combination
-% with Widmann's filters.
-% But if I exchange 'hamming' for 'kaiser', also need to specify a Beta
-% value, and I don't know what to base that choice on.
-% Note: Annika & Claudia take beta value = 7.857
-% NB: the value of 3.3 for the filter order is based on the hamming
-% window, you'd need to change that for the kaiser window
 
 EEG = eeg_checkset( EEG );
 
@@ -244,7 +236,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')
 fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
 
 cfg = [];
-cfg.length = 5;
+cfg.length = 20;  % change resolution such that you can actually see whether it filtered out 0-0.3Hz
 cfg.overlap = 0;
 data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
 
@@ -289,7 +281,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     104, 214, 224, 234, 244}; %testS4ss
 
 segmentStart = blvalue/1000; 
-segmentEnd = 0.650;
+segmentEnd = 0.790+segmentStart;
 
 EEG = pop_epoch(EEG, onsetTags, ...
     [segmentStart, segmentEnd], 'verbose', ...
