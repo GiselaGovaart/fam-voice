@@ -83,7 +83,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
-% HERE add plotERPs withSD
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 
@@ -128,6 +128,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 % no baseline
@@ -171,6 +172,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 % 250 baseline
@@ -214,6 +216,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 
@@ -258,6 +261,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 
@@ -302,6 +306,7 @@ end
 
 computeGrandAverage_small(DIR); % exclude pp 6
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 % Soft + 200
@@ -345,6 +350,7 @@ end
 
 computeGrandAverage(DIR);
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
 % version 2
@@ -388,98 +394,101 @@ end
 
 computeGrandAverage_small(DIR); % exclude pp 6
 plotERPs(DIR);
+plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
 
-% detrend on (with filter)
-hptrans = 0.4;
-hpcutoff = 0.2;
-hptransStr=sprintf('%.2f',hptrans);
-hpcutoffStr=sprintf('%.2f',hpcutoff);
-window = 'hamming'; % hamming or kaiser
-beta = 0; % 7.857 or 5.653, or 0 for hamming (not relevant)
-betaStr=sprintf('%.2f',beta);
-threshold = 150;
-minAmpValue = -threshold;
-maxAmpValue = threshold;
-wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
-version = 3; % HAPPE2 or HAPPE 3
-baseline = "yes"; % can be yes or no
-blvalue = -200;
-muscIL = "off"; % can be on or off
-detr = "on"; % can be on or off
-
-%if dir does not exist, create new one
-if ~exist(strcat(DIR.SET_PATH,"01-output/hptrans-",hptransStr, "hpcutoff-", hpcutoffStr, ...
-        "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
-        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
-        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr), 'dir')
-    DIR = makeSubDirectory(DIR,  hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detr);
-else
-    DIR = changeSubDirectoryPaths(DIR, hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detr);
-    % to make sure that the DIR variable is also correct if the directory
-    % previously existed.
-end
-
-
-for pp = Subj
-    makeSetsEEG(pp,DIR)
-    HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, blvalue, muscIL, detr)
-end
-
-computeGrandAverage(DIR);
-plotERPs(DIR);
-write_output_tables(Subj, DIR);
-
-
-% detrend on (without filter)
-hptrans = 0.4;
-hpcutoff = 0.2;
-hptransStr=sprintf('%.2f',hptrans);
-hpcutoffStr=sprintf('%.2f',hpcutoff);
-window = 'nofilter'; % hamming or kaiser (or no filter)
-beta = 0; % 7.857 or 5.653, or 0 for hamming (not relevant)
-betaStr=sprintf('%.2f',beta);
-threshold = 150;
-minAmpValue = -threshold;
-maxAmpValue = threshold;
-wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
-version = 3; % HAPPE2 or HAPPE 3
-baseline = "yes"; % can be yes or no
-blvalue = -200;
-muscIL = "off"; % can be on or off
-detr = "on"; % can be on or off
-
-%if dir does not exist, create new one
-if ~exist(strcat(DIR.SET_PATH,"01-output/hptrans-",hptransStr, "hpcutoff-", hpcutoffStr, ...
-        "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
-        "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
-        "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr), 'dir')
-    DIR = makeSubDirectory(DIR,  hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detr);
-else
-    DIR = changeSubDirectoryPaths(DIR, hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
-        baseline, blvalue, muscIL, detr);
-    % to make sure that the DIR variable is also correct if the directory
-    % previously existed.
-end
-
-
-for pp = Subj
-    makeSetsEEG(pp,DIR)
-    HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, minAmpValue, maxAmpValue, ...
-        wavThreshold, version, baseline, blvalue, muscIL, detr)
-end
-
-computeGrandAverage(DIR);
-plotERPs(DIR);
-write_output_tables(Subj, DIR);
+% % detrend on (with filter)
+% hptrans = 0.4;
+% hpcutoff = 0.2;
+% hptransStr=sprintf('%.2f',hptrans);
+% hpcutoffStr=sprintf('%.2f',hpcutoff);
+% window = 'hamming'; % hamming or kaiser
+% beta = 0; % 7.857 or 5.653, or 0 for hamming (not relevant)
+% betaStr=sprintf('%.2f',beta);
+% threshold = 150;
+% minAmpValue = -threshold;
+% maxAmpValue = threshold;
+% wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+% version = 3; % HAPPE2 or HAPPE 3
+% baseline = "yes"; % can be yes or no
+% blvalue = -200;
+% muscIL = "off"; % can be on or off
+% detr = "on"; % can be on or off
+% 
+% %if dir does not exist, create new one
+% if ~exist(strcat(DIR.SET_PATH,"01-output/hptrans-",hptransStr, "hpcutoff-", hpcutoffStr, ...
+%         "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
+%         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+%         "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr), 'dir')
+%     DIR = makeSubDirectory(DIR,  hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
+%         baseline, blvalue, muscIL, detr);
+% else
+%     DIR = changeSubDirectoryPaths(DIR, hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
+%         baseline, blvalue, muscIL, detr);
+%     % to make sure that the DIR variable is also correct if the directory
+%     % previously existed.
+% end
+% 
+% 
+% for pp = Subj
+%     makeSetsEEG(pp,DIR)
+%     HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, minAmpValue, maxAmpValue, ...
+%         wavThreshold, version, baseline, blvalue, muscIL, detr)
+% end
+% 
+% computeGrandAverage(DIR);
+% plotERPs(DIR);
+% plotERPs_withSD(DIR);
+% write_output_tables(Subj, DIR);
+% 
+% 
+% % detrend on (without filter)
+% hptrans = 0.4;
+% hpcutoff = 0.2;
+% hptransStr=sprintf('%.2f',hptrans);
+% hpcutoffStr=sprintf('%.2f',hpcutoff);
+% window = 'nofilter'; % hamming or kaiser (or no filter)
+% beta = 0; % 7.857 or 5.653, or 0 for hamming (not relevant)
+% betaStr=sprintf('%.2f',beta);
+% threshold = 150;
+% minAmpValue = -threshold;
+% maxAmpValue = threshold;
+% wavThreshold = 'Hard'; %can bse 'Hard' or 'Soft'
+% version = 3; % HAPPE2 or HAPPE 3
+% baseline = "yes"; % can be yes or no
+% blvalue = -200;
+% muscIL = "off"; % can be on or off
+% detr = "on"; % can be on or off
+% 
+% %if dir does not exist, create new one
+% if ~exist(strcat(DIR.SET_PATH,"01-output/hptrans-",hptransStr, "hpcutoff-", hpcutoffStr, ...
+%         "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
+%         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
+%         "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr), 'dir')
+%     DIR = makeSubDirectory(DIR,  hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
+%         baseline, blvalue, muscIL, detr);
+% else
+%     DIR = changeSubDirectoryPaths(DIR, hptransStr, hpcutoffStr, window, betaStr, threshold, wavThreshold, version, ...
+%         baseline, blvalue, muscIL, detr);
+%     % to make sure that the DIR variable is also correct if the directory
+%     % previously existed.
+% end
+% 
+% 
+% for pp = Subj
+%     makeSetsEEG(pp,DIR)
+%     HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, minAmpValue, maxAmpValue, ...
+%         wavThreshold, version, baseline, blvalue, muscIL, detr)
+% end
+% 
+% computeGrandAverage(DIR);
+% plotERPs(DIR);
+% plotERPs_withSD(DIR);
+% write_output_tables(Subj, DIR);
 
 
 % muscl on
-% hptrans = 0.4;
+% hptrans = 0.4; l,─
 % hpcutoff = 0.2;
 % hptransStr=sprintf('%.2f',hptrans);
 % hpcutoffStr=sprintf('%.2f',hpcutoff);

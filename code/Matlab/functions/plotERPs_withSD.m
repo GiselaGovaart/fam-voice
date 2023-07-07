@@ -3,7 +3,6 @@ function plotERPs_withSD(DIR)
 % correction induces artifacts
 
 
-
 %% Load datasets
 % load the necessary datasets
 
@@ -17,13 +16,18 @@ GA_stan12 = pop_loadset('ga_231-232.set');
 GA_stan3 = pop_loadset('ga_233.set');
 GA_stan4 = pop_loadset('ga_234.set');
 
+GA_devall = pop_mergeset(GA_dev12, GA_dev3);
+GA_devall = pop_mergeset(GA_devall, GA_dev4);
+
+GA_stanall = pop_mergeset(GA_stan12, GA_stan3);
+GA_stanall = pop_mergeset(GA_stanall, GA_stan4);
+
 % remove EEGlab path again to be able to run the plot code
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
-
 plot_erp({ ...
-    {GA_dev4}, ...
-    {GA_stan4}}, ...
+    {GA_devall}, ...
+    {GA_stanall}}, ...
     'Fz', ...
     'plotdiff', 0, ...
     'plotstd', 'fill', ...
@@ -32,7 +36,9 @@ plot_erp({ ...
     'labels', {'deviant', 'standard'} ...
     );
 
-
+exportgraphics(gcf, strcat(DIR.grandaverage, ...
+    'AllSpeakers_Fz_SD.jpeg'), ...
+    'Resolution', 300);
 
 
 end
