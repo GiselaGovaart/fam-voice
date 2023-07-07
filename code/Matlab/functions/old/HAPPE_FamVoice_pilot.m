@@ -1,4 +1,6 @@
-function HAPPE_FamVoice_pilot_finalParams(pp, DIR)
+function HAPPE_FamVoice_pilot(pp, DIR, hptrans, hpcutoff, window, beta, ...
+    minAmpValue,maxAmpValue, wavThreshold, version, baseline, blvalue, ...
+    muscIL, detr)
 %   Preprocessing for the FamVoice data, based on HAPPE 2.0 and 3.3 
 
 %% load the data
@@ -48,10 +50,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 EEG = pop_select(EEG, 'nochannel', {'Cz'}); %remove online Ref Cz from data
 EEG = eeg_checkset(EEG);
 
-%% detrend data --> not necessary to combine with high-pass filter 
-% EEGdata = EEG.data;
-% EEGdata = detrend(EEGdata')';
-% EEG.data = EEGdata; 
+%% detrend data --> not necessary, I take a high-pass filter already
+if detr == "on"
+    EEGdata = EEG.data;
+    EEGdata = detrend(EEGdata')';
+    EEG.data = EEGdata; 
+end
 
 %% filter data 
 % These two filters help the artifact correction later on.
@@ -66,7 +70,9 @@ lineNoiseIn = struct('lineNoiseMethod', 'clean', 'lineNoiseChannels', ...
 
 %100 Hz filter
 % this filter is not used in HAPPE 3.0
-% EEG = pop_eegfiltnew(EEG, [], 100, [], 0, [], 0) ;
+if version == 2 
+    EEG = pop_eegfiltnew(EEG, [], 100, [], 0, [], 0) ;
+end 
 
 % Save the filtered dataset as an intermediate output
 EEG = eeg_checkset(EEG);
@@ -118,7 +124,7 @@ EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
 
 
 %% wavelet thresholding
-EEG = happe_waveletThreshold(EEG,'Hard',3);
+EEG = happe_waveletThreshold(EEG,wavThreshold,version);
 
 % Save the wavelet-thresholded EEG as an intermediate output
 EEG = eeg_checkset(EEG);
@@ -160,9 +166,9 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 %     'Resolution', 300);
 
 %% MUSCIL
-% not necessary, infants so young that they don't have many muscle
-% artifacts
-% EEG = happe_muscIL(EEG, pp, DIR) ;
+if muscIL == "on"
+    EEG = happe_muscIL(EEG, pp, DIR) ;
+end
 
 
 %% filter for ERP
@@ -171,17 +177,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 % lpfreq = 30;
 % EEG = pop_eegfiltnew(EEG, hpfreq, lpfreq, [], 0, [], 0) ;
 
-% params:
-hptrans = 0.4;
-hpcutoff = 0.2;
-
 % MADE filter 
 % Calculate filter order using the formula: m = dF / (df / fs), where m = filter order,
 % df = transition band width, dF = normalized transition width, fs = sampling rate
 % dF is specific for the window type. Hamming window dF = 3.3
-
-%hpfreq = 0.4; % MADE uses 0.1, HAPPE 0.3, we use 0.4 (but
-% calculated manually)
+    
+%hpfreq = hpFreqValue; % MADE uses 0.1, but HAPPE 0.3. I use 0.3 because of Burkhardt's arguments
 lpfreq = 30;
 
 high_transband = hptrans; % high pass transition band. 
@@ -189,7 +190,8 @@ low_transband = 10; % low pass transition band
 
 hp_fl_order = 3.3 / (high_transband / EEG.srate);
 lp_fl_order = 3.3 / (low_transband / EEG.srate);
-% the value of 3.3 for the filter order is based on the hamming window
+% NB: the value of 3.3 for the filter order is based on the hamming
+% window, you'd need to change that for the kaiser window
 
 % Round filter order to next higher even integer. Filter order is always even integer.
 if mod(floor(hp_fl_order),2) == 0
@@ -211,8 +213,11 @@ low_cutoff = lpfreq + (low_transband/2);
 % Performing high pass filtering
 EEG = eeg_checkset( EEG );
 
-EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'hamming', 'forder', hp_fl_order, 'minphase', 0);
-
+if window == "hamming"
+    EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'hamming', 'forder', hp_fl_order, 'minphase', 0);
+elseif window == "kaiser"
+    EEG = pop_firws(EEG, 'fcutoff', high_cutoff, 'ftype', 'highpass', 'wtype', 'kaiser','warg', beta, 'forder', hp_fl_order, 'minphase', 0);
+end
 
 EEG = eeg_checkset( EEG );
 
@@ -275,8 +280,8 @@ onsetTags = {11, 12, 21, 22, ... %training
     103, 213, 223, 233, 243,...%testS3
     104, 214, 224, 234, 244}; %testS4ss
 
-segmentStart = -0.2; 
-segmentEnd = 0.650;
+segmentStart = blvalue/1000; 
+segmentEnd = 0.790+segmentStart;
 
 EEG = pop_epoch(EEG, onsetTags, ...
     [segmentStart, segmentEnd], 'verbose', ...
@@ -295,28 +300,26 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     'Resolution', 300);
 
 %% baseline correction
-% params:
-blvalue = -200;
+if baseline == "yes"
+    EEG = pop_rmbase(EEG, [blvalue 0]);
+    EEG = eeg_checkset(EEG);
+    pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
+        'filepath', convertStringsToChars(DIR.segmenting));
 
-EEG = pop_rmbase(EEG, [blvalue 0]);
-EEG = eeg_checkset(EEG);
-pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
-    'filepath', convertStringsToChars(DIR.segmenting));
-
-% plottopo
-close all
-pop_plottopo(EEG, [1:EEG.nbchan] , 'after baseline', 0, 'ydir',1)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
-    strcat('plottopo_afterBaseline_',pp,'.png')), ...
-    'Resolution', 300);
- 
+    % plottopo
+    close all
+    pop_plottopo(EEG, [1:EEG.nbchan] , 'after baseline', 0, 'ydir',1)
+    exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+        strcat('plottopo_afterBaseline_',pp,'.png')), ...
+        'Resolution', 300);
+end 
 
 
 %% bad data interpolation
-% Took out: otherwise it does data interpolation here, within the
-% segments, and then it uses that interpolated data for the channel
-% interpolation. That's double..
-
+% lieber rausnehmen. sonst macht es hier schon data interpol within
+% segments, and thenit uses that interpolated data for the channel
+% interpolation
+% fprintf('Interpolating bad data...\n') ;
 % eegChans = [1:size(EEG.chanlocs,2)] ;
 % rejOps.measure = [1 1 1 1] ;
 % rejOps.z = [3 3 3 3] ;
@@ -342,9 +345,9 @@ end
 
 % AMPLITUDE CRITERIA
 % HAPPE suggests 200 for infants and 150 for children and adults, MADE uses
-% 150 for infants. We use 150.
-minAmp = -150; 
-maxAmp = 150; 
+% 150 for infants. Claudia suggests 100-150
+minAmp = minAmpValue; 
+maxAmp = maxAmpValue; 
 
 EEG = pop_eegthresh(EEG, 1, ...
                       ROI_indxs, [minAmp], [maxAmp], ...

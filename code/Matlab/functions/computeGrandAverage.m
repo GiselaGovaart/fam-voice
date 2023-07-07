@@ -5,7 +5,7 @@ function computeGrandAverage(DIR)
 % in some of the preproc pipelines, it thus gives an error 
 
 
-% load EEGlab (
+% load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 cd(DIR.EEGLAB_PATH);
