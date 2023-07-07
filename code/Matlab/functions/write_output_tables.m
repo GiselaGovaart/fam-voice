@@ -4,7 +4,7 @@ function write_output_tables(Subj, DIR)
 
 %% Trial overview
 % subjects = ["01","02"];
-setlist = dir(strcat(DIR.processed,"*_processed_*"));
+%setlist = dir(strcat(DIR.processed,"*_processed_*"));
 
 CondNr = ["11" "21" "12" "22" "101" "102" "103" "104"  ...
     "211" "212" "213" "214" "221" "222" "223" "224" "231" "232" ...
