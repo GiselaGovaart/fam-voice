@@ -3,9 +3,7 @@ function write_output_tables(Subj, DIR)
 
 
 %% Trial overview
-% subjects = ["01","02"];
 %setlist = dir(strcat(DIR.processed,"*_processed_*"));
-
 CondNr = ["11" "21" "12" "22" "101" "102" "103" "104"  ...
     "211" "212" "213" "214" "221" "222" "223" "224" "231" "232" ...
     "233" "234" "241" "242" "243" "244"];
@@ -26,25 +24,6 @@ for ipp = 1:length(Subj)
         end
     end
 end
-
-% Gisela's code that did not work:
-% for i = 1:length(setlist)
-%     setName = setlist(i).name;
-%     namesplit = split(setName,"_");
-%     name = namesplit(1,1);
-%     cond = erase(namesplit(3,1), ".set");
-%     set = pop_loadset(setName);
-%     trials = set.trials;
-%     for j = 1:length(Subj)
-%         if Subj(j) == name
-%             for h = 1:length(CondNr)
-%                if CondNr(h) == cond
-%                    outMat(j+1,h+1) = trials;
-%                end
-%             end
-%         end
-%     end
-% end
 
 outMatT = outMat';
 

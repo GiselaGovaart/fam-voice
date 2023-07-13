@@ -43,7 +43,6 @@ else
 end
 
 
-writeTrialTable_computeGA(Subj, DIR)
 
 %% Run preprocessing functions
 for pp = Subj
@@ -51,7 +50,7 @@ for pp = Subj
     HAPPE_FamVoice_pilot(pp, DIR)
 end
 
-computeGrandAverage(DIR);
+computeGA(Subj, DIR);
 plotERPs(DIR);
 plotERPs_withSD(DIR);
 write_output_tables(Subj, DIR);
