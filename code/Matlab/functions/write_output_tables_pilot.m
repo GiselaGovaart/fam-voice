@@ -1,12 +1,12 @@
-function write_output_tables(Subj, DIR)
+function write_output_tables_pilot(Subj, DIR)
 % write output tables
 
 
 %% Trial overview
 %setlist = dir(strcat(DIR.processed,"*_processed_*"));
-CondNr = ["S 11" "S 21" "S 12" "S 22" "S101" "S102" "S103" "S104"  ...
-    "S211" "S212" "S213" "S214" "S221" "S222" "S223" "S224" "S231" "S232" ...
-    "S233" "S234" "S241" "S242" "S243" "S244"];
+CondNr = ["11" "21" "12" "22" "101" "102" "103" "104"  ...
+    "211" "212" "213" "214" "221" "222" "223" "224" "231" "232" ...
+    "233" "234" "241" "242" "243" "244"];
 
 % Make output matrix
 outMat = strings(length(Subj)+1, length(CondNr)+1);
