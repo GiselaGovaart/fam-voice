@@ -5,15 +5,7 @@ cd('/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab')
 clear all; path(pathdef); clc; %reset session to clean
 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
-DIR.RAWEEG_PATH = '/data/p_02453/raw_eeg/pilot/raw-data-sets/';
-% these two paths are now the same, because for the active data, we dont
-% need to make sets. I adapted scripts to set the directories such that
-% they fit the _CBS and _Charite scripts. For that, I needed to add
-% '/raw-data-sets/' to the RAWEEG path. Because of this,
-% makeSetsEEG(pp,DIR) now does not work. It would work again if
-% DIR.RAWEEG_PATH = '/data/p_02453/raw_eeg/pilot/'; However, I currently
-% don't need the makeSetsEEG function anymore, so I leave it as is
-DIR.SET_PATH = '/data/p_02453/raw_eeg/pilot/raw-data-sets/';
+DIR.RAWEEG_PATH = '/data/p_02453/raw_eeg/exp_Charite/';
 DIR.REFA_PATH = '/data/p_02453/packages/eeglab2021.0/plugins/refa8import_v1.3/';
 DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab/functions';
 
@@ -32,13 +24,14 @@ addpath /data/p_02453/packages/fieldtrip-20230422
 ft_defaults
 
 %% Set subjects
-Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
+Subj = ["FamVoice98" "99" "Test1" "Test2" "Test3" "Testd" "Hannah"];
+
 
 %% Create DIRs 
-manualInfoFolder = "finalParams_linenoise2.5_lineFrequencies50-100";
+manualInfoFolder = "finalParams";
 
 %if dir does not exist, create new one
-if ~exist(strcat(DIR.SET_PATH,"01-output/", manualInfoFolder), 'dir')
+if ~exist(strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder), 'dir')
     DIR = makeSubDirectory(DIR,manualInfoFolder);
 else
     DIR = changeSubDirectoryPaths(DIR, manualInfoFolder);
@@ -48,8 +41,7 @@ end
 
 %% Run preprocessing functions
 for pp = Subj
-%     makeSetsEEG(pp,DIR)
-    HAPPE_FamVoice_pilot(pp, DIR)
+    HAPPE_FamVoice_Charite(pp, DIR)
 end
 
 computeGA(Subj, DIR);
@@ -63,7 +55,6 @@ end
 plot_ERP_RAW_plot(Subj,DIR);
 
 plotERPsIndiv(Subj, DIR);
-
 
 %% Analysis
 % Subj = (defined above)

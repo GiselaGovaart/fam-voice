@@ -4,7 +4,7 @@ function EEG = happe_detectBadChannels(EEG,pp,DIR,ROI)
 %   This code is adapted from HAPPE by Katharina, and then adapted by
 %   Gisela
 %   Detects bad channels in the recording according to the algorithm 
-%   introduced in HAPPE 2.1. It does so by first checking for flat channels,
+%   introduced in HAPPE 2.1, updated in HAPPELEE. It does so by first checking for flat channels,
 %   then assessing the Hurst gradient
 
 original = EEG.chanlocs; %save names of original channels
@@ -32,7 +32,7 @@ for i = 1:length(crucialNames)
 end
 
 
-%% channel removal according to HAPPE 2.1
+%% channel removal according to HAPPELEE
 
 %remove channels flat more than 300 seconds (changed from HAPPE, who used
 %5sec which was way too little for us)
@@ -46,10 +46,9 @@ EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', 300, ...
 % methods optimized in HAPPILEE.
 
 %remove channels that do not correlate with other channels
-% in HAPPE 3.0, 'LineNoiseCriterion' is 2.5 instead of 'off'
 EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', ...
     'off', 'ChannelCriterion', .7, 'LineNoiseCriterion', ...
-    'off', 'Highpass', 'off', 'BurstCriterion', 'off', ...
+    2.5, 'Highpass', 'off', 'BurstCriterion', 'off', ...
     'WindowCriterion', 'off', 'BurstRejection', ...
     'off', 'Distance', 'Euclidian');
 
@@ -88,15 +87,6 @@ selected = EEG.chanlocs;
 % have been marked for removal.
 selected_array = {selected(1:length(selected)).labels}; %take cell array with names out of structure
 original_array = {original(1:length(original)).labels}; %take cell array with names out of structure
-
-% I probably don't need this (if I get an error, this might be the problem)
-% sCha = struct2cell(selected);
-% sLab = squeeze(sCha(1,:,:)); 
-% % squeeze: just drops all dimensions that are 1, such that your matrix is
-% % not multidimensional
-% 
-% out = pop_select(out,'channel',sLab); % goes as output back to script
-
 save(strcat(DIR.intermediateProcessing,'channelInfo_', pp),'original','selected','crucialRemovedNames');
 
 %% Save information 
@@ -128,13 +118,10 @@ removedROINames_long(1:length(removedROINames)) = removedROINames;
 crucialRemovedNames_long = cell(1,length(original_array));
 crucialRemovedNames_long(1:length(crucialRemovedNames)) = crucialRemovedNames;
 
-% DIR.SET_PATH = '/data/p_02453/raw_eeg/pilot/raw-data-sets/';
-% DIR.intermediateProcessing =  strcat(DIR.SET_PATH,"01-output/01-intermediate_processing/");
-
 T = table(original_array', selected_long', totalRemovedNames_long', ...
     crucialRemovedNames_long', removedROINames_long', moreThan3RemovedRoi_long', ...
     'VariableNames', { 'original', 'selected', 'totalRemoved', 'crucialRemoved', 'removedROI', 'moreThan3RemovedRoi'} );
-writetable(T,strcat(DIR.intermediateProcessing,'InfoChannels_', pp, '.txt'),'Delimiter','\t');
+writetable(T,strcat(DIR.qualityAssessment,'InfoChannels_', pp, '.txt'),'Delimiter','\t');
 
 
 end

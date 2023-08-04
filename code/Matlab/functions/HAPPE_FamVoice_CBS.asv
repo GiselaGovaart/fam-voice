@@ -1,8 +1,21 @@
-function HAPPE_FamVoice_pilot(pp, DIR)
+function HAPPE_FamVoice_CBS(pp, DIR)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 %% Load the data
-[EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
+% pp="23"
+
+EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
+[ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
+[EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
+EEG = eeg_checkset( EEG );
+
+EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));  
+[ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
+% [EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
+EEG = eeg_checkset( EEG );
+
+%pop_eegplot(EEG);
+
 
 % Vizualize
 % spectopo
@@ -32,7 +45,13 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 
 %% Remove online ref Cz
 
-EEG = pop_select(EEG, 'nochannel', {'Cz'}); %remove online Ref Cz from data
+EEG = pop_select(EEG, 'nochannel', {'REF'}); %remove online Ref Cz from data
+EEG = pop_select(EEG, 'nochannel', {'GND'}); %remove GROUND from data
+
+% Remove FC1 and FC2, because it is not included in the setup at the CBS
+EEG = pop_select(EEG, 'nochannel', {'FC1'});
+EEG = pop_select(EEG, 'nochannel', {'FC2'}); 
+
 EEG = eeg_checkset(EEG);
 
 %% Detrend data --> not necessary to combine with high-pass filter 
@@ -178,11 +197,11 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 % •        First digit: 1 for fe, 2 for fi
 % •        Second digit: for speaker: 1 for S1, 2 for S2
 
-onsetTags = {11, 12, 21, 22, ... %training
-    101, 211, 221, 231, 241,... %testS1
-    102, 212, 222, 232, 242,... %testS2
-    103, 213, 223, 233, 243,...%testS3
-    104, 214, 224, 234, 244}; %testS4ss
+onsetTags = {'S 11', 'S 12', 'S 21', 'S 22', ... %training
+    'S101', 'S211', 'S221', 'S231', 'S241',... %testS1
+    'S102', 'S212', 'S222', 'S232', 'S242',... %testS2
+    'S103', 'S213', 'S223', 'S233', 'S243',...%testS3
+    'S104', 'S214', 'S224', 'S234', 'S244'}; %testS4
 
 segmentStart = -0.2; 
 segmentEnd = 0.650;

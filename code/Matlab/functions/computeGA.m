@@ -51,8 +51,13 @@ for ipp = 1:length(Subj)
     trialsD = setD.trials;
     trialsS1 = setS1.trials;
     trialsS2 = setS2.trials;
+    trialsS = trialsS1+trialsS2;
 
-    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
+    % read out whether more than 3 channels from ROI were kicked out
+    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
+    morethan3 = T{1,6};
+
+    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);
@@ -112,8 +117,13 @@ for ipp = 1:length(Subj)
     trialsD = setD.trials;
     trialsS1 = setS1.trials;
     trialsS2 = setS2.trials;
+    trialsS = trialsS1+trialsS2;
 
-    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
+    % read out whether more than 3 channels from ROI were kicked out
+    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
+    morethan3 = T{1,6};
+
+    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);
@@ -174,8 +184,13 @@ for ipp = 1:length(Subj)
     trialsD = setD.trials;
     trialsS1 = setS1.trials;
     trialsS2 = setS2.trials;
+    trialsS = trialsS1+trialsS2;
 
-    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
+    % read out whether more than 3 channels from ROI were kicked out
+    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
+    morethan3 = T{1,6};
+
+    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);

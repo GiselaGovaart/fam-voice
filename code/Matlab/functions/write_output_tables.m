@@ -63,9 +63,9 @@ for ipp = 1:length(Subj)
         if isfile(strcat(DIR.processed,setName))
             set = pop_loadset(convertStringsToChars(setName));
             erp = mean( set.data, 3 );
-            baseline = -70; % divide by 2 because of sr of 500 
+            baseline = -70; % divide by 2 because of sr of 500, which means that every sample contains 2 ms.
             window = [108  233]; % tw: 151-401 after change. change starts after 65 ms, 216-466 --> divide by 2: 
-            mean_amplitude_all = mean(erp(:, (window(1)-baseline):(window(2)-baseline)), 2); 
+            mean_amplitude_all = mean(erp(:, (window(1)-baseline):(window(2)-baseline)), 2);  % substract baseline to get correct latency
             mean_amplitude_fz = mean_amplitude_all(4,1);
             outMat(ipp+1,iCond+1) =  mean_amplitude_fz;
         end

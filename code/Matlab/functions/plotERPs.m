@@ -38,6 +38,13 @@ C3 = 13;
 C4 = 14;
 
 %% ALL SPEAKERS Fz, F3, F4
+
+% NB everywhere below, the code DIFF_all(Fz,:,:) could be changed to DIFF_all(Fz,:)
+% because the double now only has 2 dimensions. It use to have three, but I
+% averaged (above) over the pps, becuase there are a differnet number of
+% pps for the different speakers, and then matlab would not want to plot
+% all data together. 
+% leaving DIFF_all(Fz,:,:) does not make a differnce though
 fig = figure;
 h1 = plot(GA_dev12.times, ...
     ((DIFF_all(Fz,:,:)+DIFF_all(F3,:,:)+DIFF_all(F4,:,:)+ ...
