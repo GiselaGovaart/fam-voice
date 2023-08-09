@@ -27,4 +27,18 @@ mkdir(strcat(DIR.overallPath,"/06-quality_assessment_outputs/"));
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
 mkdir(strcat(DIR.overallPath,"/07-grandaverage/"));
 DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
+mkdir(strcat(DIR.overallPath,"/08-plots/"));
+DIR.plots = strcat(DIR.overallPath,"/08-plots");
+%subfolders plot
+mkdir(strcat(DIR.plots,"/01-quality_assessment/"));
+DIR.plotsQA = strcat(DIR.plots,"/01-quality_assessment/");
+mkdir(strcat(DIR.plots,"/02-collapsed_localizer/"));
+DIR.plotsCL = strcat(DIR.plots,"/02-collapsed_localizer/");
+mkdir(strcat(DIR.plots,"/03-ERPs_raw/"));
+DIR.plotsERPraw = strcat(DIR.plots,"/03-ERPs_raw/");
+mkdir(strcat(DIR.plots,"/04-ERPs_individual/"));
+DIR.plotsERPindiv = strcat(DIR.plots,"/04-ERPs_individual/");
+mkdir(strcat(DIR.plots,"/05-ERPs_processed/"));
+DIR.plotsERPproc = strcat(DIR.plots,"/05-ERPs_processed/");
+
 end

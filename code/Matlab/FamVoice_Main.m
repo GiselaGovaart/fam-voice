@@ -10,33 +10,28 @@ DIR.REFA_PATH = '/data/p_02453/packages/eeglab2021.0/plugins/refa8import_v1.3/';
 DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab/functions';
 
 % Add paths
-% addpath(genpath(DIR.EEGLAB_PATH));  %this gives a warning
-% cd(DIR.EEGLAB_PATH);
-% % [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
-% % close;
-% eeglab; close;
-
 addpath(genpath(DIR.RAWEEG_PATH));
 addpath(DIR.REFA_PATH);
 addpath(DIR.SCRIPTS);
-cd(DIR.RAWEEG_PATH);
+%cd(DIR.RAWEEG_PATH);
 
-% load fieldtrip
+% Load fieldtrip
 addpath /data/p_02453/packages/fieldtrip-20230422
 ft_defaults
 
-%% Set subjects
-Subj = ["13" "FamVoice98"];
-Subj_cbs = ["13"];
-Subj_char = ["FamVoice98"];
-
-%% set values
+%% Set subjects & values
+Subj = ["23" "27_1" "57" "FamVoice98"];
+Subj_cbs = ["23" "27_1" "57"];
+Subj_char = ["FamVoice98" ];
+Subj_Fam = ["23" "57" "27_1" "FamVoice98"];
+Subj_Unfam = ["23" "57" "27_1" "FamVoice98"];
+ 
 blvalue = -200;
 
 %% Create DIRs 
-manualInfoFolder = "finalParams";
+manualInfoFolder = "AnalysisTestSubjects";
 
-%if dir does not exist, create new one
+% if dir does not exist, create new one
 if ~exist(strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder), 'dir')
     DIR = makeSubDirectory(DIR,manualInfoFolder);
 else
@@ -47,39 +42,39 @@ end
 
 %% Run preprocessing functions
 for pp = Subj
-    HAPPE_FamVoice_both(pp, DIR, blvalue)
+    HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
 end
 
 write_output_tables(Subj, DIR);
 
-computeGA(Subj, DIR);
-plotERPs(DIR);
+computeGA(DIR, Subj_Fam, Subj_Unfam);
 
-% now decide TW and electrodes:
+plot_colloc(DIR);
 
+% Now decide time-window and electrodes:
+twstartacq = 216; % CHANGE based on coll loc. HAS TO BE EVEN
+twendacq = 466; % CHANGE based on coll loc. HAS TO BE EVEN
+twstartrec = 316; % CHANGE based on coll loc. HAS TO BE EVEN
+twendrec = 566; % CHANGE based on coll loc. HAS TO BE EVEN
 
-%% Quality checks
+write_amp_table(Subj, DIR, blvalue, twstartacq, twendacq, twstartrec, twendrec); % adapt the electrodes based on Colloc
+
+%% Quality checks & vizualize
+% NB for all these functions: adapt the electrodes based on Colloc
 
 for pp = Subj
-    plot_ERP_RAW_loop(pp,DIR);
+    plot_ERP_raw_loop(pp,DIR, blvalue, Subj_cbs, Subj_char);
 end
-plot_ERP_RAW_plot(Subj,DIR);
+plot_ERP_raw_plot(Subj,DIR);
 
-plotERPsIndiv(Subj, DIR);
+plot_ERP_proc_indiv(Subj, DIR);
+% for plot_ERP_proc_indiv, you might want to make 2 versions, one with the
+% electrodes for ACQ and one with the electrodes for REC
 
-plotERPs_withSD(DIR);
-
-
-
-
-%% Analysis
-% Subj = (defined above)
-% write a new function for the analysis, call that function here.
-
-% Step 1: Collapsed localizer
-
-
-
+plot_ERP_proc(DIR, twstartacq, twendacq, twstartrec, twendrec); 
+% for plot_ERP_proc, you also might want to make seperate versions with 
+% different electrodes for ACQ and REC (only the conditions that are used 
+% double need to be plotted twice then). 
 
 
 %% Reminder for the trigger codes

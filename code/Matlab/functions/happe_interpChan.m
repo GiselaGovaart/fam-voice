@@ -11,6 +11,12 @@ function outEEG = happe_interpChan(EEG,pp,DIR)
 load(strcat(DIR.intermediateProcessing,'channelInfo_',pp));
 
 %% compare which channels were removed
+% following code is to change the dimensions because brainvision has
+% different dimension as pilot data had.
+if size(original,2) == 1
+    original = original';
+    selected = selected';
+end
 origChans = struct2cell(original);
 origChans = squeeze(origChans(1,1,:));
 

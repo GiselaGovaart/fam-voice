@@ -1,4 +1,4 @@
-function plotERPs(DIR)
+function plot_ERP_proc_pilot(DIR)
 
 
 %% Set up

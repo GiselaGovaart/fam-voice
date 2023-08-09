@@ -1,19 +1,4 @@
-function plot_ERP_raw_plot(Subj, DIR)
-
-%% Set up
-% Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
-
-% Possibly part of final ROI: 
-Cz = 27;
-C3 = 1;
-C4 = 2;
-F7 = 9;
-F8 = 10;
+function plot_ERP_raw_plot_pilot(Subj, DIR)
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -24,9 +9,7 @@ eeglab; close;
 DIR.processed = convertStringsToChars(DIR.processed);
 DIR.grandaverage = convertStringsToChars(DIR.grandaverage);
 
-
 %% Make GA for training speaker (1 or 2)
-
 cd(DIR.processed)
 counter = 1;
 GAargD = cell(counter);
@@ -58,33 +41,14 @@ for ipp = 1:length(Subj)
     setNameS2 = setNameS22;
     end
 
-    % set the trial numbers, but only if the file is there
-    trialsD = 0;
-    trialsS = 0;
+    setD = pop_loadset(convertStringsToChars(setNameD));
+    setS1 = pop_loadset(convertStringsToChars(setNameS1));
+    setS2 = pop_loadset(convertStringsToChars(setNameS2));
+    trialsD = setD.trials;
+    trialsS1 = setS1.trials;
+    trialsS2 = setS2.trials;
 
-    if isfile(strcat(DIR.processed,setNameD))
-        setD = pop_loadset(convertStringsToChars(setNameD));
-        trialsD = setD.trials;
-    end
-    if isfile(strcat(DIR.processed,setNameS1))
-        setS1 = pop_loadset(convertStringsToChars(setNameS1));
-        trialsS1 = setS1.trials;
-
-    end
-    if isfile(strcat(DIR.processed,setNameS2))
-        setS2 = pop_loadset(convertStringsToChars(setNameS2));
-        trialsS2 = setS2.trials;
-    end
-
-    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
-        trialsS = trialsS1+trialsS2;
-    end
-
-    % read out whether more than 3 channels from ROI were kicked out
-    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
-    morethan3 = T{1,6};
-
-    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
+    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);
@@ -99,32 +63,49 @@ for ipp = 1:length(Subj)
     end
 end
 
-% Deviants
-ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed);
-% S1
-ga_2212 = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
-% S2
-ga_2312 = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
-
-GA_merged = pop_mergeset(ga_2212, ga_2312);
-pop_saveset(GA_merged, 'filename', 'ga_S12_Stan_RAW.set', ...
-        'filepath', DIR.grandaverage);
-pop_saveset(ga_1012, 'filename', 'ga_S12_Dev_RAW.set', ...
-        'filepath', DIR.grandaverage);
-
-
-
 
 %test
-% EG23_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/23_RAW_102.set');
-% EG23_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/23_processed_101.set');
-% EG27_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/27_1_RAW_101.set');
-% EG27_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/27_1_processed_101.set');
-% EG57_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/57_RAW_101.set');
-% EG57_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/57_processed_101.set');
-% EG98_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/FamVoice98_RAW_101.set');
-% EG98_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/FamVoice98_processed_101.set');
+ EG1 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/01_RAW_221.set')
+EG2 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/02_RAW_221.set')
+% EG4 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/04_RAW_222.set')
+% EG5 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/05_RAW_221.set')
+% EG6 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/06_RAW_221.set')
+% EG7 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/07_RAW_222.set')
+% EG8 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/08_RAW_222.set')
+% EG9 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/09_RAW_221.set')
+% EG10 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/10_RAW_221.set')
+% EG11 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/11_RAW_222.set')
+% EG12 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/12_RAW_222.set')
+% EG13 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/13_RAW_221.set')
+% EG15 = pop_loadset('/data/p_02453/raw_eeg/pilot/raw-data-sets/01-output/finalParams_linenoise2.5_lineFrequencies50-100/05-processed/15_RAW_222.set')
+% 
 
+% Deviants
+EEG = pop_grandaverage(GAargD, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_101-102');
+EEG = pop_saveset(EEG, 'filename', 'ga_101-102_RAW.set', ...
+    'filepath', DIR.grandaverage);
+% S1
+EEG = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_221-222');
+EEG = pop_saveset(EEG, 'filename', 'ga_221-222_RAW.set', ...
+    'filepath', DIR.grandaverage);
+% S2
+EEG = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_231-232');
+EEG = pop_saveset(EEG, 'filename', 'ga_231-232_RAW.set', ...
+    'filepath', DIR.grandaverage);
+
+cd(DIR.grandaverage);
+ga_1012 = pop_loadset('ga_101-102_RAW.set');
+ga_2212 = pop_loadset('ga_221-222_RAW.set');
+ga_2312 = pop_loadset('ga_231-232_RAW.set');
+
+GA_merged = pop_mergeset(ga_2212, ga_2312);
+EEG = pop_saveset(GA_merged, 'filename', 'ga_S12_Stan_RAW.set', ...
+        'filepath', DIR.grandaverage);
+EEG = pop_saveset(ga_1012, 'filename', 'ga_S12_Dev_RAW.set', ...
+        'filepath', DIR.grandaverage);
 
 
 %% Make GA for Speaker 3
@@ -138,34 +119,14 @@ for ipp = 1:length(Subj)
     setNameD = strcat(Subj(ipp),"_RAW_103.set");
     setNameS1 = strcat(Subj(ipp),"_RAW_223.set");
     setNameS2 = strcat(Subj(ipp),"_RAW_233.set");
+    setD = pop_loadset(convertStringsToChars(setNameD));
+    setS1 = pop_loadset(convertStringsToChars(setNameS1));
+    setS2 = pop_loadset(convertStringsToChars(setNameS2));
+    trialsD = setD.trials;
+    trialsS1 = setS1.trials;
+    trialsS2 = setS2.trials;
 
-    % set the trial numbers, but only if the file is there
-    trialsD = 0;
-    trialsS = 0;
-
-    if isfile(strcat(DIR.processed,setNameD))
-        setD = pop_loadset(convertStringsToChars(setNameD));
-        trialsD = setD.trials;
-    end
-    if isfile(strcat(DIR.processed,setNameS1))
-        setS1 = pop_loadset(convertStringsToChars(setNameS1));
-        trialsS1 = setS1.trials;
-
-    end
-    if isfile(strcat(DIR.processed,setNameS2))
-        setS2 = pop_loadset(convertStringsToChars(setNameS2));
-        trialsS2 = setS2.trials;
-    end
-
-    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
-        trialsS = trialsS1+trialsS2;
-    end
-
-    % read out whether more than 3 channels from ROI were kicked out
-    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
-    morethan3 = T{1,6};
-
-    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
+    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);
@@ -181,17 +142,32 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_103 = pop_grandaverage(GAargD, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargD, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_103');
+EEG = pop_saveset(EEG, 'filename', 'ga_103_RAW.set', ...
+    'filepath', DIR.grandaverage);
 % S1
-ga_223 = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_223');
+EEG = pop_saveset(EEG, 'filename', 'ga_223_RAW.set', ...
+    'filepath', DIR.grandaverage);
 % S2
-ga_233 = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_233');
+EEG = pop_saveset(EEG, 'filename', 'ga_233_RAW.set', ...
+    'filepath', DIR.grandaverage);
+
+cd(DIR.grandaverage);
+ga_103 = pop_loadset('ga_103_RAW.set');
+ga_223 = pop_loadset('ga_223_RAW.set');
+ga_233 = pop_loadset('ga_233_RAW.set');
 
 GA_merged = pop_mergeset(ga_223, ga_233);
-pop_saveset(GA_merged, 'filename', 'ga_S3_Stan_RAW.set', ...
+EEG = pop_saveset(GA_merged, 'filename', 'ga_S3_Stan_RAW.set', ...
         'filepath', DIR.grandaverage);
-pop_saveset(ga_103, 'filename', 'ga_S3_Dev_RAW.set', ...
+EEG = pop_saveset(ga_103, 'filename', 'ga_S3_Dev_RAW.set', ...
         'filepath', DIR.grandaverage);
+
 
 
 %% Make GA for Speaker 4
@@ -205,34 +181,14 @@ for ipp = 1:length(Subj)
     setNameD = strcat(Subj(ipp),"_RAW_104.set");
     setNameS1 = strcat(Subj(ipp),"_RAW_224.set");
     setNameS2 = strcat(Subj(ipp),"_RAW_234.set");
+    setD = pop_loadset(convertStringsToChars(setNameD));
+    setS1 = pop_loadset(convertStringsToChars(setNameS1));
+    setS2 = pop_loadset(convertStringsToChars(setNameS2));
+    trialsD = setD.trials;
+    trialsS1 = setS1.trials;
+    trialsS2 = setS2.trials;
 
-    % set the trial numbers, but only if the file is there
-    trialsD = 0;
-    trialsS = 0;
-
-    if isfile(strcat(DIR.processed,setNameD))
-        setD = pop_loadset(convertStringsToChars(setNameD));
-        trialsD = setD.trials;
-    end
-    if isfile(strcat(DIR.processed,setNameS1))
-        setS1 = pop_loadset(convertStringsToChars(setNameS1));
-        trialsS1 = setS1.trials;
-
-    end
-    if isfile(strcat(DIR.processed,setNameS2))
-        setS2 = pop_loadset(convertStringsToChars(setNameS2));
-        trialsS2 = setS2.trials;
-    end
-
-    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
-        trialsS = trialsS1+trialsS2;
-    end
-
-    % read out whether more than 3 channels from ROI were kicked out
-    T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
-    morethan3 = T{1,6};
-
-    if trialsD > 9 && trialsS > 9 && morethan3 == "no"
+    if trialsD > 9 && trialsS1 > 9 && trialsS2 > 9
         setNameD = convertStringsToChars(setNameD);
         setNameS1 = convertStringsToChars(setNameS1);
         setNameS2 = convertStringsToChars(setNameS2);
@@ -248,23 +204,35 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_104 = pop_grandaverage(GAargD, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargD, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_104');
+EEG = pop_saveset(EEG, 'filename', 'ga_104_RAW.set', ...
+    'filepath', DIR.grandaverage);
 % S1
-ga_224 = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargS1, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_224');
+EEG = pop_saveset(EEG, 'filename', 'ga_224_RAW.set', ...
+    'filepath', DIR.grandaverage);
 % S2
-ga_234 = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
+EEG = pop_grandaverage(GAargS2, 'pathname', DIR.processed);
+EEG = pop_editset(EEG,'setname', 'GA_234');
+EEG = pop_saveset(EEG, 'filename', 'ga_234_RAW.set', ...
+    'filepath', DIR.grandaverage);
+
+cd(DIR.grandaverage);
+ga_104 = pop_loadset('ga_104_RAW.set');
+ga_224 = pop_loadset('ga_224_RAW.set');
+ga_234 = pop_loadset('ga_234_RAW.set');
 
 GA_merged = pop_mergeset(ga_224, ga_234);
 
-pop_saveset(GA_merged, 'filename', 'ga_S4_Stan_RAW.set', ...
+EEG = pop_saveset(GA_merged, 'filename', 'ga_S4_Stan_RAW.set', ...
         'filepath', DIR.grandaverage);
-pop_saveset(ga_104, 'filename', 'ga_S4_Dev_RAW.set', ...
+EEG = pop_saveset(ga_104, 'filename', 'ga_S4_Dev_RAW.set', ...
         'filepath', DIR.grandaverage);
 
 
 
-
-%% PLOT
 
 cd(DIR.grandaverage);
 
@@ -292,23 +260,30 @@ DIFF_all = GA_dev_all.data - GA_stan_all.data;
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
+Fz = 4;
+F3 = 5;
+F4 = 6;
+%Cz = 28; this is the raw data so Cz is not there
+C3 = 13;
+C4 = 14;
 
+%% ALL SPEAKERS Fz, F3, F4
 fig = figure;
 h1 = plot(GA_dev12.times, ...
     ((DIFF_all(Fz,:,:)+DIFF_all(F3,:,:)+DIFF_all(F4,:,:)+ ...
-    DIFF_all(FC5,:,:)+DIFF_all(FC6,:,:)) ...
+    DIFF_all(C3,:,:)+DIFF_all(C4,:,:)) ...
     /6), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev12.times, ...
     ((GA_dev_all.data(Fz,:,:)+GA_dev_all.data(F3,:,:)+GA_dev_all.data(F4,:,:)+ ...
-    GA_dev_all.data(FC5,:,:)+GA_dev_all.data(FC6,:,:)) ...
+    GA_dev_all.data(C3,:,:)+GA_dev_all.data(C4,:,:)) ...
     /6), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev12.times, ...
     ((GA_stan_all.data(Fz,:,:)+GA_stan_all.data(F3,:,:)+GA_stan_all.data(F4,:,:)+ ...
-    +GA_stan_all.data(FC5,:,:)+GA_stan_all.data(FC6,:,:)) ...
+    +GA_stan_all.data(C3,:,:)+GA_stan_all.data(C4,:,:)) ...
     /6), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
@@ -363,8 +338,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPraw, ...
-    'AllSpeakers_F3FzF4FC5FC6_RAW_waveletted.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.grandaverage, ...
+    'AllSpeakers_F3FzF4C3C4_RAW_reref.jpeg'), ...
     'Resolution', 300);
 
 

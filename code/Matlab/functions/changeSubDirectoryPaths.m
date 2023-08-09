@@ -19,6 +19,13 @@ DIR.segmenting =  strcat(DIR.overallPath,"/04-segmenting/");
 DIR.processed =  strcat(DIR.overallPath,"/05-processed/");
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
 DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
+DIR.plots = strcat(DIR.overallPath,"/08-plots");
+%subfolders plot
+DIR.plotsQA = strcat(DIR.plots,"/01-quality_assessment/");
+DIR.plotsCL = strcat(DIR.plots,"/02-collapsed_localizer/");
+DIR.plotsERPraw = strcat(DIR.plots,"/03-ERPs_raw/");
+DIR.plotsERPindiv = strcat(DIR.plots,"/04-ERPs_individual/");
+DIR.plotsERPproc = strcat(DIR.plots,"/05-ERPs_processed/");
 
 addpath(genpath(DIR.overallPath));
 

@@ -1,8 +1,7 @@
-function HAPPE_FamVoice_both(pp, DIR, blvalue)
+function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 %% Load the data
-
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 close;
@@ -11,9 +10,6 @@ EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
 [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
 [EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
 EEG = eeg_checkset( EEG );
-
-%pop_eegplot(EEG);
-
 
 % Vizualize
 % spectopo
@@ -36,28 +32,39 @@ figure;
 hold on;
 plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
 ylim([0 40]);
-xlabel('Frequency (Hz)');
+xlabel('Frequlency (Hz)');
 ylabel('absolute power (uV^2)');
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_raw_',pp,'.png')));
 
 %% Remove non used electrodes
 
 if  any(strcmp(Subj_cbs,(pp)))
-%     EEG = pop_select(EEG, 'nochannel', {'REF'}); %remove online Ref Cz from data
-%     EEG = pop_select(EEG, 'nochannel', {'GND'}); %remove GROUND from data
-
-    % Remove FC1 and FC2, because it is not included in the setup at the CBS
+    % Remove FC1 and FC2, because it is not included in the setup at the
+    % Charite
     EEG = pop_select(EEG, 'nochannel', {'FC1'});
     EEG = pop_select(EEG, 'nochannel', {'FC2'});
-
+    EEG=pop_chanedit(EEG, 'changefield',{25 'labels' 'Fp2'}); % is called V1 originally
+    EEG=pop_chanedit(EEG, 'changefield',{26 'labels' 'EOG1'}); % is called V2 originally
 elseif any(strcmp(Subj_char,(pp)))
+    % Remove Fp1, because it is not included in the setup at the CBS
     EEG = pop_select(EEG, 'nochannel', {'Fp1'});
+    EEG=pop_chanedit(EEG, 'changefield',{24 'labels' 'EOG1'}); % is called V2 originally
 
 end
 
+% Now make sure the chanlocs from both locations have the same order:
+T = struct2table(EEG.chanlocs); % convert the struct array to a table
+sortedT = sortrows(T, 'labels'); % sort the table
+EEG.chanlocs = table2struct(sortedT); % change it back to struct array 
+
+% Already add new electrode posiitons here, to use those for interpolation
+% later on
+fprintf('Adding electrode positions using spherical template...\n');
+EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
 
 EEG = eeg_checkset(EEG);
+
 
 %% Detrend data --> not necessary to combine with high-pass filter 
 % EEGdata = EEG.data;
@@ -186,7 +193,7 @@ plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
 ylim([0 40]);
 xlabel('Frequency (Hz)');
 ylabel('absolute power (uV^2)');
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_afterfiltering_',pp,'.png')));
 
 %% Segmentation
@@ -198,11 +205,64 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 % •        First digit: 1 for fe, 2 for fi
 % •        Second digit: for speaker: 1 for S1, 2 for S2
 
-onsetTags = {'S 11', 'S 12', 'S 21', 'S 22', ... %training
-    'S101', 'S211', 'S221', 'S231', 'S241',... %testS1
-    'S102', 'S212', 'S222', 'S232', 'S242',... %testS2
-    'S103', 'S213', 'S223', 'S233', 'S243',...%testS3
-    'S104', 'S214', 'S224', 'S234', 'S244'}; %testS4
+
+for trial=1:length(EEG.event)
+    if strcmp(EEG.event(trial).type,'S 11')
+        EEG.event(trial).type = '11';
+    elseif strcmp(EEG.event(trial).type,'S 12')
+        EEG.event(trial).type = '12';
+    elseif strcmp(EEG.event(trial).type,'S 21')
+        EEG.event(trial).type = '21';
+    elseif strcmp(EEG.event(trial).type,'S 22')
+        EEG.event(trial).type = '22';
+    elseif strcmp(EEG.event(trial).type,'S101')
+        EEG.event(trial).type = '101';
+    elseif strcmp(EEG.event(trial).type,'S211')
+        EEG.event(trial).type = '211';
+    elseif strcmp(EEG.event(trial).type,'S221')
+        EEG.event(trial).type = '221';
+    elseif strcmp(EEG.event(trial).type,'S231')
+        EEG.event(trial).type = '231';
+    elseif strcmp(EEG.event(trial).type,'S241')
+        EEG.event(trial).type = '241';        
+    elseif strcmp(EEG.event(trial).type,'S102')
+        EEG.event(trial).type = '102';
+    elseif strcmp(EEG.event(trial).type,'S212')
+        EEG.event(trial).type = '212';
+    elseif strcmp(EEG.event(trial).type,'S222')
+        EEG.event(trial).type = '222';
+    elseif strcmp(EEG.event(trial).type,'S232')
+        EEG.event(trial).type = '232';
+    elseif strcmp(EEG.event(trial).type,'S242')
+        EEG.event(trial).type = '242';  
+    elseif strcmp(EEG.event(trial).type,'S103')
+        EEG.event(trial).type = '103';
+    elseif strcmp(EEG.event(trial).type,'S213')
+        EEG.event(trial).type = '213';
+    elseif strcmp(EEG.event(trial).type,'S223')
+        EEG.event(trial).type = '223';
+    elseif strcmp(EEG.event(trial).type,'S233')
+        EEG.event(trial).type = '233';
+    elseif strcmp(EEG.event(trial).type,'S243')
+        EEG.event(trial).type = '243';  
+    elseif strcmp(EEG.event(trial).type,'S104')
+        EEG.event(trial).type = '104';
+    elseif strcmp(EEG.event(trial).type,'S214')
+        EEG.event(trial).type = '214';
+    elseif strcmp(EEG.event(trial).type,'S224')
+        EEG.event(trial).type = '224';
+    elseif strcmp(EEG.event(trial).type,'S234')
+        EEG.event(trial).type = '234';
+    elseif strcmp(EEG.event(trial).type,'S244')
+        EEG.event(trial).type = '244'; 
+    end
+end
+
+onsetTags = {11, 12, 21, 22, ... %training
+    101, 211, 221, 231, 241,... %testS1
+    102, 212, 222, 232, 242,... %testS2
+    103, 213, 223, 233, 243,...%testS3
+    104, 214, 224, 234, 244}; %testS4ss
 
 segmentStart = -0.2; 
 segmentEnd = 0.650;
@@ -220,7 +280,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented.set')),
 % plottopo
 close all
 pop_plottopo(EEG, [1:EEG.nbchan] , 'after segmentation', 0, 'ydir',1)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('plottopo_afterSegm_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -237,7 +297,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.s
 % plottopo
 close all
 pop_plottopo(EEG, [1:EEG.nbchan] , 'after baseline', 0, 'ydir',1)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('plottopo_afterBaseline_',pp,'.png')), ...
     'Resolution', 300);
  
@@ -287,20 +347,20 @@ EEG.data(end+1,:,:) = 0;
 EEG.nbchan = size(EEG.data,1);
 EEG.chanlocs(end+1).labels = 'Cz';
 
-for chan=1:28
+for chan=1:length(EEG.chanlocs)
     EEG.chanlocs(chan).type = 'EEG';
     EEG.chanlocs(chan).ref = 'Cz';
 end
 
 fprintf('Adding electrode positions using spherical template...\n');
 EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-EEG.setname = strcat(pp,' loc');
+% EEG = pop_chanedit(EEG, 'lookup','standard_1005.elc');
 
 [~,refchan] = intersect({EEG.chanlocs.labels},{'TP9','TP10'});
 EEG = pop_reref(EEG,refchan,'keepref','on');
 EEG.setname = strcat(pp,' reref');
 
-% Save the rereferences data as an intermediate output
+% Save the rereferenced data as an intermediate output
 
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
@@ -329,13 +389,13 @@ plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
 ylim([0 40]);
 xlabel('Frequency (Hz)');
 ylabel('absolute power (uV^2)');
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_clean_',pp,'.png')));
 
 % plottopo
 close all
 pop_plottopo(EEG, [1:EEG.nbchan] , 'after reref (clean)', 0, 'ydir',1)
-exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('plottopo_clean_',pp,'.png')), ...
     'Resolution', 300);
 
@@ -344,12 +404,12 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
 % rightMas = find(strcmpi({EEG.chanlocs.labels}, 'TP10'));
 % close all
 % pop_plottopo(EEG, leftMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
-% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+% exportgraphics(gcf, strcat(DIR.plotsQA, ...
 %     strcat('plottopo_leftMas_clean',pp,'.png')), ...
 %     'Resolution', 300);
 % close all
 % pop_plottopo(EEG, rightMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
-% exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
+% exportgraphics(gcf, strcat(DIR.plotsQA, ...
 %     strcat('plottopo_rightMas_clean',pp,'.png')), ...
 %     'Resolution', 300);
 
@@ -366,8 +426,10 @@ end
 
 %% Save dataset
 for i=1:length(eegByTags)
+
     fileName = convertStringsToChars(strcat(DIR.processed,pp,'_processed_', ...
         int2str(usedTags(i)),'.set'));
+
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end

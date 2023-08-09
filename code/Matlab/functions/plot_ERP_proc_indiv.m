@@ -1,4 +1,4 @@
-function plotERPsIndiv(Subj, DIR)
+function plot_ERP_proc_indiv(Subj, DIR)
 
 % load EEGlab 
 % DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -9,13 +9,19 @@ function plotERPsIndiv(Subj, DIR)
 DIR.processed = convertStringsToChars(DIR.processed);
 DIR.grandaverage = convertStringsToChars(DIR.grandaverage);
 
-% set electrode positions
-Fz = 4;
-F3 = 5;
-F4 = 6;
-Cz = 28;
-C3 = 13;
-C4 = 14;
+% Definelty part of final ROI
+Fz = 15;
+F3 = 7;
+F4 = 8;
+FC5 = 12;
+FC6 = 13;
+
+% Possibly part of final ROI: 
+Cz = 27;
+C3 = 1;
+C4 = 2;
+F7 = 9;
+F8 = 10;
 
 %% Make individual plot for training speaker (1 or 2)
 cd(DIR.processed)
@@ -24,6 +30,7 @@ for ipp = 1:length(Subj)
 
     cd(DIR.EEGLAB_PATH);
     eeglab; close;
+
     setNameD1 = strcat(Subj(ipp),"_processed_101.set");
     setNameD2 = strcat(Subj(ipp),"_processed_102.set");
     if isfile(strcat(DIR.processed,setNameD1))
@@ -48,26 +55,38 @@ for ipp = 1:length(Subj)
     setNameS2 = setNameS22;
     end
 
-    setD = pop_loadset(convertStringsToChars(setNameD));
-    setS1 = pop_loadset(convertStringsToChars(setNameS1));
-    setS2 = pop_loadset(convertStringsToChars(setNameS2));
-    setS = pop_mergeset(setS1, setS2);
-    setD.data = mean(setD.data(:,:,:),3);
-    setS.data = mean(setS.data(:,:,:),3);
+    % set the trial numbers, but only if the file is there
+    trialsD = 0;
+    trialsS = 0;
 
-    trialsD = setD.trials;
-    trialsS1 = setS1.trials;
-    trialsS2 = setS2.trials;
-    trialsS = trialsS1+trialsS2;
+    if isfile(strcat(DIR.processed,setNameD))
+        setD = pop_loadset(convertStringsToChars(setNameD));
+        trialsD = setD.trials;
+        setD.data = mean(setD.data(:,:,:),3);
 
-    % read out whether more than 3 channels from ROI were kicked out
+    end
+    if isfile(strcat(DIR.processed,setNameS1))
+        setS1 = pop_loadset(convertStringsToChars(setNameS1));
+        trialsS1 = setS1.trials;
+
+    end
+    if isfile(strcat(DIR.processed,setNameS2))
+        setS2 = pop_loadset(convertStringsToChars(setNameS2));
+        trialsS2 = setS2.trials;
+    end
+
+    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
+        trialsS = trialsS1+trialsS2;
+        setS = pop_mergeset(setS1, setS2);
+        setS.data = mean(setS.data(:,:,:),3);
+
+    end
+    
+     % read out whether more than 3 channels from ROI were kicked out
     T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
     morethan3 = T{1,6};
 
     if trialsD > 9 && trialsS > 9 && morethan3 == "no"
-%         setNameD = convertStringsToChars(setNameD);
-%         setNameS1 = convertStringsToChars(setNameS1);
-%         setNameS2 = convertStringsToChars(setNameS2);
 
         % PLOT
         DIFF = setD.data - setS.data;
@@ -76,15 +95,18 @@ for ipp = 1:length(Subj)
 
         fig = figure;
         h1 = plot(setS.times, ...
-            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:))/3), ...
+            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
+            DIFF(FC5,:,:)+DIFF(FC6,:,:))/5), ...
             'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
         hold on;
         h2 = plot(setS.times, ...
-            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:))/3), ...
+            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:)+ ...
+            setD.data(FC5,:,:)+setD.data(FC6,:,:))/5), ...
             'Color', '#f78d95', 'Linewidth', 2);
         hold on;
         h3 = plot(setS.times, ...
-            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:))/3), ...
+            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:)+ ...
+            setS.data(FC5,:,:)+setS.data(FC6,:,:))/5), ...
             'Color', '#3b8dca', 'Linewidth', 2);
         hold on;
         % Set axes
@@ -119,8 +141,8 @@ for ipp = 1:length(Subj)
         hYLabel.Position(2) = 0;
         set(gca,'LineWidth',1)
         % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-        exportgraphics(gcf, strcat(DIR.grandaverage, ...
-            strcat(Subj(ipp),'_Trainingspeaker_F3FzF4.jpeg')), ...
+        exportgraphics(gcf, strcat(DIR.plotsERPindiv, ...
+            strcat(Subj(ipp),'_Trainingspeaker_F3FzF4FC5FC6.jpeg')), ...
             'Resolution', 300);
 
     end
@@ -131,32 +153,46 @@ end
 cd(DIR.processed)
 
 for ipp = 1:length(Subj)
+
     cd(DIR.EEGLAB_PATH);
     eeglab; close;
+
     setNameD = strcat(Subj(ipp),"_processed_103.set");
     setNameS1 = strcat(Subj(ipp),"_processed_223.set");
     setNameS2 = strcat(Subj(ipp),"_processed_233.set");
-    setD = pop_loadset(convertStringsToChars(setNameD));
-    setS1 = pop_loadset(convertStringsToChars(setNameS1));
-    setS2 = pop_loadset(convertStringsToChars(setNameS2));
-    setS = pop_mergeset(setS1, setS2);
 
-    setD.data = mean(setD.data(:,:,:),3);
-    setS.data = mean(setS.data(:,:,:),3);
+    % set the trial numbers, but only if the file is there
+    trialsD = 0;
+    trialsS = 0;
 
-    trialsD = setD.trials;
-    trialsS1 = setS1.trials;
-    trialsS2 = setS2.trials;
-    trialsS = trialsS1+trialsS2;
+    if isfile(strcat(DIR.processed,setNameD))
+        setD = pop_loadset(convertStringsToChars(setNameD));
+        trialsD = setD.trials;
+        setD.data = mean(setD.data(:,:,:),3);
+
+    end
+    if isfile(strcat(DIR.processed,setNameS1))
+        setS1 = pop_loadset(convertStringsToChars(setNameS1));
+        trialsS1 = setS1.trials;
+
+    end
+    if isfile(strcat(DIR.processed,setNameS2))
+        setS2 = pop_loadset(convertStringsToChars(setNameS2));
+        trialsS2 = setS2.trials;
+    end
+
+    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
+        trialsS = trialsS1+trialsS2;
+        setS = pop_mergeset(setS1, setS2);
+        setS.data = mean(setS.data(:,:,:),3);
+
+    end
 
     % read out whether more than 3 channels from ROI were kicked out
     T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
     morethan3 = T{1,6};
 
     if trialsD > 9 && trialsS > 9 && morethan3 == "no"
-%         setNameD = convertStringsToChars(setNameD);
-%         setNameS1 = convertStringsToChars(setNameS1);
-%         setNameS2 = convertStringsToChars(setNameS2);
 
         % PLOT
         DIFF = setD.data - setS.data;
@@ -165,15 +201,18 @@ for ipp = 1:length(Subj)
 
         fig = figure;
         h1 = plot(setS.times, ...
-            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:))/3), ...
+            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
+            DIFF(FC5,:,:)+DIFF(FC6,:,:))/5), ...
             'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
         hold on;
         h2 = plot(setS.times, ...
-            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:))/3), ...
+            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:)+ ...
+            setD.data(FC5,:,:)+setD.data(FC6,:,:))/5), ...
             'Color', '#f78d95', 'Linewidth', 2);
         hold on;
         h3 = plot(setS.times, ...
-            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:))/3), ...
+            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:)+ ...
+            setS.data(FC5,:,:)+setS.data(FC6,:,:))/5), ...
             'Color', '#3b8dca', 'Linewidth', 2);
         hold on;
         % Set axes
@@ -208,8 +247,8 @@ for ipp = 1:length(Subj)
         hYLabel.Position(2) = 0;
         set(gca,'LineWidth',1)
         % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-        exportgraphics(gcf, strcat(DIR.grandaverage, ...
-            strcat(Subj(ipp),'_Speaker3_F3FzF4.jpeg')), ...
+        exportgraphics(gcf, strcat(DIR.plotsERPindiv, ...
+            strcat(Subj(ipp),'_Speaker3_F3FzF4FC5FC6.jpeg')), ...
             'Resolution', 300);
 
     end
@@ -219,32 +258,46 @@ end
 cd(DIR.processed)
 
 for ipp = 1:length(Subj)
+
     cd(DIR.EEGLAB_PATH);
     eeglab; close;
+
     setNameD = strcat(Subj(ipp),"_processed_104.set");
     setNameS1 = strcat(Subj(ipp),"_processed_224.set");
     setNameS2 = strcat(Subj(ipp),"_processed_234.set");
-    setD = pop_loadset(convertStringsToChars(setNameD));
-    setS1 = pop_loadset(convertStringsToChars(setNameS1));
-    setS2 = pop_loadset(convertStringsToChars(setNameS2));
-    setS = pop_mergeset(setS1, setS2);
+    
+    % set the trial numbers, but only if the file is there
+    trialsD = 0;
+    trialsS = 0;
 
-    setD.data = mean(setD.data(:,:,:),3);
-    setS.data = mean(setS.data(:,:,:),3);
+    if isfile(strcat(DIR.processed,setNameD))
+        setD = pop_loadset(convertStringsToChars(setNameD));
+        trialsD = setD.trials;
+        setD.data = mean(setD.data(:,:,:),3);
 
-    trialsD = setD.trials;
-    trialsS1 = setS1.trials;
-    trialsS2 = setS2.trials;
-    trialsS = trialsS1+trialsS2;
+    end
+    if isfile(strcat(DIR.processed,setNameS1))
+        setS1 = pop_loadset(convertStringsToChars(setNameS1));
+        trialsS1 = setS1.trials;
+
+    end
+    if isfile(strcat(DIR.processed,setNameS2))
+        setS2 = pop_loadset(convertStringsToChars(setNameS2));
+        trialsS2 = setS2.trials;
+    end
+
+    if isfile(strcat(DIR.processed,setNameS1)) && isfile(strcat(DIR.processed,setNameS2))
+        trialsS = trialsS1+trialsS2;
+        setS = pop_mergeset(setS1, setS2);
+        setS.data = mean(setS.data(:,:,:),3);
+
+    end
 
     % read out whether more than 3 channels from ROI were kicked out
     T = readtable(strcat(DIR.qualityAssessment, 'InfoChannels_', Subj(ipp)));
     morethan3 = T{1,6};
 
     if trialsD > 9 && trialsS > 9 && morethan3 == "no"
-%         setNameD = convertStringsToChars(setNameD);
-%         setNameS1 = convertStringsToChars(setNameS1);
-%         setNameS2 = convertStringsToChars(setNameS2);
 
         % PLOT
         DIFF = setD.data - setS.data;
@@ -253,15 +306,18 @@ for ipp = 1:length(Subj)
 
         fig = figure;
         h1 = plot(setS.times, ...
-            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:))/3), ...
+            ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
+            DIFF(FC5,:,:)+DIFF(FC6,:,:))/5), ...
             'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
         hold on;
         h2 = plot(setS.times, ...
-            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:))/3), ...
+            ((setD.data(Fz,:,:)+setD.data(F3,:,:)+setD.data(F4,:,:)+ ...
+            setD.data(FC5,:,:)+setD.data(FC6,:,:))/5), ...
             'Color', '#f78d95', 'Linewidth', 2);
         hold on;
         h3 = plot(setS.times, ...
-            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:))/3), ...
+            ((setS.data(Fz,:,:)+setS.data(F3,:,:)+setS.data(F4,:,:)+ ...
+            setS.data(FC5,:,:)+setS.data(FC6,:,:))/5), ...
             'Color', '#3b8dca', 'Linewidth', 2);
         hold on;
         % Set axes
@@ -296,16 +352,12 @@ for ipp = 1:length(Subj)
         hYLabel.Position(2) = 0;
         set(gca,'LineWidth',1)
         % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-        exportgraphics(gcf, strcat(DIR.grandaverage, ...
-            strcat(Subj(ipp),'_Speaker4_F3FzF4.jpeg')), ...
+        exportgraphics(gcf, strcat(DIR.plotsERPindiv, ...
+            strcat(Subj(ipp),'_Speaker4_F3FzF4FC5FC6.jpeg')), ...
             'Resolution', 300);
 
     end
 end
-
-
-
-
 
 
 end

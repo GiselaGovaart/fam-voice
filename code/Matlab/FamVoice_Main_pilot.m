@@ -52,25 +52,17 @@ for pp = Subj
     HAPPE_FamVoice_pilot(pp, DIR)
 end
 
-computeGA(Subj, DIR);
-plotERPs(DIR);
-plotERPs_withSD(DIR);
+computeGA_pilot(Subj, DIR);
+plot_ERP_proc_pilot(DIR);
+plot_ERP_proc_withSD_pilot(DIR);
 write_output_tables_pilot(Subj, DIR);
 
 for pp = Subj
-    plot_ERP_RAW_loop(pp,DIR);
+    plot_ERP_raw_loop_pilot(pp,DIR);
 end
-plot_ERP_RAW_plot(Subj,DIR);
+plot_ERP_raw_plot_pilot(Subj,DIR);
 
-plotERPsIndiv(Subj, DIR);
-
-
-%% Analysis
-% Subj = (defined above)
-% write a new function for the analysis, call that function here.
-
-% Step 1: Collapsed localizer
-
+plot_ERP_proc_indiv_pilot(Subj, DIR);
 
 
 

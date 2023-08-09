@@ -1,6 +1,4 @@
 function write_output_tables(Subj, DIR)
-% write output tables
-
 
 %% Trial overview
 %setlist = dir(strcat(DIR.processed,"*_processed_*"));
@@ -13,7 +11,7 @@ outMat = strings(length(Subj)+1, length(CondNr)+1);
 outMat(1,2:length(CondNr)+1) = CondNr;
 outMat(2:length(Subj)+1,1) = Subj;
 
-addpath(genpath(DIR.EEGLAB_PATH)); 
+% addpath(genpath(DIR.EEGLAB_PATH)); 
 for ipp = 1:length(Subj)
     for iCond = 1:length(CondNr)
         setName = strcat(Subj(ipp),"_processed_",CondNr(iCond),".set");
@@ -28,7 +26,6 @@ end
 outMatT = outMat';
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
-
 
 colNames(length(Subj)+1) = ["placeholder"];
 colNames(1) = "Cond";

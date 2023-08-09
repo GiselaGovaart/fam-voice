@@ -1,4 +1,4 @@
-function plotERPs_withSD(DIR)
+function plot_ERP_proc_withSD_pilot(DIR)
 % Vizualization ERPs with standard diff to check whether the basline
 % correction induces artifacts
 
