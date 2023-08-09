@@ -6,13 +6,9 @@ cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 close;
 
-[EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
-EEG = eeg_hist(EEG,com);
-
-% EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
-% [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
-% [EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
-
+EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
+[ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
+[EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
 EEG = eeg_checkset( EEG );
 
 % Vizualize
@@ -41,22 +37,19 @@ ylabel('absolute power (uV^2)');
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_raw_',pp,'.png')));
 
-%% Edit channel locations  and remove non used electrodes
-
-[EEG,com] = famvoice_fix_chanlocs(EEG);
-EEG = eeg_hist(EEG,com);
+%% Remove non used electrodes
 
 if  any(strcmp(Subj_cbs,(pp)))
     % Remove FC1 and FC2, because it is not included in the setup at the
     % Charite
     EEG = pop_select(EEG, 'nochannel', {'FC1'});
     EEG = pop_select(EEG, 'nochannel', {'FC2'});
-   % EEG=pop_chanedit(EEG, 'changefield',{25 'labels' 'Fp2'}); % is called V1 originally
-   % EEG=pop_chanedit(EEG, 'changefield',{26 'labels' 'EOG1'}); % is called V2 originally
+    EEG=pop_chanedit(EEG, 'changefield',{25 'labels' 'Fp2'}); % is called V1 originally
+    EEG=pop_chanedit(EEG, 'changefield',{26 'labels' 'EOG1'}); % is called V2 originally
 elseif any(strcmp(Subj_char,(pp)))
     % Remove Fp1, because it is not included in the setup at the CBS
     EEG = pop_select(EEG, 'nochannel', {'Fp1'});
-    %EEG=pop_chanedit(EEG, 'changefield',{24 'labels' 'EOG1'}); % is called V2 originally
+    EEG=pop_chanedit(EEG, 'changefield',{24 'labels' 'EOG1'}); % is called V2 originally
 
 end
 
@@ -67,71 +60,12 @@ EEG.chanlocs = table2struct(sortedT); % change it back to struct array
 
 % Already add new electrode posiitons here, to use those for interpolation
 % later on
-% fprintf('Adding electrode positions using spherical template...\n');
-% EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
+fprintf('Adding electrode positions using spherical template...\n');
+EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
 
 EEG = eeg_checkset(EEG);
 
-%% Detect stimulation pauses
 
-longEEG = EEG;
-
-longEEG.setname = [convertStringsToChars(pp)];
-[ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,longEEG);
-eeglab redraw;
-
-pauses = famvoice_detect_pauses(longEEG);
-
-% Display the trigger time series and the pauses.
-fig = famvoice_plot_triggers(longEEG,pauses,'pause');
-exportgraphics(gcf, strcat(DIR.plotsQA, ...
-    strcat('triggerTimeSeriesAndPauses',pp,'.png')));
-
-%% 
-if ~isempty(pauses)
-   %%Delete the pauses from the dataset
-
-    fprintf('Deleting n=%d pauses from the dataset.\n',size(pauses,1));
-    
-    [EEG,com] = pop_select(longEEG,'nopoint',pauses);
-    EEG = eeg_hist(EEG,com);
-    
-    EEG.setname = [Subj ' without pauses'];
-    [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
-    eeglab redraw;
-    
-    % Display the trigger time series after pauses have been deleted.
-    fig2 = famvoice_plot_triggers(EEG);
-    exportgraphics(gcf, strcat(DIR.plotsQA, ...
-        strcat('triggerTimeSeriesAfterPausesDeleted',pp,'.png')));
-
-   %% Check consistency between datasets before and after deleting pauses.
-
-    fprintf('Checking consistency between datasets before and after deleting pauses...\n')
-    
-    trg = famvoice_triggers;
-    stimType = trg.stimulus;
-    n_long = sum(ismember({longEEG.event.type},stimType));
-    n = sum(ismember({EEG.event.type},stimType));
-    
-    if n_long ~= n
-        error('ERROR: Inconsistent number of stimulus events after deleting pauses: got %d; expected %d',n,n_long);
-    end
-    
-    % Cut epochs around each stimulus trigger and compare the data.
-    epoch_long = pop_epoch(longEEG,stimType,[-0.5 0.5]);
-    epoch = pop_epoch(EEG,stimType,[-0.5 0.5]);
-    m = max(abs(epoch.data(:)-epoch_long.data(:))); 
-
-    fprintf('Comparing data matrices...')
-    if m ~= 0
-        error('Found inconsistent data between datasets; max. diviation: %e uV',m)
-    end
-    
-    fprintf('...ok.\n')
-    clear trg stimTrg n_long n m epoch_long epoch
-%%
-end
 
 %% Filter data 
 % These  filters help the artifact correction later on.
@@ -157,6 +91,7 @@ ROI = {'F7','F3','Fz','F4','F8',...
 
 EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
 
+
 %% Wavelet thresholding
 EEG = happe_waveletThreshold(EEG,'Hard',3);
 
@@ -164,6 +99,8 @@ EEG = happe_waveletThreshold(EEG,'Hard',3);
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), ...
     'filepath', convertStringsToChars(DIR.waveletCleaned));
+
+
 
 %% Filter for ERP
 % This is the HAPPE filter:
@@ -396,32 +333,27 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_interpolated.set'
 
 
 %% Rereferencing
-% % This code comes from Maren's script "makeSetsEEG.m"
-% 
-% EEG.data(end+1,:,:) = 0;
-% EEG.nbchan = size(EEG.data,1);
-% EEG.chanlocs(end+1).labels = 'Cz';
-% 
-% for chan=1:length(EEG.chanlocs)
-%     EEG.chanlocs(chan).type = 'EEG';
-%     EEG.chanlocs(chan).ref = 'Cz';
-% end
-% 
-% fprintf('Adding electrode positions using spherical template...\n');
-% EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-% % EEG = pop_chanedit(EEG, 'lookup','standard_1005.elc');
+% This code comes from Maren's script "makeSetsEEG.m"
 
+EEG.data(end+1,:,:) = 0;
+EEG.nbchan = size(EEG.data,1);
+EEG.chanlocs(end+1).labels = 'Cz';
 
-% add Cz
-[EEG,com] = famvoice_add_reference_channel(EEG);
-EEG = eeg_hist(EEG,com);
+for chan=1:length(EEG.chanlocs)
+    EEG.chanlocs(chan).type = 'EEG';
+    EEG.chanlocs(chan).ref = 'Cz';
+end
 
-% Reref
+fprintf('Adding electrode positions using spherical template...\n');
+EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
+% EEG = pop_chanedit(EEG, 'lookup','standard_1005.elc');
+
 [~,refchan] = intersect({EEG.chanlocs.labels},{'TP9','TP10'});
 EEG = pop_reref(EEG,refchan,'keepref','on');
 EEG.setname = strcat(pp,' reref');
 
 % Save the rereferenced data as an intermediate output
+
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_reref.set')), ...
     'filepath', convertStringsToChars(DIR.segmenting));

@@ -29,7 +29,7 @@ Subj_Unfam = ["23" "57" "27_1" "FamVoice98"];
 blvalue = -200;
 
 %% Create DIRs 
-manualInfoFolder = "AnalysisTestSubjects";
+manualInfoFolder = "AnalysisTestSubjects_inclMaren";
 
 % if dir does not exist, create new one
 if ~exist(strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder), 'dir')
