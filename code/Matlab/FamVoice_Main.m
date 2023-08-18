@@ -1,6 +1,5 @@
 
 %% Paths 
-
 cd('/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab')
 clear all; path(pathdef); clc; %reset session to clean
 
@@ -13,7 +12,6 @@ DIR.SCRIPTS = '/data/tu_govaart/Experiment1_FamVoice/FamVoiceWORCS/code/Matlab/f
 addpath(genpath(DIR.RAWEEG_PATH));
 addpath(DIR.REFA_PATH);
 addpath(DIR.SCRIPTS);
-%cd(DIR.RAWEEG_PATH);
 
 % Load fieldtrip
 addpath /data/p_02453/packages/fieldtrip-20230422
@@ -46,9 +44,7 @@ for pp = Subj
 end
 
 write_output_tables(Subj, DIR);
-
 computeGA(DIR, Subj_Fam, Subj_Unfam);
-
 plot_colloc(DIR);
 
 % Now decide time-window and electrodes:
