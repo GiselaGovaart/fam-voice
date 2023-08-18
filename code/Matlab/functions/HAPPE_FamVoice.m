@@ -1,6 +1,9 @@
 function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
+% set electrode location for the spectoplots:
+Fz = 15;
+
 %% Load the data
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
@@ -8,11 +11,6 @@ close;
 
 [EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
 EEG = eeg_hist(EEG,com);
-
-% EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
-% [ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
-% [EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
-
 EEG = eeg_checkset( EEG );
 
 % Vizualize
@@ -34,14 +32,14 @@ freq_segmented = ft_freqanalysis(cfg, data_segmented);
 close all
 figure;
 hold on;
-plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
 xlabel('Frequlency (Hz)');
 ylabel('absolute power (uV^2)');
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_raw_',pp,'.png')));
 
-%% Edit channel locations  and remove non used electrodes
+%% Edit channel locations and remove non-used electrodes
 
 [EEG,com] = famvoice_fix_chanlocs(EEG);
 EEG = eeg_hist(EEG,com);
@@ -73,7 +71,6 @@ EEG.chanlocs = table2struct(sortedT); % change it back to struct array
 EEG = eeg_checkset(EEG);
 
 %% Detect stimulation pauses
-
 longEEG = EEG;
 
 longEEG.setname = [convertStringsToChars(pp)];
@@ -96,7 +93,7 @@ if ~isempty(pauses)
     [EEG,com] = pop_select(longEEG,'nopoint',pauses);
     EEG = eeg_hist(EEG,com);
     
-    EEG.setname = [Subj ' without pauses'];
+    EEG.setname = [convertStringsToChars(pp) ' without pauses'];
     [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
     eeglab redraw;
     
@@ -230,7 +227,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')
 fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
 
 cfg = [];
-cfg.length = 20;  % change resolution such that you can actually see whether it filtered out 0-0.3Hz
+cfg.length = 20;  % changed the resolution such that I can actually see whether it filtered out 0-0.3Hz
 cfg.overlap = 0;
 data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
 
@@ -244,7 +241,7 @@ freq_segmented = ft_freqanalysis(cfg, data_segmented);
 close all
 figure;
 hold on;
-plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
 xlabel('Frequency (Hz)');
 ylabel('absolute power (uV^2)');
@@ -252,15 +249,6 @@ exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_afterfiltering_',pp,'.png')));
 
 %% Segmentation
-% For the test phase:
-% •        First digit: 1 for dev, 2 for stan
-% •        Second digit: 0 for deviant, 1,2,3,4 for standard types: 1 = regular standard, 2 = standard pre-preceding the deviant, 3 = standard preceding the deviant, 4 = standard after the deviant.
-% •        Third digit: speakers: 1,2,3,4
-% For the training phase:
-% •        First digit: 1 for fe, 2 for fi
-% •        Second digit: for speaker: 1 for S1, 2 for S2
-
-
 for trial=1:length(EEG.event)
     if strcmp(EEG.event(trial).type,'S 11')
         EEG.event(trial).type = '11';
@@ -340,9 +328,6 @@ exportgraphics(gcf, strcat(DIR.plotsQA, ...
     'Resolution', 300);
 
 %% Baseline correction
-% params:
-%blvalue = -200; already defined above
-
 EEG = pop_rmbase(EEG, [blvalue 0]);
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...
@@ -396,22 +381,6 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_interpolated.set'
 
 
 %% Rereferencing
-% % This code comes from Maren's script "makeSetsEEG.m"
-% 
-% EEG.data(end+1,:,:) = 0;
-% EEG.nbchan = size(EEG.data,1);
-% EEG.chanlocs(end+1).labels = 'Cz';
-% 
-% for chan=1:length(EEG.chanlocs)
-%     EEG.chanlocs(chan).type = 'EEG';
-%     EEG.chanlocs(chan).ref = 'Cz';
-% end
-% 
-% fprintf('Adding electrode positions using spherical template...\n');
-% EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-% % EEG = pop_chanedit(EEG, 'lookup','standard_1005.elc');
-
-
 % add Cz
 [EEG,com] = famvoice_add_reference_channel(EEG);
 EEG = eeg_hist(EEG,com);
@@ -445,7 +414,7 @@ freq_segmented = ft_freqanalysis(cfg, data_segmented);
 close all
 figure;
 hold on;
-plot(freq_segmented.freq, freq_segmented.powspctrm(4,:)) %4=Fz
+plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
 xlabel('Frequency (Hz)');
 ylabel('absolute power (uV^2)');
@@ -486,10 +455,8 @@ end
 
 %% Save dataset
 for i=1:length(eegByTags)
-
     fileName = convertStringsToChars(strcat(DIR.processed,pp,'_processed_', ...
         int2str(usedTags(i)),'.set'));
-
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
