@@ -27,10 +27,17 @@ funcame = coder.mfunctionname;
 
 chanlocs = EEG.chanlocs;
     
-% Fix channel label V1 --> FP2 ?
+% Fix channel label and coordinates V1 --> Fp2 
 iV1 = find(strcmp({chanlocs.labels},'V1'));
 if ~isempty(iV1)
-    chanlocs(iV1).labels = 'FP2';
+    chanlocs(iV1).labels = 'Fp2';
+    chanlocs(iV1).sph_theta = -18;
+    chanlocs(iV1).sph_phi = 0;
+    chanlocs(iV1).theta = 18;
+    chanlocs(iV1).radius = 0.5000;
+    chanlocs(iV1).X = 0.9511;
+    chanlocs(iV1).Y = -0.3090;
+    chanlocs(iV1).Z = 0;
 end
 
 % Fix location info of electtrode V2 
