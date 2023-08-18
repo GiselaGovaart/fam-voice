@@ -538,8 +538,10 @@ DIFF_TW1 = mean(DIFF_T1,2); % calculate average
 
 fig = figure;
 %topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+EEG.chaninfo.plotrad = 0.5;
 topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
-    'electrodes', 'labels');
+    'electrodes', 'labels', 'plotrad', 0.5);
+
 colorbar
 title(strcat('All speakers ACQ (Difference): ', int2str(twstartacq), '-', int2str(twendacq), ' ms'));
 exportgraphics(gcf, strcat(DIR.plotsERPproc, 'AllspeakersACQ_topo.jpeg'), 'Resolution', 300);
