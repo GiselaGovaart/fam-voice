@@ -34,28 +34,14 @@ num_warmup <- num_iter / 2 # number of warm-up samples per chain
 num_thin <- 1 # thinning: extract one out of x samples per chain
 
 
-# priors  --------------------------------------------------------------------
-
-priors <-
-  c(
-    prior("normal(0, 10)", class = "b") # weakly informative prior on intercept & slopes: b stand for beta
-  )
-# here, A only sets a prior for the intercept and slopes. It's a prior that assumes a normal
-# distribution centered around 0, with an SD of 10 microvolt.
-# The priors for the random effects are thus just the default priors from brms (you need 
-# priors for all the parameters, otherwise the model does not run). 
-# Weakly informative means you might not know what you expect exactly, 
-# but you know what you do NOT expect.
-
-# I can set an informative prior, based on my pilot. I just take all of the amplitude values of my pilot, 
-# and then plot the distribution of those values. I would then make that prior a bit broader 
-# (= increase the SD), such that I do not exclude informative values 
-
-
 # load data  --------------------------------------------------------------------
-
-load(here("data", "preprocessed", "P3_mean.RData"))
+# I need this weird hack because otherwise it does not find the codebooks
+setwd(here("data"))
 load_data()
+setwd(here())
+
+# dummy for centering the variables (added by G 8.11.23)
+data = data %/% mutate(cVar = Var-mean(Var))
 
 # sampling: P3, mean amplitude --------------------------------------------------------------------
 
@@ -97,7 +83,7 @@ P3_m <-
 
 # NB the values of your parameter space are the values of your posterior distribution! MCC just gives you your
 # posterior distribution.
-# You have several posterior distributions, for teach fixed effect, and for each random effect. 
+# You have several posterior distributions, for each fixed effect, and for each random effect. 
 # For each effect that you’d in a frequentist framework get a p-value, you here get a distribution.
 
 

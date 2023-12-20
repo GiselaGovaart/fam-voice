@@ -24,6 +24,7 @@ library(tidyverse)
 # this data is the pilot data, which has the MMR
 # - per TestSpeaker (1/2 coded as 1, 3 and 4)
 # - for each subject
+# - the condition the subject was in (fake, because the pilot data does not have between-subj condiiton)
 
 # I need this weird hack because otherwise it does not find the codebooks
 setwd(here("data"))

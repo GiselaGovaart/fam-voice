@@ -1,3 +1,6 @@
+
+## most of this is copied in 00_priors.R
+
 # RNG --------------------------------------------------------
 
 project_seed <- 2049

@@ -5,4 +5,4 @@ data:
     codebook: codebook_data_pilot.Rmd
     labels: value_labels_data_pilot.yml
 checksums:
-  data_pilot.csv: 6c3776b89bba7514cf6a1f2e9eee12ac
+  data_pilot.csv: 14086ddf21247e53b092d81307e249e4
