@@ -244,18 +244,18 @@ exportgraphics(gcf, strcat(DIR.plotsCL, ...
     'ERP_Colloc_ACQ_f3.jpeg'), ...
     'Resolution', 300);
 
-% F4
+% F3
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
     DIFF(F4,:,:), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F4,:,:), ...
+    GA_dev_all.data(F,:,:), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F4,:,:), ...
+    GA_stan_all.data(F3,:,:), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -302,33 +302,6 @@ set(gca,'LineWidth',1)
 exportgraphics(gcf, strcat(DIR.plotsCL, ...
     'ERP_Colloc_ACQ_f4.jpeg'), ...
     'Resolution', 300);
-
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%% CONTINUE HERE
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 %% ERPs with SD: baseline check
 % Vizualization ERPs with standard diff to check whether the baseline

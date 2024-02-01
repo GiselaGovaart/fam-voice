@@ -1,4 +1,4 @@
-function HAPPE_FamVoice_pilot(pp, DIR)
+function HAPPE_FamVoice_pilot(pp, DIR,filtervalue)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 %% Load the data
@@ -90,8 +90,13 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), 
 % EEG = pop_eegfiltnew(EEG, hpfreq, lpfreq, [], 0, [], 0) ;
 
 % params:
-hptrans = 0.4;
-hpcutoff = 0.2;
+if filtervalue == "low"
+    hptrans = 0.4;
+    hpcutoff = 0.2;
+elseif filtervalue == "high"
+    hptrans = 1;
+    hpcutoff = 0.5;
+end
 
 % MADE filter 
 % Calculate filter order using the formula: m = dF / (df / fs), where m = filter order,
