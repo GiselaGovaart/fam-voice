@@ -3,7 +3,6 @@ project_seed <- 2049
 set.seed(project_seed) # set seed
 
 # load packages --------------------------------------------------------------------
-
 library(here)
 library(tidyverse)
 library(brms)
@@ -94,6 +93,37 @@ dprig$Prior <- factor(dprig$Prior)
 levels(dprig$Prior) <- c("Prior for mu\ndnorm(x, mean=2.92, sd=14)", "Prior for slope\ndnorm(x, mean=0, sd=14)", "Prior for sigma\ndnorm(x, mean=0, sd=14)")
 ggplot(data=dprig, aes(x=x, y=Density)) + geom_line() + facet_wrap(~Prior, scales="free")
 
+##### Set priors based only on Sp1 and Sp4
+data_pilot_ss = subset(data_pilot, TestSpeaker !=3)
+
+plot(density(data_pilot_ss$MMR),
+     main="Pilot data",xlab="MMR")
+mean(data_pilot_ss$MMR)
+sd(data_pilot_ss$MMR)
+# the data are normally distributed (but bump around 28), the mean = 2.881777, SD = 10.92288
+
+# let model run with default priors
+pilot_m = brm(MMR ~ 1 + TestSpeaker + (1 | Subj), 
+              data = data_pilot_ss)
+summary(pilot_m)
+# Intercept = 2.84
+# sigma = 8.94
+
+# let model run with weakly informative priors
+prior_p <-
+  c(
+    prior("normal(0, 30)", class = "Intercept") #  weakly informative prior on intercept 
+    , prior("normal(0, 30)", class = "b") #  weakly informative prior on slope
+  )
+pilot_m = brm(MMR ~ 1 + TestSpeaker + (1 | Subj), 
+              prior = prior_p,
+              data = data_pilot_ss)
+summary(pilot_m)
+# Intercept = 2.83
+# sigma = 8.95
+
+# --> adapt accordingly??
+
 
 # Simulate some data --------------------------------------------------------------------
 # create experimental design
@@ -115,12 +145,15 @@ dat$mumDistTrainS = NA
 dat$mumDistNovelS = NA
 dat$timeVoiceFam = NA
 dat$nrSpeakersDaily = NA
+dat$sleepState = NA
 
-dat$mumDistTrainS <- rep(abs(rnorm(nrow(dat)/2,1,2)), each=2)
-dat$mumDistNovelS <- rep(abs(rnorm(nrow(dat)/2,1,2.5)), each=2)
-dat$timeVoiceFam <- rep(round(rnorm(nrow(dat)/2,21,2)), each=2)
-dat$nrSpeakersDaily <- rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
+dat$mumDistTrainS = rep(abs(rnorm(nrow(dat)/2,1,2)), each=2)
+dat$mumDistNovelS = rep(abs(rnorm(nrow(dat)/2,1,2.5)), each=2)
+dat$timeVoiceFam = rep(round(rnorm(nrow(dat)/2,21,2)), each=2)
+dat$nrSpeakersDaily = rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
+dat$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat)/2, replace = TRUE), each=2)
 
+# centering the covariates -  CHECK WHETHER THIS IS NECESSARY
 (dat <- dat %>%
     mutate(mumDistTrainS = mumDistTrainS - mean(mumDistTrainS)))
 (dat <- dat %>%
@@ -134,10 +167,6 @@ dat$nrSpeakersDaily <- rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
 ### CHECK WHETHER THIS IS NECESSARY
 contrasts(dat$Group) <- c(-0.5, +0.5)
 contrasts(dat$TestSpeaker) <- c(-0.5, +0.5)
-
-### CHECK WHETHER THIS IS NECESSARY
-# dummy for centering the variables (added by G 8.11.23)
-data = data %/% mutate(cVar = Var-mean(Var))
 
 # Prior predictive check --------------------------------------------------------------------
 # Performing prior predictive simulations using brms
@@ -233,7 +262,7 @@ p <- ggplot(df, aes(x=x)) +
   stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50))) +
   scale_fill_brewer(palette = "Blues", name = "") +
   ggtitle("Comparison of Priors") +
-  xlab(bquote(beta[sex])) +
+  xlab(bquote(beta[Intercept])) +
   theme_classic() +  
   theme(legend.position="bottom", 
         axis.title.x=element_text(family = "sans", size = 18),
@@ -255,6 +284,7 @@ m_sens_orig <- brm(MMR ~ 1 + TestSpeaker * Group +
            iter = 4000, chains = 4, warmup = 2000, thin = 1,
            family = gaussian(), 
            control = list(adapt_delta = 0.99, max_treedepth = 15))
+plot(m_sens_orig) # looks good
 
 # model alternative priors 2 (4 divergent transitions after warmup)
 m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group + 
@@ -268,6 +298,9 @@ m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group +
                    iter = 4000, chains = 4, warmup = 2000, thin = 1,
                    family = gaussian(), 
                    control = list(adapt_delta = 0.99, max_treedepth = 15))
+
+plot(m_sens_2)
+
 # model alternative priors 3 (4 divergent transitions after warmup)
 m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group + 
                   mumDistTrainS * TestSpeaker + 
@@ -280,6 +313,7 @@ m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group +
                 iter = 4000, chains = 4, warmup = 2000, thin = 1,
                 family = gaussian(), 
                 control = list(adapt_delta = 0.99, max_treedepth = 15))
+plot(m_sens_3)
 
 summary(m_sens_orig)
 summary(m_sens_2)
@@ -322,6 +356,52 @@ pp_check(m1, ndraws=50)
 summary(m1)
 # posterior summary for reporting
 posterior_summary(m1, variable="b_TestSpeaker_n")
+
+
+# Posterior checks WITH COVARIATES--------------------------------------------------------------------
+# Now we check whether the model can also recover the underlying data (with our simulated data)
+# define and fit model
+m1 <- brm(MMR ~ 1 + TestSpeaker * Group + 
+            mumDistTrainS * TestSpeaker + 
+            mumDistNovelS * TestSpeaker + 
+            timeVoiceFam * TestSpeaker * Group +
+            nrSpeakersDaily * TestSpeaker * Group + 
+            (1 | Subj) + (1 | TestSpeaker*Group),
+          data = dat,
+          prior = priors,
+          iter = 2000, chains = 4, family = gaussian(), 
+          control = list(adapt_delta = 0.99))
+
+
+# check traces and posterior distributions
+plot(m1)
+# the traces look like good hairy caterpillars
+# since we simulated the data ourselves, we know the true values that the model needs to recover, 
+# and we can check whether these distributions make sense: 
+# the simulated data was: dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14)
+# so the mean (intercept) should be ~2.92
+# wordFreq (beta) shoud be ~ 5
+# sigma should be ~14
+
+#check this:
+# the posterior distributions look quite close to this! They are also normally distributed, and for example do not have 2 bumps
+
+# Posterior check
+pp_check(m1, ndraws=50)
+# here we check whether the model is able to retrieve the underlying data. y is the observed data, so the data that we inputted, 
+# and y' is the simulated data from the posterior predictive distribution. This looks good.
+
+# look at summary (including Rhat + ESS)
+summary(m1)
+# posterior summary for reporting
+posterior_summary(m1, variable="b_TestSpeaker_n")
+
+
+
+
+
+
+
 
 
 
