@@ -40,45 +40,51 @@ setwd(here("data"))
 load_data()
 setwd(here())
 
-# dummy for centering the variables (added by G 8.11.23)
-data = data %/% mutate(cVar = Var-mean(Var))
+# centering the covariates -  CHECK WHETHER THIS IS NECESSARY
+(dat <- dat %>%
+    mutate(mumDistTrainS = mumDistTrainS - mean(mumDistTrainS)))
+(dat <- dat %>%
+    mutate(mumDistNovelS = mumDistNovelS - mean(mumDistNovelS)))
+(dat <- dat %>%
+    mutate(timeVoiceFam = timeVoiceFam - mean(timeVoiceFam)))
+(dat <- dat %>%
+    mutate(nrSpeakersDaily = nrSpeakersDaily - mean(nrSpeakersDaily)))
 
-# sampling: P3, mean amplitude --------------------------------------------------------------------
 
-P3_m <-
-  brm(
-    Amplitude ~ 1 + Valence * Expectancy + (1 + Valence * Expectancy | Laboratory / Subject),
-    # Random: we want both lab and subject varying for our fixed effects 
-    # / means that subject is nested in lab
-    data = P3_mean,
-    family = gaussian(), # the likelihood of the data that you are given to the model. 
-    # Here you say you expect the data to have a normal distribution.
-    # I can check that in my pilot data.
-    prior = priors,
-    init = "random",
-    # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
-    # start from  different value. If you start from 4 different values and they all converge to same 
-    # param space, you can be quite sure that’s the good one!
-    # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
-    # that for your data, it does not make sense te start eg at -2. 
-    # I will take random.
+# sampling --------------------------------------------------------------------
+
+modelMMR <-
+  brm(MMR ~ 1 + TestSpeaker * Group + 
+        mumDistTrainS * TestSpeaker + 
+        mumDistNovelS * TestSpeaker + 
+        timeVoiceFam * TestSpeaker * Group +
+        nrSpeakersDaily * TestSpeaker * Group + 
+        (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
+      data = dat,
+      family = gaussian(), # the likelihood of the data that you are given to the model. 
+      # Here you say you expect the data to have a normal distribution.
+      # I can check that in my pilot data.
+      prior = priors,
+      init = "random",
+      # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
+      # start from  different value. If you start from 4 different values and they all converge to same 
+      # param space, you can be quite sure that’s the good one!
+      # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
+      # that for your data, it does not make sense te start eg at -2. 
       control = list(
-      adapt_delta = .99, 
-      max_treedepth = 15
-      # These are the parameters of the algorithms. Here A changed the default values (to make more precise but less fast).
-      # Check which ones are possible!
-    ),
-    chains = num_chains,
-    iter = num_iter,
-    warmup = num_warmup,
-    thin = num_thin,
-    algorithm = "sampling", 
-    # we use the NoUTurn algorithm. Because it's efficient. 
-    # but check ?brm, because there is now also brms.algorithm, maybe that's better?
-    cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
-    seed = project_seed,
-    file = here("data", "model_output", "samples_P3_mean.rds"),
-    file_refit = "on_change"
+        adapt_delta = .99, 
+        max_treedepth = 15
+        # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
+      ),
+      chains = num_chains,
+      iter = num_iter,
+      warmup = num_warmup,
+      thin = num_thin,
+      algorithm = "sampling", 
+      cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
+      seed = project_seed,
+      file = here("data", "model_output", "samples_MMR.rds"),
+      file_refit = "on_change"
   )
 
 # NB the values of your parameter space are the values of your posterior distribution! MCC just gives you your
@@ -87,4 +93,44 @@ P3_m <-
 # For each effect that you’d in a frequentist framework get a p-value, you here get a distribution.
 
 
+modelMMR_nested <-
+  brm(MMR ~ 1 + TestSpeaker / Group + 
+        mumDistTrainS * TestSpeaker + 
+        mumDistNovelS * TestSpeaker + 
+        timeVoiceFam * TestSpeaker * Group +
+        nrSpeakersDaily * TestSpeaker * Group + 
+        (1 | Subj) + (1 | TestSpeaker/Group),  # or: (1 + TestSpeaker * Group | Subj)
+      data = dat,
+      family = gaussian(), # the likelihood of the data that you are given to the model. 
+      # Here you say you expect the data to have a normal distribution.
+      # I can check that in my pilot data.
+      prior = priors,
+      init = "random",
+      # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
+      # start from  different value. If you start from 4 different values and they all converge to same 
+      # param space, you can be quite sure that’s the good one!
+      # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
+      # that for your data, it does not make sense te start eg at -2. 
+      control = list(
+        adapt_delta = .99, 
+        max_treedepth = 15
+        # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
+      ),
+      chains = num_chains,
+      iter = num_iter,
+      warmup = num_warmup,
+      thin = num_thin,
+      algorithm = "sampling", 
+      cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
+      seed = project_seed,
+      file = here("data", "model_output", "samples_MMR.rds"),
+      file_refit = "on_change"
+  )
+
+
 # END  --------------------------------------------------------------------
+
+
+
+
+

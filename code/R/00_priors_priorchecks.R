@@ -9,6 +9,8 @@ library(brms)
 library(ggplot2)
 library(designr)
 library(worcs)
+library(ggmcmc)
+library(RColorBrewer)
 
 # I need this weird hack because otherwise it does not find the codebooks to load the data
 setwd(here("data"))
@@ -253,14 +255,15 @@ df <- data.frame(x = c(-50, 50))
 p <- ggplot(df, aes(x=x)) +
   # First, add the prior distribution of the original prior. 
   # The first line creates an area (filled in with color), the second line creates a line graph
-  stat_function(fun = dnorm, n = 1001, args = list(mean = 2.92, sd = sqrt(14)), geom = "area", aes(fill = "Original Prior"), alpha = .7) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 2.92, sd = sqrt(14)), geom = "area", aes(fill = "Original Prior: normal(2.92, 14)"), alpha = .5) +
   stat_function(fun = dnorm, n = 1001, args = list(mean = 2.92, sd = sqrt(14))) +
   # Repeat the above for each of the two alternative priors
-  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(28)), geom = "area", aes(fill = "Alternative 1"), alpha = .7) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(28)), geom = "area", aes(fill = "Alternative 1: normal(0, 28)"), alpha = .5) +
   stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(28))) +
-  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50)), geom = "area", aes(fill = "Alternative 2"), alpha = .7) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50)), geom = "area", aes(fill = "Alternative 2: normal(0, 50)"), alpha = .5) +
   stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50))) +
-  scale_fill_brewer(palette = "Blues", name = "") +
+  #scale_fill_brewer(palette = "Blues", name = "") +
+  scale_fill_manual(values = c("#F8766D", "#00BA38", "#619CFF")) +
   ggtitle("Comparison of Priors") +
   xlab(bquote(beta[Intercept])) +
   theme_classic() +  
@@ -288,16 +291,16 @@ plot(m_sens_orig) # looks good
 
 # model alternative priors 2 (4 divergent transitions after warmup)
 m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group + 
-                     mumDistTrainS * TestSpeaker + 
-                     mumDistNovelS * TestSpeaker + 
-                     timeVoiceFam * TestSpeaker * Group +
-                     nrSpeakersDaily * TestSpeaker * Group + 
-                     (1 | Subj) + (1 | TestSpeaker*Group),
-                   data = dat,
-                   prior = priors2,
-                   iter = 4000, chains = 4, warmup = 2000, thin = 1,
-                   family = gaussian(), 
-                   control = list(adapt_delta = 0.99, max_treedepth = 15))
+                  mumDistTrainS * TestSpeaker + 
+                  mumDistNovelS * TestSpeaker + 
+                  timeVoiceFam * TestSpeaker * Group +
+                  nrSpeakersDaily * TestSpeaker * Group + 
+                  (1 | Subj) + (1 | TestSpeaker*Group),
+                data = dat,
+                prior = priors2,
+                iter = 4000, chains = 4, warmup = 2000, thin = 1,
+                family = gaussian(), 
+                control = list(adapt_delta = 0.99, max_treedepth = 15))
 
 plot(m_sens_2)
 
@@ -323,11 +326,49 @@ posterior_summary(m_sens_orig, variable=c("b_Intercept","b_TestSpeaker1", "b_Gro
 posterior_summary(m_sens_2, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
 posterior_summary(m_sens_3, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
 
-## ggf add visualization here as well, also from https://osf.io/eyd4r/)
+# Visualize posterior distributions
+# for prior_orig
+m_sens_orig_tranformed <- ggs(m_sens_orig) # the ggs function transforms the brms output into a longformat tibble, that we can use to make different types of plots.
+m_sens_2_tranformed <- ggs(m_sens_2)
+m_sens_3_tranformed <- ggs(m_sens_3)
 
+legend_colors <- c("Orig: normal(2.92, 14)" = "#F8766D", "Alt 1: normal(0, 28)" = "#00BA38", "Alt 2: normal(0, 50)" = "#619CFF")
 
+ggplot() + 
+  geom_density(data = filter(m_sens_orig_tranformed,
+                                      Parameter == "b_Intercept", 
+                                      Iteration > 1000), aes(x = value, fill  = "Orig: normal(2.92, 14)"), alpha = .5) +
+  geom_density(data = filter(m_sens_2_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 1000), aes(x = value, fill  = "Alt 1: normal(0, 28)"), alpha = .5) +
+  geom_density(data = filter(m_sens_3_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 1000), aes(x = value, fill  = "Alt 2: normal(0, 50)"),  alpha = .5) +
+  scale_x_continuous(name   = "Value",
+                     limits = c(-80, 80)) + 
+  scale_fill_manual(name='Priors', values = legend_colors, breaks = c("Orig: normal(2.92, 14)", "Alt 1: normal(0, 28)", "Alt 2: normal(0, 50)")) +
+  #set v-lines for the CIs
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[1,3],
+             col = "#F8766D",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[1,4],
+             col = "#F8766D",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_2)$fixed[1,3],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_2)$fixed[1,4],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[1,3],
+             col = "#619CFF",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[1,4],
+             col = "#619CFF",
+             linetype = 2) +
+  theme_light() +
+  labs(title = "Posterior Density of the Intercept for different priors") 
 
-# ADD THE COVARIATES TO THE POSTERIOR CHECKS!
 
 # Posterior checks --------------------------------------------------------------------
 # Now we check whether the model can also recover the underlying data (with our simulated data)
@@ -408,79 +449,5 @@ posterior_summary(m1, variable="b_TestSpeaker_n")
 
 
 
-### FROM HERE DOWNWARDS, THIS CAN GO TO 01_parameter_estimation.R
-# Contrast coding ---------------------------------
 
-# Here's an example of how you can estimate the effect of speaker 1 compared to speaker 4:
-# 
-# ```R library(emmeans) emm <- emmeans(model, ~ test_speaker) contrast(emm, method = "pairwise", ref = "4") ```
-# 
-# This will provide you with the estimated differences between speaker 1 and speaker 4, along with their standard errors and p-values.
-# df$group <- factor(df$group, contrasts = contr.sum)
-# df$test_speaker <- factor(df$test_speaker, contrasts = contr.sum)
-# 
-
-
-# For the Acquisiton RQ, we want the following comparisons
-# 1. For test_speaker = Speaker1, the mmr is different for group=fam vs group = unfam. 
-# 2. For test_speaker = Speaker2, the mmr is different for group=fam vs group = unfam. 
-# 3. For both groups together: mmr is larger for test_speaker = S1 as for test_speaker = S2
-
-# For our hypotheses, we can use a nested model instead of a complicated contrast matrix. This gives us the coefficients we are interested in
-contrasts(dat$Group) <- c(-0.5, +0.5)
-contrasts(dat$TestSpeaker) <- c(-0.5, +0.5)
-fit_Nest <- brm(MMR ~ 1 + TestSpeaker / Group,
-                data = dat,
-                family = gaussian(),
-                prior = priors
-)
-
-summary(fit_Nest)
-
-# Our output:
-# Intercept = the intercept term represents the estimated mean response when both the test_speaker and group variables are at their reference levels. In this case, the reference levels are Group=2 and Testpeaker=2
-# TestSpeaker1 = comparison 3:  The estimated coefficient represents the difference in the average mmr between test_speaker1 and test_speaker2, regardless of the group
-# TestSpeaker1:Group1 = Comparison 1. The estimated coefficient represents the difference in the average mmr between group=fam and group=unfam when test_speaker is Speaker1.
-# TestSpeaker2:Group1 = Comparison 2. The estimated coefficient represents the difference in the average mmr between group=fam and group=unfam when test_speaker is Speaker2
-
-# So what can we interpret from this data:
-# TestSpeaker1 = -5.74 indicated that the MMR is lower for Speaker1 as compared to Speaker2 regardless of group
-# For Speaker=1, MMR is higher for infants with a training with a familiar voice
-# For Speaker=2, MMR is lower for infants with a training with a familiar voice
-
-plot(fit_Nest)
-#The regression coefficients estimate the grand mean, the difference for the main effect of TestSpeaker and the two differences (for Group; 
-# i.e., simple main effects) within the two levels (TestSpeaker 1 and TestSpeaker 4) of TestSpeaker
-
-
-
-num_chains <- 4 # number of chains = number of processor cores
-num_iter <- 4000 # number of samples per chain
-num_warmup <- num_iter / 2 # number of warm-up samples per chain
-num_thin <- 1 # thinning: extract one out of x samples per chain
-
-
-fit_Nest2 <- brm(MMR ~ 1 + TestSpeaker / Group + 
-                   mumDistTrainS * TestSpeaker + 
-                   mumDistNovelS * TestSpeaker + 
-                   timeVoiceFam * TestSpeaker * Group +
-                   nrSpeakersDaily * TestSpeaker * Group + 
-                   (1 | Subj) + (1 | TestSpeaker/Group),
-                 chains = num_chains,
-                 iter = num_iter,
-                 warmup = num_warmup,
-                 thin = num_thin,
-                 control = list(
-                   adapt_delta = .99, 
-                   max_treedepth = 15
-                   # These are the parameters of the algorithms. Here A changed the default values (to make more precise but less fast).
-                   # Check which ones are possible!
-                 ),                 data = dat,
-                 family = gaussian(),
-                 prior = priors)
-
-
-pairs(fit_Nest2)
-plot(fit_Nest2)
-summary(fit_Nest2)
 
