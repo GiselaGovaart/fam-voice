@@ -128,7 +128,7 @@ summary(pilot_m)
 
 
 # Simulate some data --------------------------------------------------------------------
-# create experimental design
+# create experimental design for ACQUISITION
 design <-
   fixed.factor("Group", levels=c("fam", "unfam")) +
   fixed.factor("TestSpeaker", levels=c("1", "2")) +
@@ -165,10 +165,49 @@ dat$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat)/2
 (dat <- dat %>%
     mutate(nrSpeakersDaily = nrSpeakersDaily - mean(nrSpeakersDaily)))
 
-# Now we add the contrasts to the factors itself: 
-### CHECK WHETHER THIS IS NECESSARY
-contrasts(dat$Group) <- c(-0.5, +0.5)
-contrasts(dat$TestSpeaker) <- c(-0.5, +0.5)
+
+# create experimental design for RECOGNITION
+design <-
+  fixed.factor("Group", levels=c("fam", "unfam")) +
+  fixed.factor("TestSpeaker", levels=c("1", "2")) +
+  random.factor("Subj", groups="Group", instances=32)
+
+dat_rec <- design.codes(design)
+# define a sum contrast. I take 0.5 instead of 1 because it's nicer for two levels (https://phillipalday.com/stats/coding.html)
+dat$TestSpeaker_n <- ifelse(dat$TestSpeaker=="1", +0.5, -0.5)
+dat$Group_n <- ifelse(dat$Group=="fam", +0.5, -0.5)
+
+# simulate data
+dat_rec$MMR <- 2.92 + 5*dat_rec$TestSpeaker_n + rnorm(nrow(dat_rec),0,14) # 1st part: the mean of the MMR for all groups together, 2nd part: making sure the groups are different, 3rd part: adding noise: the SD of the MMR is 14
+
+# now add dummy values for the other variables
+dat$mumDistTrainS = NA
+dat$mumDistNovelS = NA
+dat$timeVoiceFam = NA
+dat$nrSpeakersDaily = NA
+dat$sleepState = NA
+
+dat$mumDistTrainS = rep(abs(rnorm(nrow(dat)/2,1,2)), each=2)
+dat$mumDistNovelS = rep(abs(rnorm(nrow(dat)/2,1,2.5)), each=2)
+dat$timeVoiceFam = rep(round(rnorm(nrow(dat)/2,21,2)), each=2)
+dat$nrSpeakersDaily = rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
+dat$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat)/2, replace = TRUE), each=2)
+
+# centering the covariates -  CHECK WHETHER THIS IS NECESSARY
+(dat <- dat %>%
+    mutate(mumDistTrainS = mumDistTrainS - mean(mumDistTrainS)))
+(dat <- dat %>%
+    mutate(mumDistNovelS = mumDistNovelS - mean(mumDistNovelS)))
+(dat <- dat %>%
+    mutate(timeVoiceFam = timeVoiceFam - mean(timeVoiceFam)))
+(dat <- dat %>%
+    mutate(nrSpeakersDaily = nrSpeakersDaily - mean(nrSpeakersDaily)))
+
+
+# # Now we add the contrasts to the factors itself: 
+# ### CHECK WHETHER THIS IS NECESSARY
+# contrasts(dat$Group) <- c(-0.5, +0.5)
+# contrasts(dat$TestSpeaker) <- c(-0.5, +0.5)
 
 # Prior predictive check --------------------------------------------------------------------
 # Performing prior predictive simulations using brms
@@ -436,17 +475,6 @@ pp_check(m1, ndraws=50)
 summary(m1)
 # posterior summary for reporting
 posterior_summary(m1, variable="b_TestSpeaker_n")
-
-
-
-
-
-
-
-
-
-
-
 
 
 

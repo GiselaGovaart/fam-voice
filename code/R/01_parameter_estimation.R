@@ -51,6 +51,18 @@ setwd(here())
     mutate(nrSpeakersDaily = nrSpeakersDaily - mean(nrSpeakersDaily)))
 
 
+
+
+# Before we enter the continuous IQ variable, we center it, by subtracting its mean. Centering covariates is generally good practice. Moreover, it is often important to  
+# z -transform the covariate, i.e., to not only subtract the mean, but also to divide by its standard deviation (this can be done as follows: df_contrasts5$IQ.s <- scale(df_contrasts5$IQ)). 
+# The reason why this is often important is that the sampler doesn’t work well if predictors have different scales. For the simple models we use here, the sampler works without  
+# z -transformation. However, for more realistic and more complex models,  
+# z -transformation of covariates is often very important.
+# https://vasishth.github.io/bayescogsci/book/ch-coding2x2.html
+
+
+
+
 # sampling --------------------------------------------------------------------
 
 modelMMR <-
@@ -84,7 +96,7 @@ modelMMR <-
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
       file = here("data", "model_output", "samples_MMR.rds"),
-      file_refit = "on_change"
+      file_refit = "on_change" 
   )
 
 # NB the values of your parameter space are the values of your posterior distribution! MCC just gives you your
@@ -123,7 +135,7 @@ modelMMR_nested <-
       algorithm = "sampling", 
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
-      file = here("data", "model_output", "samples_MMR.rds"),
+      file = here("data", "model_output", "samples_MMR_nested.rds"),
       file_refit = "on_change"
   )
 

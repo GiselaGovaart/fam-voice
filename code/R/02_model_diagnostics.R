@@ -24,8 +24,12 @@ library(viridis) # just a color palette
 
 # setup: plots --------------------------------------------------------------------
 
+# 8/2: look at whether you need to implement this: https://www.flutterbys.com.au/stats/tut/tut7.5b.html
+
+
+
 # custom ggplot theme
-source(here("code", "functions", "custom_ggplot_theme.R"))
+#source(here("code", "functions", "custom_ggplot_theme.R"))
 
 # cividis color palette for bayesplot
 color_scheme_set("viridisE")
@@ -35,30 +39,30 @@ color_scheme_set("viridisE")
 # ERP data
 load(here("data", "preprocessed", "P3_mean.RData"))
 
-P3_mean <-
-  P3_mean %>%
+dat <-
+  dat %>%
   unite( # unite columns for posterior predictive checks
     # unites the two columns valence and expectancy. Because brms made a posterior distribution
     # with Valuence_Expectancy, because it looks at an interaction. 
     # And you need to be able to compare
-    "Valence_Expectancy",
-    c("Valence", "Expectancy"),
+    "TestSpeaker_Group",
+    c("TestSpeaker", "Group"),
     sep = "_",
     remove = FALSE,
     na.rm = FALSE
   ) %>%
-  select(Laboratory, Subject, Valence_Expectancy, Valence, Expectancy, Amplitude)
+  select(Subj, TestSpeaker_Group, TestSpeaker, Group, MMR)
 
 # results of model fit
 # for notes on the output, see notes in Notes_meeting_Antonio_20221216.docx
-P3_m <- readRDS(here("data", "model_output", "samples_P3_mean.rds"))
+MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
 
 
 # posterior samples of the posterior predictive distribution
 # you need the posterior distribution to compute with, so you need to still extract this information
 # before, we only had summaries
-posterior_predict_P3_m <-
-  P3_m %>%
+posterior_predict_MMR_m <-
+  MMR_m %>%
   posterior_predict(ndraws = 2000) # 2000 samples per observation
 # We get a dataframe of size 2000:986, because there were 986 observations. 
 # And now we have for each observation a distribution with 2000 sampling points!
@@ -68,9 +72,8 @@ posterior_predict_P3_m <-
 # these are the caterpillar plots. It gives you a caterpillar for each effect
 # it takes that samples that were shown in ESS
 # Here you have all your samples (the ones from ESS). 
-MCMC_P3_m <-
-  plot(P3_m, ask = FALSE) +
-  theme_custom
+MCMC_MMR_m <-
+  plot(MMR_m, ask = FALSE) 
 
 # model diagnostics: posterior predictive checks --------------------------------------------------------
 # If you extract the post pred samples from your posterior distributions 
@@ -83,24 +86,23 @@ MCMC_P3_m <-
 # random effects, so it was set by default, and this is an exponential distribution. 
 # You need to check that in your data.
 
-PPC_P3_m <-
-  posterior_predict_P3_m %>%
+PPC_MMR_m <-
+  posterior_predict_MMR_m %>%
   ppc_stat_grouped(
-    y = pull(P3_mean, Amplitude),
-    group = pull(P3_mean, Valence_Expectancy),
+    y = pull(dat, MMR),
+    group = pull(dat, TestSpeaker_Group),
     stat = "mean"
   ) +
-  ggtitle("Posterior predictive samples") +
-  theme_custom
+  ggtitle("Posterior predictive samples")
 
-PPC_P3_m
+PPC_MMR_m
 
 # model performance: Bayesian R2 --------------------------------------------------------
 
 # Conditional R2 takes into account both fixed and random effects
 # Marginal R2 only considers the variance of the fixed effects (without the random effects)
-R2_P3_m <- r2(P3_m)
-R2_P3_m
+R2_MMR_m <- r2(MMR_m)
+R2_MMR_m
 
 # Here, marginal for Antonio was very low. That means if you only look at the fixed effects, your model 
 # does not explain a lot of your data. In this case that’s fine, because very few datapoints 
@@ -108,9 +110,9 @@ R2_P3_m
 
 # summary of posterior distributions of model parameters + model diagnostics: Rhat --------------------------------------------------------
 # This is just a nice and fast way to create your table for the paper.
-params_P3_m <-
+params_MMR_m <-
   model_parameters(
-    P3_m,
+    MMR_m,
     centrality = "mean",
     # do we care about the mean or the median? Since we know that the posterior distributions are normal, 
     # we want the mean. If during the post pred checks uyou see that it’s not normal, you might wanna use “median”
@@ -122,12 +124,12 @@ params_P3_m <-
     effects = "fixed" # options: "fixed", "random", "all". You only need fixed.
   )
 
-params_P3_m
+params_MMR_m
 
 # save as .RData (compressed)
 save(
-  params_P3_m,
-  file = here("data", "model_output", "params_P3_m.RData")
+  params_MMR_m,
+  file = here("data", "model_output", "params_MMR_m.RData")
 )
 
 # END --------------------------------------------------------

@@ -42,7 +42,7 @@ MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
 # RQ1: fam TestSpeaker1 - unfam TestSpeaker1
 # RQ2: fam TestSpeaker2 - unfam TestSpeaker2
 # for TestSpeaker:
-# RQ3: TestSpeaker1 - TestSpeaker1
+# RQ3: TestSpeaker1 - TestSpeaker2
 
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 
@@ -62,6 +62,31 @@ pMAP_method <- c("kernel", "logspline", "KernSmooth")
 pMAP_Group_Speaker_MMR_m <- NULL
 pMAP_Group_Speaker_nested_MMR_m <- NULL
 pMAP_Speaker_MMR_m <- NULL
+
+
+# Testing contrasts
+MMR.emm = MMR_m %>%
+  emmeans(~  Group| TestSpeaker)
+contrast(MMR.emm, "trt.vs.ctrl")
+coef(contrast(MMR.emm, "trt.vs.ctrl"))
+
+# MMR.emm = emmeans(MMR_m, ~ TestSpeaker | Group)
+# contrast(MMR.emm, "trt.vs.ctrl")
+
+MMR.emm2 = MMR_m %>%
+  emmeans(specs = pairwise ~  Group | TestSpeaker)
+MMR.emm2
+
+
+
+
+
+
+
+
+
+
+
 
 # Group:Testspeaker interaction
 for (i in pMAP_method) {
