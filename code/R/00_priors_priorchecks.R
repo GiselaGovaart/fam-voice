@@ -63,12 +63,14 @@ summary(pilot_m)
 # So we set the following prior (we add some uncertainty, so a larger SD):
 priors <- c(set_prior("normal(2.92, 14)",  # sd=14 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu
                       class = "Intercept"),
-            set_prior("normal(0, 14)",  # this is the prior on the slope
-                      class = "b"),  
-            set_prior("normal(0, 14)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case
-                      class = "sigma")) #  sigma represents the standard deviation of the response variable, mmr in this case. 
-                                        # it's a bit strange because of course, sigma cannot be smaller than zero..
-                                        # an alternative to incorporate that would be normal(14,5)
+            # set_prior("normal(0, 14)",  # this is the prior on the slope
+            #           class = "b"),  
+            set_prior("normal(0, 14)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this casesigma represents the standard deviation of the response variable, mmr in this cas
+                      class = "sigma"), # it's a bit strange because of course, sigma cannot be smaller than zero..an alternative to incorporate that would be normal(14,5)
+            set_prior("normal(0,14)",
+                      class = "b_Group"),
+            set_prior("normal(0,14)",
+                      class = "b_TestSpeaker"))
 
 # let's check the default prior for sigma in brms:
 priors_nosigma <- c(set_prior("normal(2.92, 14)",  # sd=14 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu

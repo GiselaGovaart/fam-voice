@@ -18,7 +18,18 @@ library(tidyverse)
 library(easystats)
 library(emmeans) # just makes it easier to do the comparisons
 library(logspline)
+
 # setup --------------------------------------------------------------------
+
+# options
+backup_options <- options()
+options(contrasts = c("contr.equalprior", "ordered"))
+# the default contrasts used in model fitting such as with aov or lm. 
+# A character vector of length two, the first giving the function to be used with unordered factors 
+# and the second the function to be used with ordered factors. By default the elements are named 
+# c("unordered", "ordered"), but the names are unused.
+options(backup_options)
+
 
 # https://easystats.github.io/bayestestR/articles/bayes_factors.html#appendices
 # orthonormal factor coding (see Rouder, Morey, Speckman, & Province, 2012, sec. 7.2)
@@ -99,14 +110,7 @@ contrast(MMR_rec.emm3, "poly")
 
 
 
-# options
-backup_options <- options()
-options(contrasts = c("contr.equalprior", "contr.poly"))
-# the default contrasts used in model fitting such as with aov or lm. 
-# A character vector of length two, the first giving the function to be used with unordered factors 
-# and the second the function to be used with ordered factors. By default the elements are named 
-# c("unordered", "ordered"), but the names are unused.
-options(backup_options)
+
 
 
 
@@ -368,6 +372,13 @@ ggplot(stack(insight::get_parameters(MMR_m_prior_rq12)), aes(x = values, fill = 
   facet_grid(ind ~ .) +
   labs(x = "prior difference values with contr.equalprior_pairs on $TestSpeaker") +
   theme(legend.position = "none")
+
+est <- emmeans(MMR_m_prior, pairwise ~  Group|TestSpeaker)
+
+point_estimate(est, centr = "mean", disp = TRUE)
+
+
+
 
 
 
