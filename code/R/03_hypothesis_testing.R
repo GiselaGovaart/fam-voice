@@ -24,14 +24,17 @@ library(logspline)
 # orthonormal factor coding (see Rouder, Morey, Speckman, & Province, 2012, sec. 7.2)
 # important when working with factors with 3 or more levels
 # @G: check this!
-options(contrasts = c("contr.orthonorm", "contr.poly"))
+# options(contrasts = c("contr.orthonorm", "contr.poly"))
 
 # load data --------------------------------------------------------------------
 
 # results of model fit
 MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
+MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
 
+# Trying out different contrasts:
+# ACQ
 # Hypotheses -------------------------------------------------------------------
 # For the Acquisition RQ, we want the following comparisons
 # 1. For test_speaker = Speaker1, the mmr is different for group=fam vs group = unfam. 
@@ -44,6 +47,72 @@ MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
 # for TestSpeaker:
 # RQ3: TestSpeaker1 - TestSpeaker2
 
+
+# Testing contrasts
+MMR.emm = MMR_m %>%
+  emmeans(~  Group | TestSpeaker)
+contrast(MMR.emm, "trt.vs.ctrl", adjust = "none") # no difference with default or adjust="none"
+coef(contrast(MMR.emm, "trt.vs.ctrl"))
+
+plot(MMR.emm)
+
+# this does the exact same:
+MMR.emm2 = MMR_m %>%
+  emmeans(~  Group|TestSpeaker)
+pairs(MMR.emm2) 
+
+# Also same:
+MMR.emm3 = MMR_m %>%
+  emmeans(~  Group:TestSpeaker)
+pairs(MMR.emm3, simple = "Group") # same as pairs(MMR.emm2, by = "TestSpeaker") 
+
+
+
+# REC
+# Hypotheses -------------------------------------------------------------------
+# S1 = S1, S2 = S4, S3 = S3
+# RQ1: unfam S2 - fam S1
+# RQ2: unfam S2 - unfam S3
+# RQ3: unfam S1 - unfam S2
+
+# make custom contrasts (from https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/)
+unfam2 = c(0,0,0,1,0,0)
+fam1 = c(1,0,0,0,0,0)
+unfam3 = c(0,0,0,0,0,1)
+unfam1 = c(0,1,0,0,0,0)
+
+MMR_rec.emm2 = MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker)
+
+contrast(MMR_rec.emm2, method = list("unfam2-fam1" = unfam2 - fam1))
+contrast(MMR_rec.emm2, method = list("unfam2-unfam3" = unfam2 - unfam3))
+contrast(MMR_rec.emm2, method = list("unfam1-unfam2" = unfam1 - unfam2))
+# I checked, this gives the same output as (at least for the last two, the first one is given the other way around:) :
+MMR_rec.emm2 = MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker) %>%
+  pairs()
+MMR_rec.emm2
+
+MMR_rec.emm3 = MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker) 
+contrast(MMR_rec.emm3, "poly")
+
+
+
+# options
+backup_options <- options()
+options(contrasts = c("contr.equalprior", "contr.poly"))
+# the default contrasts used in model fitting such as with aov or lm. 
+# A character vector of length two, the first giving the function to be used with unordered factors 
+# and the second the function to be used with ordered factors. By default the elements are named 
+# c("unordered", "ordered"), but the names are unused.
+options(backup_options)
+
+
+
+
+
+##### from Antonio:
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 
 # We use p-values here, but just to check the robustness, to check with other experiments with frequentist methods.
@@ -62,32 +131,6 @@ pMAP_method <- c("kernel", "logspline", "KernSmooth")
 pMAP_Group_Speaker_MMR_m <- NULL
 pMAP_Group_Speaker_nested_MMR_m <- NULL
 pMAP_Speaker_MMR_m <- NULL
-
-
-# Testing contrasts
-MMR.emm = MMR_m %>%
-  emmeans(~  Group| TestSpeaker)
-contrast(MMR.emm, "trt.vs.ctrl")
-coef(contrast(MMR.emm, "trt.vs.ctrl"))
-
-# MMR.emm = emmeans(MMR_m, ~ TestSpeaker | Group)
-# contrast(MMR.emm, "trt.vs.ctrl")
-
-MMR.emm2 = MMR_m %>%
-  emmeans(specs = pairwise ~  Group | TestSpeaker)
-MMR.emm2
-
-
-
-
-
-
-
-
-
-
-
-
 # Group:Testspeaker interaction
 for (i in pMAP_method) {
   temp <-
@@ -281,6 +324,143 @@ BF_Speaker_MMR_m <-
   )
 
 BF_Speaker_MMR_m
+
+
+# TESTING priors equal
+MMR_m_prior <- unupdate(MMR_m) # sample priors from model
+
+MMR_m_prior_rq12 <-
+  MMR_m_prior %>%
+  emmeans(~  Group|TestSpeaker) %>%
+  pairs() 
+
+MMR_m_rq12 <-
+  MMR_m %>%
+  emmeans(~  Group|TestSpeaker) %>%
+  pairs() 
+
+# Bayes Factors (Savage-Dickey density ratio)
+BF_rq12 <-
+  MMR_m_rq12 %>%
+  bf_parameters(prior = MMR_m_prior_rq12) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+BF_rq12 <-
+  BF_rq12 %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_rq12$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+
+BF_rq12
+
+# check priors equal?  --> only if we set contrasts(dat_rec$TestSpeaker) <- contr.equalprior_pairs before running the model in parameter_estimation.R
+ggplot(stack(insight::get_parameters(MMR_m_prior_rq12)), aes(x = values, fill = ind)) +
+  geom_density(linewidth = 1) +
+  facet_grid(ind ~ .) +
+  labs(x = "prior difference values with contr.equalprior_pairs on $TestSpeaker") +
+  theme(legend.position = "none")
+
+
+
+##### Model for REC ------------------------
+rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
+
+#### RQ1
+#  comparison of prior distributions
+rec_MMR_m_prior_rq1 <-
+  rec_MMR_m_prior %>%
+  emmeans(~ Group:TestSpeaker)
+rec_MMR_m_prior_rq1 = contrast(rec_MMR_m_prior_rq1, method = list("unfam2-fam1" = unfam2 - fam1))
+
+#  comparison of posterior distributions
+rec_MMR_m_rq1 <-
+  MMR_m_rec %>%
+  emmeans(~ TestSpeaker:Group) 
+rec_MMR_m_rq1 = contrast(rec_MMR_m_rq1, method = list("unfam2-fam1" = unfam2 - fam1))
+
+# Bayes Factors (Savage-Dickey density ratio)
+BF_rec_rq1 <-
+  rec_MMR_m_rq1 %>%
+  bf_parameters(prior = rec_MMR_m_prior_rq1) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+BF_rec_rq1 <-
+  BF_rec_rq1 %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_rec_rq1$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+
+BF_rec_rq1
+
+# check priors equal?  --> here there is only one comparison, so yes, the prior is equal...
+ggplot(stack(insight::get_parameters(rec_MMR_m_prior_rq1)), aes(x = values, fill = ind)) +
+  geom_density(linewidth = 1) +
+  facet_grid(ind ~ .) +
+  labs(x = "prior difference values without contr.equalprior_pairs on $TestSpeaker") +
+  theme(legend.position = "none")
+
+
+#### All pairs
+# pairwise comparisons of prior distributions
+rec_MMR_m_prior_pairwise <-
+  rec_MMR_m_prior %>%
+  emmeans(~ Group:TestSpeaker) %>% # estimated marginal means
+  pairs() # pairwise comparisons
+
+# pairwise comparisons of posterior distributions
+rec_MMR_m_pairwise <-
+  MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker) %>%
+  pairs()
+
+# Bayes Factors (Savage-Dickey density ratio)
+BF_rec_pairwise <-
+  rec_MMR_m_pairwise %>%
+  bf_parameters(prior = rec_MMR_m_prior_pairwise) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+BF_rec_pairwise <-
+  BF_rec_pairwise %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_rec_pairwise$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+
+BF_rec_pairwise
+
+# check priors equal? --> no they're not
+ggplot(stack(insight::get_parameters(rec_MMR_m_prior_pairwise)), aes(x = values, fill = ind)) +
+  geom_density(linewidth = 1) +
+  facet_grid(ind ~ .) +
+  labs(x = "prior difference values without contr.equalprior_pairs on $TestSpeaker") +
+  theme(legend.position = "none")
+
 
 
 
