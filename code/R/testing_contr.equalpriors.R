@@ -9,6 +9,8 @@ set.seed(project_seed) # set seed
 library(here)
 library(tidyverse)
 library(brms)
+library(emmeans)
+
 
 # set vars --------------------------------------------------------------------
 num_chains <- 4 # number of chains = number of processor cores
@@ -137,11 +139,6 @@ ggplot(stack(insight::get_parameters(pairs_bayes_contr)), aes(x = values, fill =
   facet_grid(ind ~ .) +
   labs(x = "prior difference values with contr.equalprior_pairs on $TestSpeaker") +
   theme(legend.position = "none")
-
-
-
-
-
 
 
 
