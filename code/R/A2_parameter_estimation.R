@@ -15,6 +15,8 @@ library(here)
 library(tidyverse)
 library(brms)
 
+
+
 # setup: STAN --------------------------------------------------------------------
 # here we set up the sampling. 
 # num_chains:  how many processor cores you want to run in parallel (always leave some of your computer's processors unused!)
@@ -60,6 +62,12 @@ dat$mumDistNovelS <- scale(dat$mumDistNovelS)
 dat$timeVoiceFam <- scale(dat$timeVoiceFam)
 dat$nrSpeakersDaily <- scale(dat$nrSpeakersDaily)
 
+dat_rec$mumDistTrainS <- scale(dat_rec$mumDistTrainS)
+dat_rec$mumDistNovelS <- scale(dat_rec$mumDistNovelS)
+dat_rec$timeVoiceFam <- scale(dat_rec$timeVoiceFam)
+dat_rec$nrSpeakersDaily <- scale(dat_rec$nrSpeakersDaily)
+
+
 # Before we enter the continuous IQ variable, we center it, by subtracting its mean. Centering covariates is generally good practice. Moreover, it is often important to  
 # z -transform the covariate, i.e., to not only subtract the mean, but also to divide by its standard deviation (this can be done as follows: df_contrasts5$IQ.s <- scale(df_contrasts5$IQ)). 
 # The reason why this is often important is that the sampler doesn’t work well if predictors have different scales. For the simple models we use here, the sampler works without  
@@ -68,57 +76,23 @@ dat$nrSpeakersDaily <- scale(dat$nrSpeakersDaily)
 # https://vasishth.github.io/bayescogsci/book/ch-coding2x2.html
 
 # Set priors ------------------------------------------------------------
+# priors 0.4 Hz filter
+priors <- c(set_prior("normal(2.92, 14)", 
+                      class = "Intercept"),
+            set_prior("normal(0, 14)", 
+                      class = "b"),
+            set_prior("normal(0, 14)", 
+                      class = "sigma")) 
 
+# priors 1 Hz filter
 
 
 
 # Setting up contrasts for during the model fitting -------------
-# SleepState
-### OPTION 1
-dat$sleepState <- factor(dat$sleepState, levels = c("awake", "activesleep", "quietsleep"), ordered = TRUE)
-
-contrast_matrix <- matrix(c(
-  1, -1/2, -1/2,   # awake vs mean of activesleep and quietsleep
-  -1/2, -1/2, 1,   # quietsleep vs mean of awake and activesleep
-  0, 1, -1         # quietsleep vs activesleep
-), nrow = 3, byrow = TRUE)
-
-# Set up custom contrasts for 'sleepState'
-contrasts(dat$sleepState) <- contrast_matrix
-
-# Include 'sleepState' with custom contrasts as a covariate in the model formula
-#formula <- response ~ TestSpeaker_n + Group_n + mumDistTrainS_centered + mumDistNovelS_centered + timeVoiceFam_centered + nrSpeakersDaily_centered + sleepState + (1 | Subj)
-
-### OPTION 2 (not sure whether)
-# Define Sleepstate with ordered levels
-dat$Sleepstate <- factor(dat$Sleepstate, levels = c("awake", "activesleep", "quietsleep"), ordered = TRUE)
-
-# Specify ordered contrasts for 'Sleepstate' with equal prior distributions
-contrast_pairs <- list(
-  c("awake", "activesleep", "quietsleep"),           # awake vs mean of activesleep and quietsleep
-  c("quietsleep", "awake", "activesleep"),           # quietsleep vs mean of awake and activesleep
-  c("quietsleep", "activesleep")                     # quietsleep vs activesleep
-)
-
-# Specify ordered contrasts with equal prior distributions
-contrasts_ordered <- contr.equalprior(emmeans(~ Sleepstate, data = dat), contrast_pairs)
-
-# Fit the brms model with specified contrasts
-#model <- brm(response ~ TestSpeaker_n + Group_n + mumDistTrainS_centered + mumDistNovelS_centered + timeVoiceFam_centered + nrSpeakersDaily_centered + Sleepstate + (1 | Subj), data = dat, prior = priors)
-
-# Obtain estimated marginal means (EMMs) using specified contrasts
-emm <- emmeans(model, specs = ~ Sleepstate, contr = contrasts_ordered)
-
-# Conduct pairwise comparisons using specified contrasts
-pairwise_contrasts <- pairs(emm)
-
-##### end option 2
-
-
+# not necessary??
 
 
 # sampling --------------------------------------------------------------------
-contrasts(dat$TestSpeaker) <- contr.equalprior_pairs
 
 modelMMR <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
@@ -154,7 +128,6 @@ modelMMR <-
       file_refit = "on_change" 
   )
 
-
 modelMMRtestcovs <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
         mumDistTrainS+ 
@@ -185,7 +158,7 @@ modelMMRtestcovs <-
       algorithm = "sampling", 
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
-      file = here("data", "model_output", "samples_MMR.rds"),
+      file = here("data", "model_output", "samples_MMR_testcovs.rds"),
       file_refit = "on_change" 
   )
 
@@ -266,8 +239,44 @@ modelMMR_rec <-
       file_refit = "on_change" 
   )
 
+modelMMR_rec_sleep <-
+  brm(MMR ~ 1 + TestSpeaker * Group + 
+        mumDistTrainS * TestSpeaker + 
+        mumDistNovelS * TestSpeaker + 
+        timeVoiceFam * TestSpeaker * Group +
+        nrSpeakersDaily * TestSpeaker * Group + 
+        sleepState +
+        (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
+      data = dat_rec,
+      family = gaussian(), # the likelihood of the data that you are given to the model. 
+      # Here you say you expect the data to have a normal distribution.
+      # I can check that in my pilot data.
+      prior = priors,
+      init = "random",
+      # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
+      # start from  different value. If you start from 4 different values and they all converge to same 
+      # param space, you can be quite sure that’s the good one!
+      # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
+      # that for your data, it does not make sense te start eg at -2. 
+      control = list(
+        adapt_delta = .99, 
+        max_treedepth = 15
+        # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
+      ),
+      chains = num_chains,
+      iter = num_iter,
+      warmup = num_warmup,
+      thin = num_thin,
+      algorithm = "sampling", 
+      cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
+      seed = project_seed,
+      file = here("data", "model_output", "samples_MMR_rec_sleep.rds"),
+      file_refit = "on_change" 
+  )
+
 
 # END  --------------------------------------------------------------------
+
 
 
 

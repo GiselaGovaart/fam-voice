@@ -22,13 +22,13 @@ library(logspline)
 # setup --------------------------------------------------------------------
 
 # options
-backup_options <- options()
-options(contrasts = c("contr.equalprior", "ordered"))
-# the default contrasts used in model fitting such as with aov or lm. 
-# A character vector of length two, the first giving the function to be used with unordered factors 
-# and the second the function to be used with ordered factors. By default the elements are named 
-# c("unordered", "ordered"), but the names are unused.
-options(backup_options)
+# backup_options <- options()
+# options(contrasts = c("contr.equalprior", "ordered"))
+# # the default contrasts used in model fitting such as with aov or lm. 
+# # A character vector of length two, the first giving the function to be used with unordered factors 
+# # and the second the function to be used with ordered factors. By default the elements are named 
+# # c("unordered", "ordered"), but the names are unused.
+# options(backup_options)
 
 
 # https://easystats.github.io/bayestestR/articles/bayes_factors.html#appendices
@@ -40,7 +40,9 @@ options(backup_options)
 # load data --------------------------------------------------------------------
 
 # results of model fit
-MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
+MMR_m_orig <- readRDS(here("data", "model_output", "samples_MMR_orig.rds"))
+MMR_m_epoptions <- readRDS(here("data", "model_output", "samples_MMR_equalprior-options.rds"))
+
 MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
 
@@ -63,22 +65,14 @@ MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
 
 # Testing contrasts
-MMR.emm = MMR_m %>%
-  emmeans(~  Group | TestSpeaker)
-contrast(MMR.emm, "trt.vs.ctrl", adjust = "none") # no difference with default or adjust="none"
-coef(contrast(MMR.emm, "trt.vs.ctrl"))
-
-plot(MMR.emm)
-
-# this does the exact same:
-MMR.emm2 = MMR_m %>%
+MMR.emm = MMR_m_orig %>%
   emmeans(~  Group|TestSpeaker)
-pairs(MMR.emm2) 
+pairs(MMR.emm) 
 
-# Also same:
-MMR.emm3 = MMR_m %>%
-  emmeans(~  Group:TestSpeaker)
-pairs(MMR.emm3, simple = "Group") # same as pairs(MMR.emm2, by = "TestSpeaker") 
+# #  same:
+# MMR.emm2 = MMR_m %>%
+#   emmeans(~  Group:TestSpeaker)
+# pairs(MMR.emm2, simple = "Group") # same as pairs(MMR.emm2, by = "TestSpeaker") 
 
 
 
@@ -106,7 +100,12 @@ custom_contrasts <- list(
   list("unfam2-fam1" = unfam2 - fam1),
   list("unfam2-unfam3" = unfam2 - unfam3),
   list("unfam1-unfam2" = unfam1 - unfam2)
-)
+) # this should also work like this:L
+# custom_contrasts <- list(
+#   "unfam2-fam1" = unfam2 - fam1,
+#   "unfam2-unfam3" = unfam2 - unfam3,
+#   "unfam1-unfam2" = unfam1 - unfam2)
+# )
 
 contrast(MMR_rec.emm2, method = custom_contrasts)
 

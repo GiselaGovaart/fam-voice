@@ -95,15 +95,11 @@ priors <- c(set_prior("normal(2.92, 14)",  # sd=14 is here the SD of the distrib
                       class = "Intercept"),
             set_prior("normal(0, 14)",  # this is the prior on the slope
                       class = "b"),
-            set_prior("normal(0, 14)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this casesigma represents the standard deviation of the response variable, mmr in this cas
+            set_prior("normal(0, 14)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case sigma represents the standard deviation of the response variable, mmr in this cas
                       class = "sigma")) # it's a bit strange because of course, sigma cannot be smaller than zero..an alternative to incorporate that would be normal(14,5)
          
 # altermnative for sigma:
-#prior_sigma <- set_prior("student_t(3, 0, 20)", class = "sigma")
-
-
-
-
+#prior_sigma <- set_prior("student_t(3, 0, 14)", class = "sigma")
 
 
 # let's check the default prior for sigma in brms:
