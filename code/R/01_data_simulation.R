@@ -24,7 +24,9 @@ dat$TestSpeaker_n <- ifelse(dat$TestSpeaker=="1", +0.5, -0.5)
 dat$Group_n <- ifelse(dat$Group=="fam", +0.5, -0.5)
 
 # simulate data
-dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14) # 1st part: the mean of the MMR for all groups together, 2nd part: making sure the groups are different, 3rd part: adding noise: the SD of the MMR is 14
+dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14) # 1st part: the mean of the MMR for all groups together, 
+                                                              # 2nd part: making sure the groups are different: adding an effect of 5: S1=2.5, S2=-2/5
+                                                              # 3rd part: adding noise: the SD of the MMR is 14
 
 # now add dummy values for the other variables
 dat$mumDistTrainS = NA
@@ -39,15 +41,16 @@ dat$timeVoiceFam = rep(round(rnorm(nrow(dat)/2,21,2)), each=2)
 dat$nrSpeakersDaily = rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
 dat$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat)/2, replace = TRUE), each=2)
 
-# centering the covariates -  CHECK WHETHER THIS IS NECESSARY
-# (dat <- dat %>%
-#     mutate(mumDistTrainS = mumDistTrainS - mean(mumDistTrainS)))
-# (dat <- dat %>%
-#     mutate(mumDistNovelS = mumDistNovelS - mean(mumDistNovelS)))
-# (dat <- dat %>%
-#     mutate(timeVoiceFam = timeVoiceFam - mean(timeVoiceFam)))
-# (dat <- dat %>%
-#     mutate(nrSpeakersDaily = nrSpeakersDaily - mean(nrSpeakersDaily)))
+
+dat = subset(dat, select = -c(TestSpeaker_n,Group_n) ) # remove these "contrast coding columns" because we only use them for data simulation
+dat$sleepState = as.factor(dat$sleepState)
+
+# Center and scale: this subtracts the mean from each value and then divides by the SD
+dat$mumDistTrainS <- scale(dat$mumDistTrainS)
+dat$mumDistNovelS <- scale(dat$mumDistNovelS)
+dat$timeVoiceFam <- scale(dat$timeVoiceFam)
+dat$nrSpeakersDaily <- scale(dat$nrSpeakersDaily)
+
 
 
 # Simulate some data for ACQUISITION--------------------------------------------------------------------
@@ -102,7 +105,13 @@ dat_rec$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(da
 
 dat_rec = subset(dat_rec, select = -c(TestSpeaker_n,Group_n) ) # remove these "contrast coding columns" because we only use them for data simulation
 
+dat_rec$sleepState = as.factor(dat_rec$sleepState)
 
+# Center and scale
+dat_rec$mumDistTrainS <- scale(dat_rec$mumDistTrainS)
+dat_rec$mumDistNovelS <- scale(dat_rec$mumDistNovelS)
+dat_rec$timeVoiceFam <- scale(dat_rec$timeVoiceFam)
+dat_rec$nrSpeakersDaily <- scale(dat_rec$nrSpeakersDaily)
 
 rm(design,i)
 

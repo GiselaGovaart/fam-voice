@@ -1,4 +1,3 @@
-
 # RNG --------------------------------------------------------
 
 project_seed <- 2049
@@ -30,7 +29,6 @@ library(logspline)
 # # c("unordered", "ordered"), but the names are unused.
 # options(backup_options)
 
-
 # https://easystats.github.io/bayestestR/articles/bayes_factors.html#appendices
 # orthonormal factor coding (see Rouder, Morey, Speckman, & Province, 2012, sec. 7.2)
 # important when working with factors with 3 or more levels
@@ -40,8 +38,8 @@ library(logspline)
 # load data --------------------------------------------------------------------
 
 # results of model fit
-MMR_m_orig <- readRDS(here("data", "model_output", "samples_MMR_orig.rds"))
-MMR_m_epoptions <- readRDS(here("data", "model_output", "samples_MMR_equalprior-options.rds"))
+MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
+#MMR_m_orig <- readRDS(here("data", "model_output", "samples_MMR_orig.rds"))
 
 MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
@@ -65,8 +63,8 @@ MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
 
 # Testing contrasts
-MMR.emm = MMR_m_orig %>%
-  emmeans(~  Group|TestSpeaker)
+MMR.emm = MMR_m %>%
+  emmeans(~ Group|TestSpeaker)
 pairs(MMR.emm) 
 
 # #  same:
@@ -123,10 +121,6 @@ contrast(MMR_rec.emm3, "poly")
 
 
 
-
-
-
-
 ##### from Antonio:
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 
@@ -142,18 +136,18 @@ contrast(MMR_rec.emm3, "poly")
 # loop over density estimation method (to assess robustness)
 pMAP_method <- c("kernel", "logspline", "KernSmooth")
 
+
+#### ACQUISTION
 # preallocate empty dataframes
 pMAP_Group_Speaker_MMR_m <- NULL
-pMAP_Group_Speaker_nested_MMR_m <- NULL
 pMAP_Speaker_MMR_m <- NULL
-# Group:Testspeaker interaction
+pMAP_nrSpeakers_MMR_m <- NULL
+
+# Simple effects of Group
 for (i in pMAP_method) {
   temp <-
     MMR_m %>%
-    emmeans(~ Group:TestSpeaker) %>%
-    # here we create all the all the pairs between the two levels of your two factors
-    # if you only want to look at the effect of Expectancy, just use (~ Expectancy)
-    # so for Gisela's data, do this 3 times, once with (~Group:TestVoice), once with (~Group) and once with (~TestVoice)
+    emmeans(~ Group|TestSpeaker) %>%
     pairs() %>%
     p_map(
       method = i
@@ -175,48 +169,11 @@ for (i in pMAP_method) {
 
 pMAP_Group_Speaker_MMR_m
 
-# Group:Testspeaker interaction for nested model
-for (i in pMAP_method) {
-  temp <-
-    fit_Nest %>%
-    emmeans(~ Group:TestSpeaker) %>% # or: Group/TestSpeaker ??
-    # here we create all the all the pairs between the two levels of your two factors
-    # if you only want to look at the effect of Expectancy, just use (~ Expectancy)
-    # so for Gisela's data, do this 3 times, once with (~Group:TestVoice), once with (~Group) and once with (~TestVoice)
-    pairs() %>%
-    p_map(
-      method = i
-    ) %>%
-    mutate(
-      "method" = i,
-      "p < .05" = ifelse(p_MAP < .05, "*", "")
-    )
-  
-  pMAP_Group_Speaker_nested_MMR_m <-
-    rbind(
-      pMAP_Group_Speaker_nested_MMR_m,
-      temp
-    ) %>%
-    arrange(p_MAP)
-  
-  rm(temp)
-}
-
-pMAP_Group_Speaker_nested_MMR_m
-
-
-# NB: if we compare these two outputs (once interaction model, once nested model, we do see there is a difference. 
-# so then the nested model does not make sense I think)
-
-
 # Speaker effect
 for (i in pMAP_method) {
   temp <-
     MMR_m %>%
     emmeans(~ TestSpeaker) %>%
-    # here we create all the all the pairs between the two levels of your two factors
-    # if you only want to look at the effect of Expectancy, just use (~ Expectancy)
-    # so for Gisela's data, do this 3 times, once with (~Group:TestVoice), once with (~Group) and once with (~TestVoice)
     pairs() %>%
     p_map(
       method = i
@@ -238,6 +195,146 @@ for (i in pMAP_method) {
 
 pMAP_Speaker_MMR_m
 
+# nrSpeakersDailyLife effect
+for (i in pMAP_method) {
+  temp <-
+    MMR_m %>%
+    emmeans(~ nrSpeakersDaily) %>%
+   # pairs() %>% # no pairs because continuous variable
+    p_map(
+      method = i
+    ) %>%
+    mutate(
+      "method" = i,
+      "p < .05" = ifelse(p_MAP < .05, "*", "")
+    )
+  
+  pMAP_nrSpeakers_MMR_m <-
+    rbind(
+      pMAP_nrSpeakers_MMR_m,
+      temp
+    ) %>%
+    arrange(p_MAP)
+  
+  rm(temp)
+}
+
+pMAP_nrSpeakers_MMR_m
+
+
+
+
+# # Group:Testspeaker interaction for nested model
+# pMAP_Group_Speaker_nested_MMR_m <- NULL
+# for (i in pMAP_method) {
+#   temp <-
+#     fit_Nest %>%
+#     emmeans(~ Group:TestSpeaker) %>% # or: Group/TestSpeaker ??
+#     # here we create all the all the pairs between the two levels of your two factors
+#     # if you only want to look at the effect of Expectancy, just use (~ Expectancy)
+#     # so for Gisela's data, do this 3 times, once with (~Group:TestVoice), once with (~Group) and once with (~TestVoice)
+#     pairs() %>%
+#     p_map(
+#       method = i
+#     ) %>%
+#     mutate(
+#       "method" = i,
+#       "p < .05" = ifelse(p_MAP < .05, "*", "")
+#     )
+#   
+#   pMAP_Group_Speaker_nested_MMR_m <-
+#     rbind(
+#       pMAP_Group_Speaker_nested_MMR_m,
+#       temp
+#     ) %>%
+#     arrange(p_MAP)
+#   
+#   rm(temp)
+# }
+# 
+# pMAP_Group_Speaker_nested_MMR_m
+# NB: if we compare these two outputs (once interaction model, once nested model, we do see there is a difference. 
+# so then the nested model does not make sense I think)
+
+
+#### RECOGNITION
+# REC
+# Hypotheses -------------------------------------------------------------------
+# S1 = S1, S2 = S4, S3 = S3
+# RQ1: unfam S2 - fam S1
+# RQ2: unfam S2 - unfam S3
+# RQ3: unfam S1 - unfam S2
+
+# make custom contrasts (from https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/)
+unfam2 = c(0,0,0,1,0,0)
+fam1 = c(1,0,0,0,0,0)
+unfam3 = c(0,0,0,0,0,1)
+unfam1 = c(0,1,0,0,0,0)
+
+custom_contrasts <- list(
+  list("unfam2-fam1" = unfam2 - fam1),
+  list("unfam2-unfam3" = unfam2 - unfam3),
+  list("unfam1-unfam2" = unfam1 - unfam2)
+) 
+
+# preallocate empty dataframes
+pMAP_rec_custom_m <- NULL
+pMAP_rec_nrSpeaker_m <- NULL
+
+# Custom contrast
+for (i in pMAP_method) {
+  temp <-
+    MMR_m_rec %>%
+    emmeans(~ Group:TestSpeaker) %>%
+    contrast(method = custom_contrasts) %>%
+    p_map(
+      method = i
+    ) %>%
+    mutate(
+      "method" = i,
+      "p < .05" = ifelse(p_MAP < .05, "*", "")
+    )
+  
+  pMAP_rec_custom_m <-
+    rbind(
+      pMAP_rec_custom_m,
+      temp
+    ) %>%
+    arrange(p_MAP)
+  
+  rm(temp)
+}
+
+pMAP_rec_custom_m
+
+# nrSpeakersDailyLife effect
+for (i in pMAP_method) {
+  temp <-
+    MMR_m_rec %>%
+    emmeans(~ nrSpeakersDaily) %>%
+    # pairs() %>% # no pairs because continuous variable
+    p_map(
+      method = i
+    ) %>%
+    mutate(
+      "method" = i,
+      "p < .05" = ifelse(p_MAP < .05, "*", "")
+    )
+  
+  pMAP_rec_nrSpeaker_m <-
+    rbind(
+      pMAP_rec_nrSpeaker_m,
+      temp
+    ) %>%
+    arrange(p_MAP)
+  
+  rm(temp)
+}
+
+pMAP_rec_nrSpeaker_m
+
+
+
 # caveats --------------------------------------------------------
 
 # 1) p_MAP allows to assess the presence of an effect, not its *magnitude* or *importance* (https://easystats.github.io/bayestestR/articles/probability_of_direction.html)
@@ -258,13 +355,13 @@ MMR_m_prior <- unupdate(MMR_m) # sample priors from model
 # pairwise comparisons of prior distributions
 Group_Speaker_MMR_m_prior_pairwise <-
   MMR_m_prior %>%
-  emmeans(~ Group:TestSpeaker) %>% # estimated marginal means
+  emmeans(~ Group|TestSpeaker) %>% # estimated marginal means
   pairs() # pairwise comparisons
 
 # pairwise comparisons of posterior distributions
 Group_Speaker_MMR_m_pairwise <-
   MMR_m %>%
-  emmeans(~ Group:TestSpeaker) %>%
+  emmeans(~ Group|TestSpeaker) %>%
   pairs()
 
 # Bayes Factors (Savage-Dickey density ratio)
@@ -296,6 +393,16 @@ BF_Group_Speaker_MMR_m <-
   )
 
 BF_Group_Speaker_MMR_m
+
+## check whether the priors were equal (yes!)
+ggplot(stack(insight::get_parameters(Group_Speaker_MMR_m_prior_pairwise)), aes(x = values, fill = ind)) +
+  geom_density(linewidth = 1) +
+  facet_grid(ind ~ .) +
+  labs(x = "prior difference values") +
+  theme(legend.position = "none")
+
+point_estimate(Group_Speaker_MMR_m_prior_pairwise, centr = "mean", disp = TRUE)
+
 
 # Model for only TestSpeaker
 # pairwise comparisons of prior distributions
@@ -341,86 +448,34 @@ BF_Speaker_MMR_m <-
 BF_Speaker_MMR_m
 
 
-# TESTING priors equal
-MMR_m_prior <- unupdate(MMR_m) # sample priors from model
-
-MMR_m_prior_rq12 <-
-  MMR_m_prior %>%
-  emmeans(~  Group|TestSpeaker) %>%
-  pairs() 
-
-MMR_m_rq12 <-
-  MMR_m %>%
-  emmeans(~  Group|TestSpeaker) %>%
-  pairs() 
-
-# Bayes Factors (Savage-Dickey density ratio)
-BF_rq12 <-
-  MMR_m_rq12 %>%
-  bf_parameters(prior = MMR_m_prior_rq12) %>%
-  arrange(log_BF) # sort according to BF
-
-# add rule-of-thumb interpretation
-BF_rq12 <-
-  BF_rq12 %>%
-  add_column(
-    "interpretation" = interpret_bf(
-      BF_rq12$log_BF,
-      rules = "raftery1995",
-      log = TRUE,
-      include_value = TRUE,
-      protect_ratio = TRUE,
-      exact = TRUE
-    ),
-    .after = "log_BF"
-  )
-
-BF_rq12
-
-# check priors equal?  --> only if we set contrasts(dat_rec$TestSpeaker) <- contr.equalprior_pairs before running the model in parameter_estimation.R
-ggplot(stack(insight::get_parameters(MMR_m_prior_rq12)), aes(x = values, fill = ind)) +
-  geom_density(linewidth = 1) +
-  facet_grid(ind ~ .) +
-  labs(x = "prior difference values with contr.equalprior_pairs on $TestSpeaker") +
-  theme(legend.position = "none")
-
-est <- emmeans(MMR_m_prior, pairwise ~  Group|TestSpeaker)
-
-point_estimate(est, centr = "mean", disp = TRUE)
-
-
-
-
-
-
 ##### Model for REC ------------------------
 rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
 
-#### RQ1
+#### Custom contrasts
 #  comparison of prior distributions
-rec_MMR_m_prior_rq1 <-
+rec_MMR_m_prior <-
   rec_MMR_m_prior %>%
   emmeans(~ Group:TestSpeaker)
-rec_MMR_m_prior_rq1 = contrast(rec_MMR_m_prior_rq1, method = list("unfam2-fam1" = unfam2 - fam1))
+rec_MMR_m_prior = contrast(rec_MMR_m_prior, method = custom_contrasts)
 
 #  comparison of posterior distributions
-rec_MMR_m_rq1 <-
+rec_MMR_m <-
   MMR_m_rec %>%
   emmeans(~ TestSpeaker:Group) 
-rec_MMR_m_rq1 = contrast(rec_MMR_m_rq1, method = list("unfam2-fam1" = unfam2 - fam1))
+rec_MMR_m = contrast(rec_MMR_m, method = custom_contrasts)
 
 # Bayes Factors (Savage-Dickey density ratio)
-BF_rec_rq1 <-
-  rec_MMR_m_rq1 %>%
-  bf_parameters(prior = rec_MMR_m_prior_rq1) %>%
+BF_rec <-
+  rec_MMR_m %>%
+  bf_parameters(prior = rec_MMR_m_prior) %>%
   arrange(log_BF) # sort according to BF
 
 # add rule-of-thumb interpretation
-BF_rec_rq1 <-
-  BF_rec_rq1 %>%
+BF_rec <-
+  BF_rec %>%
   add_column(
     "interpretation" = interpret_bf(
-      BF_rec_rq1$log_BF,
+      BF_rec$log_BF,
       rules = "raftery1995",
       log = TRUE,
       include_value = TRUE,
@@ -430,63 +485,22 @@ BF_rec_rq1 <-
     .after = "log_BF"
   )
 
-BF_rec_rq1
+BF_rec
 
-# check priors equal?  --> here there is only one comparison, so yes, the prior is equal...
-ggplot(stack(insight::get_parameters(rec_MMR_m_prior_rq1)), aes(x = values, fill = ind)) +
+# check priors equal?
+# --> they're not, because unfam2-fam1 differ both for group and TestSpeaker. 
+# I have no idea how to set that such that the priors would also be equal here
+ggplot(stack(insight::get_parameters(rec_MMR_m_prior)), aes(x = values, fill = ind)) +
   geom_density(linewidth = 1) +
   facet_grid(ind ~ .) +
-  labs(x = "prior difference values without contr.equalprior_pairs on $TestSpeaker") +
+  labs(x = "prior difference values") +
   theme(legend.position = "none")
 
-
-#### All pairs
-# pairwise comparisons of prior distributions
-rec_MMR_m_prior_pairwise <-
-  rec_MMR_m_prior %>%
-  emmeans(~ Group:TestSpeaker) %>% # estimated marginal means
-  pairs() # pairwise comparisons
-
-# pairwise comparisons of posterior distributions
-rec_MMR_m_pairwise <-
-  MMR_m_rec %>%
-  emmeans(~ Group:TestSpeaker) %>%
-  pairs()
-
-# Bayes Factors (Savage-Dickey density ratio)
-BF_rec_pairwise <-
-  rec_MMR_m_pairwise %>%
-  bf_parameters(prior = rec_MMR_m_prior_pairwise) %>%
-  arrange(log_BF) # sort according to BF
-
-# add rule-of-thumb interpretation
-BF_rec_pairwise <-
-  BF_rec_pairwise %>%
-  add_column(
-    "interpretation" = interpret_bf(
-      BF_rec_pairwise$log_BF,
-      rules = "raftery1995",
-      log = TRUE,
-      include_value = TRUE,
-      protect_ratio = TRUE,
-      exact = TRUE
-    ),
-    .after = "log_BF"
-  )
-
-BF_rec_pairwise
-
-# check priors equal? --> no they're not
-ggplot(stack(insight::get_parameters(rec_MMR_m_prior_pairwise)), aes(x = values, fill = ind)) +
-  geom_density(linewidth = 1) +
-  facet_grid(ind ~ .) +
-  labs(x = "prior difference values without contr.equalprior_pairs on $TestSpeaker") +
-  theme(legend.position = "none")
+point_estimate(rec_MMR_m_prior, centr = "mean", disp = TRUE)
 
 
 
-
-# output: 
+# output BF: 
 # - “Evidence against the null: 0” this does not have to be 0. Can be another model for example
 # BA(10): first looking at alternative and then null. 
 # This is what’s always is used in the table. So if there is strong evidence against ha, 
@@ -496,6 +510,10 @@ ggplot(stack(insight::get_parameters(rec_MMR_m_prior_pairwise)), aes(x = values,
 # this is also explained well in JASP
 
 
+
+
+
+## ADAPT
 # merge info and save to file --------------------------------------------------------
 MMR_pMAP_BF <-
   full_join(

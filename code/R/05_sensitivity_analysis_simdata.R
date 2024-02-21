@@ -2,9 +2,6 @@
 project_seed <- 2049
 set.seed(project_seed) # set seed
 
-# install packages --------------------------------------------------------------------
-
-
 # load packages --------------------------------------------------------------------
 library(ggplot2)
 library(brms)
@@ -17,6 +14,7 @@ formula = MMR ~ 1 + TestSpeaker * Group +
   mumDistNovelS * TestSpeaker + 
   timeVoiceFam * TestSpeaker * Group +
   nrSpeakersDaily * TestSpeaker * Group + 
+  sleepState * TestSpeaker * Group + 
   (1 | Subj) + (1 | TestSpeaker*Group)
 
 
@@ -26,20 +24,24 @@ priors_orig <-
   c(set_prior("normal(2.92, 14)",  
               class = "Intercept"),
     set_prior("normal(0, 14)",  
-              class = "b"))
+              class = "b"),
+    set_prior("normal(0, 14)", 
+              class = "sigma")) 
 
 priors2 <-
   c(set_prior("normal(0, 28)",  
               class = "Intercept"),
     set_prior("normal(0, 28)",  
-              class = "b")) # weakly informative prior on intercept & slopes: this is still biologically plausible
-
+              class = "b"), # weakly informative prior on intercept & slopes: this is still biologically plausible
+    set_prior("normal(0, 14)", 
+              class = "sigma")) 
 priors3 <-
   c(set_prior("normal(0, 50)",  
               class = "Intercept"),
     set_prior("normal(0, 50)",  
-              class = "b")) # uninformative prior on intercept & slopes: this is not biologically plausible
-
+              class = "b"), # uninformative prior on intercept & slopes: this is not biologically plausible
+    set_prior("normal(0, 14)", 
+              class = "sigma")) 
 
 # Plot the priors (code adapted from https://osf.io/eyd4r/)
 # Save the x-axis limits in a dataframe
@@ -67,7 +69,7 @@ p <- ggplot(df, aes(x=x)) +
 # Print the plot
 p
 
-# model orig prior (converges)
+# model orig prior (1 divergent transition after warmup)
 m_sens_orig <- brm(formula,
                    data = dat,
                    prior = priors_orig,
@@ -77,43 +79,33 @@ m_sens_orig <- brm(formula,
 
 plot(m_sens_orig) # looks good
 
-# model alternative priors 2 (4 divergent transitions after warmup)
-m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group + 
-                  mumDistTrainS * TestSpeaker + 
-                  mumDistNovelS * TestSpeaker + 
-                  timeVoiceFam * TestSpeaker * Group +
-                  nrSpeakersDaily * TestSpeaker * Group + 
-                  (1 | Subj) + (1 | TestSpeaker*Group),
+# model alternative priors 2 (0 divergent transitions after warmup)
+m_sens_2 <- brm(formula,
                 data = dat,
                 prior = priors2,
                 iter = 4000, chains = 4, warmup = 2000, thin = 1,
                 family = gaussian(), 
                 control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-plot(m_sens_2)
+plot(m_sens_2) # looks good
 
-# model alternative priors 3 (4 divergent transitions after warmup)
-m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group + 
-                  mumDistTrainS * TestSpeaker + 
-                  mumDistNovelS * TestSpeaker + 
-                  timeVoiceFam * TestSpeaker * Group +
-                  nrSpeakersDaily * TestSpeaker * Group + 
-                  (1 | Subj) + (1 | TestSpeaker*Group),
+# model alternative priors 3 (1 divergent transitions after warmup)
+m_sens_3 <- brm(formula,
                 data = dat,
                 prior = priors3,
                 iter = 4000, chains = 4, warmup = 2000, thin = 1,
                 family = gaussian(), 
                 control = list(adapt_delta = 0.99, max_treedepth = 15))
 
-plot(m_sens_3)
+plot(m_sens_3) # looks good
 
-summary(m_sens_orig)
-summary(m_sens_2)
-summary(m_sens_3)
+summary(m_sens_orig) # Rhat and ESS'es look good
+summary(m_sens_2) # Rhat and ESS'es look good
+summary(m_sens_3) # Rhat and ESS'es look good
 
-posterior_summary(m_sens_orig, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
-posterior_summary(m_sens_2, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
-posterior_summary(m_sens_3, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
+posterior_summary(m_sens_orig, variable=c("b_Intercept","b_TestSpeaker2", "b_Groupunfam", "sigma"))
+posterior_summary(m_sens_2, variable=c("b_Intercept","b_TestSpeaker2", "b_Groupunfam", "sigma"))
+posterior_summary(m_sens_3, variable=c("b_Intercept","b_TestSpeaker2", "b_Groupunfam", "sigma"))
 
 # Visualize posterior distributions
 # for prior_orig
@@ -157,4 +149,7 @@ ggplot() +
              linetype = 2) +
   theme_light() +
   labs(title = "Posterior Density of the Intercept for different priors") 
+
+## CONCLUSION
+# the priors do not seem to have a too large influence?
 
