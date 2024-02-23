@@ -8,21 +8,27 @@ library(brms)
 
 # Set priors ------------------------------------------------------------
 # priors 0.4 Hz filter
-priors <- c(set_prior("normal(2.92, 14)", 
-                      class = "Intercept"),
-            set_prior("normal(0, 14)", 
-                      class = "b"),
-            set_prior("normal(0, 14)", 
-                      class = "sigma")) 
+priors_acq_low <- c(set_prior("normal(5.94, 20.52)",  
+                              class = "Intercept"),
+                    set_prior("normal(0, 20.52)",  
+                              class = "b"),
+                    set_prior("normal(0, 20.52)",  
+                              class = "sigma"))
 
+priors_rec_low <- c(set_prior("normal(5.97, 23.34)",  
+                              class = "Intercept"),
+                    set_prior("normal(0, 23.34)",  
+                              class = "b"),
+                    set_prior("normal(0, 23.34)",  
+                              class = "sigma")) 
 # priors 1 Hz filter
 
-
+## Checks for now with REC data:
 # Posterior recovery checks WIHTOUT covariates --------------------------------------------------------------------
 # Now we check whether the model can also recover the underlying data (with our simulated data)
 # define and fit model
-m1 <- brm(MMR ~ 1 + Group * TestSpeaker + (1 | Subj), data = dat,
-          prior = priors,
+m1 <- brm(MMR ~ 1 + Group * TestSpeaker + (1 | Subj), data = dat_rec,
+          prior = priors_rec_low,
           iter = 2000, chains = 4, family = gaussian(), 
           control = list(adapt_delta = 0.99))
 # check traces and posterior distributions
@@ -30,14 +36,15 @@ plot(m1)
 # the traces look like good hairy caterpillars
 # since we simulated the data ourselves, we know the true values that the model needs to recover, 
 # and we can check whether these distributions make sense: 
-# the simulated data was: dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14)
-# so the mean (intercept) should be ~2.92
+# the simulated data was: dat$MMR <- 6 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,22)
+# so the mean (intercept) should be ~ 6
 # TestSpeaker (beta) shoud be ~ 5
-# sigma should be ~14
+# sigma should be ~ 22
 # the posterior distributions look quite close to this:
 # They are also normally distributed, and for example do not have 2 bumps
-# b_Intercept is around 4, but 2.92 is clearly in the distribution
-# it does seem to estimate as big an effect for group as for TestSpeaker??
+# b_Intercept is around 6
+# It seems to retrieve an effect for TestSpeaker, and no effect for group
+# sigma is around 20
 
 # Posterior check
 pp_check(m1, ndraws=50)
@@ -58,32 +65,31 @@ summary(m1)
 m2 <- brm(MMR ~ 1 + TestSpeaker * Group + 
             mumDistTrainS * TestSpeaker + 
             mumDistNovelS * TestSpeaker + 
-            timeVoiceFam * TestSpeaker * Group +
-            nrSpeakersDaily * TestSpeaker * Group + 
-            sleepState * TestSpeaker * Group + 
-            (1 | Subj) + (1 | TestSpeaker*Group),
-          data = dat,
-          prior = priors,
+            timeVoiceFam * Group +
+            nrSpeakersDaily + 
+            sleepState + 
+            (1 + TestSpeaker * Group | Subj) ,
+          data = dat_rec,
+          prior = priors_rec_low,
           iter = 2000, chains = 4, family = gaussian(), 
           control = list(adapt_delta = 0.99))
-
 
 # check traces and posterior distributions
 plot(m2)
 # the traces look like good hairy caterpillars
 # since we simulated the data ourselves, we know the true values that the model needs to recover, 
 # and we can check whether these distributions make sense: 
-# the simulated data was: dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14)
-# so the mean (intercept) should be ~2.92
+# the simulated data was: dat$MMR <- 6 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,22)
+# so the mean (intercept) should be ~6
 # TestSpeaker (beta) shoud be ~ 5
-# sigma should be ~14
+# sigma should be ~22
 # the posterior distributions look quite close to this:
 # They are also normally distributed, and for example do not have 2 bumps
-# b_Intercept is around 0, but 2.92 is clearly in the distribution
-# b_TestSpeaker2 is indeed estimated at around 5, and b_Groupunfam around 0
-# it does seem to estimate an effect for nrSpeakersDaily that's not there, and possibly also for timeVoiceFam
-# for the interactions, at least 0 is always in the distribution, it does not halllucinate crazy things
-# sigma for TestSpeaker and for Group seem to be around 14, and the effect of sigma is around 12
+# b_Intercept is around 10
+# It seems to retrieve a very small effect for TestSpeaker, and no effect for group
+# sigma is around 20
+# for the interactions, at least 0 is always in the distribution, it does not hallucinate crazy things (except may an effect for nrSpeakersDaily awake?)
+# sigma for TestSpeaker and for Group seem to be okay, and the effect of sigma is around 20
 
 
 # Posterior check

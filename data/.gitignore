@@ -1,2 +1,10 @@
 !data_pilot.csv
 !codebook_data_pilot.csv
+!data_pilot_acq_low.csv
+!codebook_data_pilot_acq_low.csv
+!data_pilot_acq_high.csv
+!codebook_data_pilot_acq_high.csv
+!data_pilot_rec_low.csv
+!codebook_data_pilot_rec_low.csv
+!data_pilot_rec_high.csv
+!codebook_data_pilot_rec_high.csv

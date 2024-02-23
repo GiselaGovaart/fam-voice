@@ -4,5 +4,29 @@ data:
     load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
     codebook: codebook_data_pilot.Rmd
     labels: value_labels_data_pilot.yml
+  data_pilot_acq_low.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    codebook: codebook_data_pilot_acq_low.Rmd
+    labels: value_labels_data_pilot_acq_low.yml
+  data_pilot_acq_high.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    codebook: codebook_data_pilot_acq_high.Rmd
+    labels: value_labels_data_pilot_acq_high.yml
+  data_pilot_rec_low.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    codebook: codebook_data_pilot_rec_low.Rmd
+    labels: value_labels_data_pilot_rec_low.yml
+  data_pilot_rec_high.csv:
+    save_expression: write.csv(x = data, file = filename, row.names = FALSE)
+    load_expression: read.csv(file = filename, stringsAsFactors = TRUE)
+    codebook: codebook_data_pilot_rec_high.Rmd
+    labels: value_labels_data_pilot_rec_high.yml
 checksums:
   data_pilot.csv: 14086ddf21247e53b092d81307e249e4
+  data_pilot_acq_low.csv: 2496a5c4686bd9aab67de5b9822c1737
+  data_pilot_acq_high.csv: 40e66f4afb30a8d61246e709b1c4931a
+  data_pilot_rec_low.csv: 2496a5c4686bd9aab67de5b9822c1737
+  data_pilot_rec_high.csv: 9df19172f16c1766e0a1f2fd68b80788

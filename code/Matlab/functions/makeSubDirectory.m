@@ -1,4 +1,4 @@
-function DIR = makeSubDirectory(DIR, manualInfoFolder)
+function DIR = makeSubDirectory(DIR, manualInfoFolder,filtervalue)
 
 
 
@@ -10,7 +10,7 @@ function DIR = makeSubDirectory(DIR, manualInfoFolder)
 %         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
 %         "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr);
 
-DIR.overallPath = strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder);
+DIR.overallPath = strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder,"_filter-",filtervalue);
 
 mkdir(DIR.overallPath);
 mkdir(strcat(DIR.overallPath,"/01-intermediate_processing/"));

@@ -1,3 +1,7 @@
+### CLEAN UP
+
+
+
 # RNG --------------------------------------------------------
 
 project_seed <- 2049
@@ -39,13 +43,9 @@ library(logspline)
 
 # results of model fit
 MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
-#MMR_m_orig <- readRDS(here("data", "model_output", "samples_MMR_orig.rds"))
-
 MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 
 
-# Trying out different contrasts:
-# ACQ
 # Hypotheses -------------------------------------------------------------------
 # For the Acquisition RQ, we want the following comparisons
 # 1. For test_speaker = Speaker1, the mmr is different for group=fam vs group = unfam. 
@@ -59,69 +59,19 @@ MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
 # for TestSpeaker:
 # RQ3: TestSpeaker1 - TestSpeaker2
 # general:
-# RG4: nrSpeakersDaily
+# RQ4: nrSpeakersDaily
+# RQ5: sleepState
 
-
-# Testing contrasts
-MMR.emm = MMR_m %>%
-  emmeans(~ Group|TestSpeaker)
-pairs(MMR.emm) 
-
-# #  same:
-# MMR.emm2 = MMR_m %>%
-#   emmeans(~  Group:TestSpeaker)
-# pairs(MMR.emm2, simple = "Group") # same as pairs(MMR.emm2, by = "TestSpeaker") 
-
-
-
-# REC
-# Hypotheses -------------------------------------------------------------------
+# For the Recognition RQ, we want the following comparisons
 # S1 = S1, S2 = S4, S3 = S3
 # RQ1: unfam S2 - fam S1
 # RQ2: unfam S2 - unfam S3
 # RQ3: unfam S1 - unfam S2
-
-# make custom contrasts (from https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/)
-unfam2 = c(0,0,0,1,0,0)
-fam1 = c(1,0,0,0,0,0)
-unfam3 = c(0,0,0,0,0,1)
-unfam1 = c(0,1,0,0,0,0)
-
-MMR_rec.emm2 = modelMMR_rec %>%
-  emmeans(~ Group:TestSpeaker)
-
-contrast(MMR_rec.emm2, method = list("unfam2-fam1" = unfam2 - fam1))
-contrast(MMR_rec.emm2, method = list("unfam2-unfam3" = unfam2 - unfam3))
-contrast(MMR_rec.emm2, method = list("unfam1-unfam2" = unfam1 - unfam2))
-
-custom_contrasts <- list(
-  list("unfam2-fam1" = unfam2 - fam1),
-  list("unfam2-unfam3" = unfam2 - unfam3),
-  list("unfam1-unfam2" = unfam1 - unfam2)
-) # this should also work like this:L
-# custom_contrasts <- list(
-#   "unfam2-fam1" = unfam2 - fam1,
-#   "unfam2-unfam3" = unfam2 - unfam3,
-#   "unfam1-unfam2" = unfam1 - unfam2)
-# )
-
-contrast(MMR_rec.emm2, method = custom_contrasts)
-
-# I checked, this gives the same output as (at least for the last two, the first one is given the other way around:) :
-MMR_rec.emm2 = MMR_m_rec %>%
-  emmeans(~ Group:TestSpeaker) %>%
-  pairs()
-MMR_rec.emm2
-
-MMR_rec.emm3 = MMR_m_rec %>%
-  emmeans(~ Group:TestSpeaker) 
-contrast(MMR_rec.emm3, "poly")
+# general:
+# RQ4: nrSpeakersDaily
+# RQ5: sleepState
 
 
-
-
-
-##### from Antonio:
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 
 # We use p-values here, but just to check the robustness, to check with other experiments with frequentist methods.
@@ -134,7 +84,9 @@ contrast(MMR_rec.emm3, "poly")
 # The MAP-based p-value is related to the odds that a parameter has against the null hypothesis (Mills and Parent, 2014; Mills, 2017). It is mathematically defined as the density value at 0 divided by the density at the Maximum A Posteriori (MAP), i.e., the equivalent of the mode for continuous distributions.
 
 # loop over density estimation method (to assess robustness)
-pMAP_method <- c("kernel", "logspline", "KernSmooth")
+# pMAP_method <- c("kernel", "logspline", "KernSmooth")
+# --> take this outone is enough. just take default = kernel
+pMAP_method <- c("kernel") # take out the loop
 
 
 #### ACQUISTION
@@ -142,6 +94,14 @@ pMAP_method <- c("kernel", "logspline", "KernSmooth")
 pMAP_Group_Speaker_MMR_m <- NULL
 pMAP_Speaker_MMR_m <- NULL
 pMAP_nrSpeakers_MMR_m <- NULL
+pMAP_sleepState_MMR_m <- NULL
+
+# set custom contrast sleep
+custom_contrasts_sleep <- list(
+  list("awake - activesleep and quietsleep" = c(1, -1/2, -1/2)),
+  list("quietsleep - awake and activesleep" = c(-1/2, -1/2, 1)),
+  list("quietsleep vs activesleep" =c(0, 1, -1))
+)
 
 # Simple effects of Group
 for (i in pMAP_method) {
@@ -196,44 +156,11 @@ for (i in pMAP_method) {
 pMAP_Speaker_MMR_m
 
 # nrSpeakersDailyLife effect
-for (i in pMAP_method) {
-  temp <-
-    MMR_m %>%
-    emmeans(~ nrSpeakersDaily) %>%
-   # pairs() %>% # no pairs because continuous variable
-    p_map(
-      method = i
-    ) %>%
-    mutate(
-      "method" = i,
-      "p < .05" = ifelse(p_MAP < .05, "*", "")
-    )
-  
-  pMAP_nrSpeakers_MMR_m <-
-    rbind(
-      pMAP_nrSpeakers_MMR_m,
-      temp
-    ) %>%
-    arrange(p_MAP)
-  
-  rm(temp)
-}
-
-pMAP_nrSpeakers_MMR_m
-
-
-
-
-# # Group:Testspeaker interaction for nested model
-# pMAP_Group_Speaker_nested_MMR_m <- NULL
 # for (i in pMAP_method) {
 #   temp <-
-#     fit_Nest %>%
-#     emmeans(~ Group:TestSpeaker) %>% # or: Group/TestSpeaker ??
-#     # here we create all the all the pairs between the two levels of your two factors
-#     # if you only want to look at the effect of Expectancy, just use (~ Expectancy)
-#     # so for Gisela's data, do this 3 times, once with (~Group:TestVoice), once with (~Group) and once with (~TestVoice)
-#     pairs() %>%
+#     MMR_m %>%
+#     emmeans(~ nrSpeakersDaily) %>%
+#    # pairs() %>% # no pairs because continuous variable
 #     p_map(
 #       method = i
 #     ) %>%
@@ -242,9 +169,9 @@ pMAP_nrSpeakers_MMR_m
 #       "p < .05" = ifelse(p_MAP < .05, "*", "")
 #     )
 #   
-#   pMAP_Group_Speaker_nested_MMR_m <-
+#   pMAP_nrSpeakers_MMR_m <-
 #     rbind(
-#       pMAP_Group_Speaker_nested_MMR_m,
+#       pMAP_nrSpeakers_MMR_m,
 #       temp
 #     ) %>%
 #     arrange(p_MAP)
@@ -252,18 +179,36 @@ pMAP_nrSpeakers_MMR_m
 #   rm(temp)
 # }
 # 
-# pMAP_Group_Speaker_nested_MMR_m
-# NB: if we compare these two outputs (once interaction model, once nested model, we do see there is a difference. 
-# so then the nested model does not make sense I think)
+# pMAP_nrSpeakers_MMR_m
+
+# SleepState effect
+for (i in pMAP_method) {
+  temp <-
+    MMR_m %>%
+    emmeans(~ sleepState) %>%
+    contrast(method = custom_contrasts_sleep) %>%
+    p_map(
+      method = i
+    ) %>%
+    mutate(
+      "method" = i,
+      "p < .05" = ifelse(p_MAP < .05, "*", "")
+    )
+  
+  pMAP_sleepState_MMR_m <-
+    rbind(
+      pMAP_sleepState_MMR_m,
+      temp
+    ) %>%
+    arrange(p_MAP)
+  
+  rm(temp)
+}
+
+pMAP_sleepState_MMR_m
 
 
 #### RECOGNITION
-# REC
-# Hypotheses -------------------------------------------------------------------
-# S1 = S1, S2 = S4, S3 = S3
-# RQ1: unfam S2 - fam S1
-# RQ2: unfam S2 - unfam S3
-# RQ3: unfam S1 - unfam S2
 
 # make custom contrasts (from https://aosmith.rbind.io/2019/04/15/custom-contrasts-emmeans/)
 unfam2 = c(0,0,0,1,0,0)
@@ -276,10 +221,24 @@ custom_contrasts <- list(
   list("unfam2-unfam3" = unfam2 - unfam3),
   list("unfam1-unfam2" = unfam1 - unfam2)
 ) 
+# I checked, the custom contrasts give the same output as (at least for the last two, the first one is given the other way around:) :
+
+MMR_rec.emm1 = MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker) %>%
+  contrast(method = custom_contrasts)
+MMR_rec.emm1
+
+MMR_rec.emm2 = MMR_m_rec %>%
+  emmeans(~ Group:TestSpeaker) %>%
+  pairs()
+MMR_rec.emm2
+
 
 # preallocate empty dataframes
 pMAP_rec_custom_m <- NULL
 pMAP_rec_nrSpeaker_m <- NULL
+pMAP_rec_sleepState_m <- NULL
+
 
 # Custom contrast
 for (i in pMAP_method) {
@@ -307,12 +266,38 @@ for (i in pMAP_method) {
 
 pMAP_rec_custom_m
 
-# nrSpeakersDailyLife effect
+# # nrSpeakersDailyLife effect
+# for (i in pMAP_method) {
+#   temp <-
+#     MMR_m_rec %>%
+#     emmeans(~ nrSpeakersDaily) %>%
+#     # pairs() %>% # no pairs because continuous variable
+#     p_map(
+#       method = i
+#     ) %>%
+#     mutate(
+#       "method" = i,
+#       "p < .05" = ifelse(p_MAP < .05, "*", "")
+#     )
+#   
+#   pMAP_rec_nrSpeaker_m <-
+#     rbind(
+#       pMAP_rec_nrSpeaker_m,
+#       temp
+#     ) %>%
+#     arrange(p_MAP)
+#   
+#   rm(temp)
+# }
+# 
+# pMAP_rec_nrSpeaker_m
+
+# sleepState effect
 for (i in pMAP_method) {
   temp <-
     MMR_m_rec %>%
-    emmeans(~ nrSpeakersDaily) %>%
-    # pairs() %>% # no pairs because continuous variable
+    emmeans(~ sleepState) %>%
+    contrast(method = custom_contrasts_sleep) %>%
     p_map(
       method = i
     ) %>%
@@ -321,9 +306,9 @@ for (i in pMAP_method) {
       "p < .05" = ifelse(p_MAP < .05, "*", "")
     )
   
-  pMAP_rec_nrSpeaker_m <-
+  pMAP_rec_sleepState_m <-
     rbind(
-      pMAP_rec_nrSpeaker_m,
+      pMAP_rec_sleepState_m,
       temp
     ) %>%
     arrange(p_MAP)
@@ -331,8 +316,7 @@ for (i in pMAP_method) {
   rm(temp)
 }
 
-pMAP_rec_nrSpeaker_m
-
+pMAP_rec_sleepState_m
 
 
 # caveats --------------------------------------------------------
@@ -447,6 +431,90 @@ BF_Speaker_MMR_m <-
 
 BF_Speaker_MMR_m
 
+# # Model for nrSpeakersDaily
+# # pairwise comparisons of prior distributions
+# nrSpeakers_MMR_m_prior_pairwise <-
+#   MMR_m_prior %>%
+#   emmeans(~ nrSpeakersDaily) 
+# 
+# # pairwise comparisons of posterior distributions
+# nrSpeakers_MMR_m_pairwise <-
+#   MMR_m %>%
+#   emmeans(~ nrSpeakersDaily) 
+# 
+# # Bayes Factors (Savage-Dickey density ratio)
+# # Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
+# # So if that density is very high, you have no support for your Ha. (because there are a lot
+# # of values around zero)
+# BF_nrSpeakers_MMR_m <-
+#   nrSpeakers_MMR_m_pairwise %>%
+#   bf_parameters(prior = nrSpeakers_MMR_m_prior_pairwise) %>%
+#   arrange(log_BF) # sort according to BF
+# 
+# # add rule-of-thumb interpretation
+# # Add rule of thumb interpretation: looks at value and tells use what it means according to the
+# # rules of raftery1995. You add the column for interpretability, but you want to keep the other 
+# # stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
+# # if off with a rule of thumb!
+# BF_nrSpeakers_MMR_m <-
+#   BF_nrSpeakers_MMR_m %>%
+#   add_column(
+#     "interpretation" = interpret_bf(
+#       BF_nrSpeakers_MMR_m$log_BF,
+#       rules = "raftery1995",
+#       log = TRUE,
+#       include_value = TRUE,
+#       protect_ratio = TRUE,
+#       exact = TRUE
+#     ),
+#     .after = "log_BF"
+#   )
+# 
+# BF_nrSpeakers_MMR_m
+
+
+# Model for sleepstate
+# pairwise comparisons of prior distributions
+Sleep_MMR_m_prior_pairwise <-
+  MMR_m_prior %>%
+  emmeans(~ sleepState) %>% # estimated marginal means
+  contrast(method = custom_contrasts_sleep) 
+  
+# pairwise comparisons of posterior distributions
+Sleep_MMR_m_pairwise <-
+  MMR_m %>%
+  emmeans(~ sleepState) %>%
+  contrast(method = custom_contrasts_sleep)
+  
+# Bayes Factors (Savage-Dickey density ratio)
+# Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
+# So if that density is very high, you have no support for your Ha. (because there are a lot
+# of values around zero)
+BF_Sleep_MMR_m <-
+  Sleep_MMR_m_prior_pairwise %>%
+  bf_parameters(prior = Sleep_MMR_m_prior_pairwise) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+# Add rule of thumb interpretation: looks at value and tells use what it means according to the
+# rules of raftery1995. You add the column for interpretability, but you want to keep the other 
+# stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
+# if off with a rule of thumb!
+BF_Sleep_MMR_m <-
+  BF_Sleep_MMR_m %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_Sleep_MMR_m$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+
+BF_Sleep_MMR_m
 
 ##### Model for REC ------------------------
 rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
@@ -497,6 +565,105 @@ ggplot(stack(insight::get_parameters(rec_MMR_m_prior)), aes(x = values, fill = i
   theme(legend.position = "none")
 
 point_estimate(rec_MMR_m_prior, centr = "mean", disp = TRUE)
+
+# # Model for nrSpeakersDaily
+# rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
+# 
+# # pairwise comparisons of prior distributions
+# nrSpeakers_rec_MMR_m_prior_pairwise <-
+#   rec_MMR_m_prior %>%
+#   emmeans(~ nrSpeakersDaily) 
+# 
+# # pairwise comparisons of posterior distributions
+# nrSpeakers_rec_MMR_m_pairwise <-
+#   MMR_m_rec %>%
+#   emmeans(~ nrSpeakersDaily) 
+# 
+# # Bayes Factors (Savage-Dickey density ratio)
+# # Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
+# # So if that density is very high, you have no support for your Ha. (because there are a lot
+# # of values around zero)
+# BF_rec_nrSpeakers_MMR_m <-
+#   nrSpeakers_rec_MMR_m_pairwise %>%
+#   bf_parameters(prior = nrSpeakers_rec_MMR_m_prior_pairwise) %>%
+#   arrange(log_BF) # sort according to BF
+# 
+# # add rule-of-thumb interpretation
+# # Add rule of thumb interpretation: looks at value and tells use what it means according to the
+# # rules of raftery1995. You add the column for interpretability, but you want to keep the other 
+# # stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
+# # if off with a rule of thumb!
+# BF_rec_nrSpeakers_MMR_m <-
+#   BF_rec_nrSpeakers_MMR_m %>%
+#   add_column(
+#     "interpretation" = interpret_bf(
+#       BF_rec_nrSpeakers_MMR_m$log_BF,
+#       rules = "raftery1995",
+#       log = TRUE,
+#       include_value = TRUE,
+#       protect_ratio = TRUE,
+#       exact = TRUE
+#     ),
+#     .after = "log_BF"
+#   )
+# 
+# BF_rec_nrSpeakers_MMR_m
+
+
+## Sleep State
+rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
+
+#  comparison of prior distributions
+sleep_rec_MMR_m_prior <-
+  rec_MMR_m_prior %>%
+  emmeans(~ sleepState)
+sleep_rec_MMR_m_prior = contrast(sleep_rec_MMR_m_prior, method = custom_contrasts_sleep)
+
+#  comparison of posterior distributions
+rec_sleep_MMR_m <-
+  MMR_m_rec %>%
+  emmeans(~ sleepState) 
+rec_sleep_MMR_m = contrast(rec_sleep_MMR_m, method = custom_contrasts_sleep)
+
+# Bayes Factors (Savage-Dickey density ratio)
+BF_rec_sleep <-
+  rec_sleep_MMR_m %>%
+  bf_parameters(prior = sleep_rec_MMR_m_prior) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+BF_rec_sleep <-
+  BF_rec_sleep %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_rec_sleep$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+
+BF_rec_sleep
+
+# check priors equal?
+# --> they're not, because the first two combine two states. 
+# I have no idea how to set that such that the priors would also be equal here
+# but I don't compare the 3rd contrast against the other two, so I think it's fine here
+ggplot(stack(insight::get_parameters(sleep_rec_MMR_m_prior)), aes(x = values, fill = ind)) +
+  geom_density(linewidth = 1) +
+  facet_grid(ind ~ .) +
+  labs(x = "prior difference values") +
+  theme(legend.position = "none")
+
+point_estimate(sleep_rec_MMR_m_prior, centr = "mean", disp = TRUE)
+
+
+
+
+
 
 
 

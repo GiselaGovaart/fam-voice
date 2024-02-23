@@ -78,12 +78,19 @@ dat_rec$nrSpeakersDaily <- scale(dat_rec$nrSpeakersDaily)
 
 # Set priors ------------------------------------------------------------
 # priors 0.4 Hz filter
-priors <- c(set_prior("normal(2.92, 14)", 
-                      class = "Intercept"),
-            set_prior("normal(0, 14)", 
-                      class = "b"),
-            set_prior("normal(0, 14)", 
-                      class = "sigma")) 
+priors_acq_low <- c(set_prior("normal(5.94, 20.52)",  
+                              class = "Intercept"),
+                    set_prior("normal(0, 20.52)",  
+                              class = "b"),
+                    set_prior("normal(0, 20.52)",  
+                              class = "sigma"))
+
+priors_rec_low <- c(set_prior("normal(5.97, 23.34)",  
+                              class = "Intercept"),
+                    set_prior("normal(0, 23.34)",  
+                              class = "b"),
+                    set_prior("normal(0, 23.34)",  
+                              class = "sigma")) 
 
 # priors 1 Hz filter
 
@@ -99,14 +106,6 @@ contrasts(dat_rec$TestSpeaker) <- contr.equalprior
 contrasts(dat_rec$Group) <- contr.equalprior
 contrasts(dat_rec$sleepState) <- contr.equalprior
 
-# formula ----------
-formula = MMR ~ 1 + TestSpeaker * Group + 
-  mumDistTrainS * TestSpeaker + 
-  mumDistNovelS * TestSpeaker + 
-  timeVoiceFam * TestSpeaker * Group +
-  nrSpeakersDaily * TestSpeaker * Group + 
-  sleepState * TestSpeaker * Group + 
-  (1 | Subj) + (1 | TestSpeaker*Group)
 
 # sampling --------------------------------------------------------------------
 ### Model ACQUISITION
@@ -114,15 +113,15 @@ modelMMR <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
         mumDistTrainS * TestSpeaker + 
         mumDistNovelS * TestSpeaker + 
-        timeVoiceFam * TestSpeaker * Group +
-        nrSpeakersDaily * TestSpeaker * Group + 
-        sleepState * TestSpeaker * Group + 
-        (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
+        timeVoiceFam * Group +
+        nrSpeakersDaily  + 
+        sleepState + 
+        (1 + TestSpeaker * Group | Subj),
       data = dat,
       family = gaussian(), # the likelihood of the data that you are given to the model. 
       # Here you say you expect the data to have a normal distribution.
       # I can check that in my pilot data.
-      prior = priors,
+      prior = priors_acq_low,
       init = "random",
       # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
       # start from  different value. If you start from 4 different values and they all converge to same 
@@ -142,83 +141,84 @@ modelMMR <-
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
       file = here("data", "model_output", "samples_MMR.rds"),
-      file_refit = "on_change" 
+      file_refit = "on_change",
+      save_pars = save_pars(all = TRUE)
   )
 
-modelMMRtestcovs <-
-  brm(MMR ~ 1 + TestSpeaker * Group + 
-        mumDistTrainS+ 
-        mumDistNovelS + 
-        timeVoiceFam  +
-        nrSpeakersDaily + 
-        sleepState + 
-        (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
-      data = dat,
-      family = gaussian(), # the likelihood of the data that you are given to the model. 
-      # Here you say you expect the data to have a normal distribution.
-      # I can check that in my pilot data.
-      prior = priors,
-      init = "random",
-      # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
-      # start from  different value. If you start from 4 different values and they all converge to same 
-      # param space, you can be quite sure that’s the good one!
-      # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
-      # that for your data, it does not make sense te start eg at -2. 
-      control = list(
-        adapt_delta = .99, 
-        max_treedepth = 15
-        # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
-      ),
-      chains = num_chains,
-      iter = num_iter,
-      warmup = num_warmup,
-      thin = num_thin,
-      algorithm = "sampling", 
-      cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
-      seed = project_seed,
-      file = here("data", "model_output", "samples_MMR_testcovs.rds"),
-      file_refit = "on_change" 
-  )
+# modelMMRtestcovs <-
+#   brm(MMR ~ 1 + TestSpeaker * Group + 
+#         mumDistTrainS+ 
+#         mumDistNovelS + 
+#         timeVoiceFam  +
+#         nrSpeakersDaily + 
+#         sleepState + 
+#         (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
+#       data = dat,
+#       family = gaussian(), # the likelihood of the data that you are given to the model. 
+#       # Here you say you expect the data to have a normal distribution.
+#       # I can check that in my pilot data.
+#       prior = priors,
+#       init = "random",
+#       # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
+#       # start from  different value. If you start from 4 different values and they all converge to same 
+#       # param space, you can be quite sure that’s the good one!
+#       # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
+#       # that for your data, it does not make sense te start eg at -2. 
+#       control = list(
+#         adapt_delta = .99, 
+#         max_treedepth = 15
+#         # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
+#       ),
+#       chains = num_chains,
+#       iter = num_iter,
+#       warmup = num_warmup,
+#       thin = num_thin,
+#       algorithm = "sampling", 
+#       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
+#       seed = project_seed,
+#       file = here("data", "model_output", "samples_MMR_testcovs.rds"),
+#       file_refit = "on_change" 
+#   )
 
 # NB the values of your parameter space are the values of your posterior distribution! MCC just gives you your
 # posterior distribution.
 # You have several posterior distributions, for each fixed effect, and for each random effect. 
 # For each effect that you’d in a frequentist framework get a p-value, you here get a distribution.
 
-
-modelMMR_nested <-
-  brm(MMR ~ 1 + TestSpeaker / Group + 
-        mumDistTrainS * TestSpeaker + 
-        mumDistNovelS * TestSpeaker + 
-        timeVoiceFam * TestSpeaker * Group +
-        nrSpeakersDaily * TestSpeaker * Group + 
-        (1 | Subj) + (1 | TestSpeaker/Group),  # or: (1 + TestSpeaker * Group | Subj)
-      data = dat,
-      family = gaussian(), # the likelihood of the data that you are given to the model. 
-      # Here you say you expect the data to have a normal distribution.
-      # I can check that in my pilot data.
-      prior = priors,
-      init = "random",
-      # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
-      # start from  different value. If you start from 4 different values and they all converge to same 
-      # param space, you can be quite sure that’s the good one!
-      # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
-      # that for your data, it does not make sense te start eg at -2. 
-      control = list(
-        adapt_delta = .99, 
-        max_treedepth = 15
-        # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
-      ),
-      chains = num_chains,
-      iter = num_iter,
-      warmup = num_warmup,
-      thin = num_thin,
-      algorithm = "sampling", 
-      cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
-      seed = project_seed,
-      file = here("data", "model_output", "samples_MMR_nested.rds"),
-      file_refit = "on_change"
-  )
+# 
+# modelMMR_nested <-
+#   brm(MMR ~ 1 + TestSpeaker / Group + 
+#         mumDistTrainS * TestSpeaker + 
+#         mumDistNovelS * TestSpeaker + 
+#         timeVoiceFam * TestSpeaker * Group +
+#         nrSpeakersDaily * TestSpeaker * Group + 
+#         (1 | Subj) + (1 | TestSpeaker/Group),  # or: (1 + TestSpeaker * Group | Subj)
+#       data = dat,
+#       family = gaussian(), # the likelihood of the data that you are given to the model. 
+#       # Here you say you expect the data to have a normal distribution.
+#       # I can check that in my pilot data.
+#       prior = priors,
+#       init = "random",
+#       # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
+#       # start from  different value. If you start from 4 different values and they all converge to same 
+#       # param space, you can be quite sure that’s the good one!
+#       # You could also put 0, and start each chain at 0. Why? For computational efficiency. Because your know
+#       # that for your data, it does not make sense te start eg at -2. 
+#       control = list(
+#         adapt_delta = .99, 
+#         max_treedepth = 15
+#         # These are the parameters of the algorithms. We adapt to make the model more precise but less fast
+#       ),
+#       chains = num_chains,
+#       iter = num_iter,
+#       warmup = num_warmup,
+#       thin = num_thin,
+#       algorithm = "sampling", 
+#       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
+#       seed = project_seed,
+#       file = here("data", "model_output", "samples_MMR_nested.rds"),
+#       file_refit = "on_change"
+#   )
 
 
 ### Model RECOGNITION
@@ -226,15 +226,15 @@ modelMMR_rec <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
         mumDistTrainS * TestSpeaker + 
         mumDistNovelS * TestSpeaker + 
-        timeVoiceFam * TestSpeaker * Group +
-        nrSpeakersDaily * TestSpeaker * Group + 
-        sleepState * TestSpeaker * Group + 
-        (1 | Subj) + (1 | TestSpeaker*Group),  # or: (1 + TestSpeaker * Group | Subj)
+        timeVoiceFam * Group +
+        nrSpeakersDaily  + 
+        sleepState + 
+        (1 + TestSpeaker * Group | Subj),
       data = dat_rec,
       family = gaussian(), # the likelihood of the data that you are given to the model. 
       # Here you say you expect the data to have a normal distribution.
       # I can check that in my pilot data.
-      prior = priors,
+      prior = priors_rec_low,
       init = "random",
       # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
       # start from  different value. If you start from 4 different values and they all converge to same 
@@ -254,7 +254,8 @@ modelMMR_rec <-
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
       file = here("data", "model_output", "samples_MMR_rec.rds"),
-      file_refit = "on_change" 
+      file_refit = "on_change",      
+      save_pars = save_pars(all = TRUE)
   )
 
 

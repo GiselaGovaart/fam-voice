@@ -1,6 +1,12 @@
 function plot_ERP_raw_loop_pilot(pp, DIR)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
+
+% load EEGlab 
+DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
+rmpath(genpath(DIR.EEGLAB_PATH)); 
+cd(DIR.EEGLAB_PATH);
+eeglab; close;
 %% Load the data
 [EEG] = pop_loadset(convertStringsToChars(strcat(pp, ".set")), DIR.SET_PATH);
 

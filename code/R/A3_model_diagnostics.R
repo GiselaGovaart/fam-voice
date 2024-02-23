@@ -129,20 +129,4 @@ save(
 
 
 
-# 8/2: look at whether you need to implement this: https://www.flutterbys.com.au/stats/tut/tut7.5b.html
 
-
-
-
-# check for collinearity ----------------------------------------------
-# Make correlation matrix
-correlation_matrix <- cor(dat[, c("mumDistTrainS", "mumDistNovelS", "timeVoiceFam", "nrSpeakersDaily")])
-print(correlation_matrix)
-corrplot(correlation_matrix, method = "circle")
-# check with in-built check_collinearity function --> 
-# It calculates the variance inflation factors (VIF) for each covariate, 
-# with values greater than 10 indicating potential collinearity issues.
-collinearity_results <- check_collinearity(MMR_m)
-print(collinearity_results)
-
-# END --------------------------------------------------------

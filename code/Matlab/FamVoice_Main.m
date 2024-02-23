@@ -24,13 +24,14 @@ Subj_char = ["FamVoice98" ];
 Subj_Fam = ["23" "57" "27_1" "FamVoice98"];
 Subj_Unfam = ["23" "57" "27_1" "FamVoice98"];
  
-blvalue = -200;
+blvalue = -200; % this is just set here because it is needed in both HAPPE_FamVoice and write_amp_table
+filtervalue = "low";
 
 %% Create DIRs 
-manualInfoFolder = "AnalysisTestSubjects_inclMaren";
+manualInfoFolder = "AnalysisTestSubjects";
 
 % if dir does not exist, create new one
-if ~exist(strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder), 'dir')
+if ~exist(strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder, "_filter", filtervalue), 'dir')
     DIR = makeSubDirectory(DIR,manualInfoFolder);
 else
     DIR = changeSubDirectoryPaths(DIR, manualInfoFolder);
@@ -40,21 +41,36 @@ end
 
 %% Run preprocessing functions
 for pp = Subj
-    HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
+    HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char, filtervalue)
 end
 
 write_output_tables(Subj, DIR);
 computeGA(DIR, Subj_Fam, Subj_Unfam);
 plot_colloc(DIR);
 
-% Now decide time-window and electrodes:
-twstartacq = 216; % CHANGE based on coll loc. HAS TO BE EVEN
-twendacq = 466; % CHANGE based on coll loc. HAS TO BE EVEN
-twstartrec = 316; % CHANGE based on coll loc. HAS TO BE EVEN
-twendrec = 566; % CHANGE based on coll loc. HAS TO BE EVEN
+% After looking at ERP_Colloc_ACQ_all and ERP_Colloc_REC_all (DON'T look at seperate plots per electrode):
+% Decide time-window:
+% For low filter:
+if filtervalue == "low"
+    twstartacq = 200; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendacq = 600; % CHANGE based on coll loc. HAS TO BE EVEN
+    twstartrec = 200; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendrec = 600; % CHANGE based on coll loc. HAS TO BE EVEN
 
-write_amp_table(Subj, DIR, blvalue, twstartacq, twendacq, twstartrec, twendrec); % adapt the electrodes based on Colloc
+    % After looking at ERP_Colloc_ACQ_.. and ERP_Colloc_REC_.. per electrode:
+    % Decide on electrodes (per RQ)
+    write_amp_table_filtlow(Subj, DIR, blvalue, twstartacq, twendacq, twstartrec, twendrec); % adapt the electrodes based on Colloc
 
+elseif filtervalue == "high"
+    twstartacq = 200; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendacq = 600; % CHANGE based on coll loc. HAS TO BE EVEN
+    twstartrec = 250; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendrec = 600; % CHANGE based on coll loc. HAS TO BE EVEN
+
+    % After looking at ERP_Colloc_ACQ_.. and ERP_Colloc_REC_.. per electrode:
+    % Decide on electrodes (per RQ)
+    write_amp_table_filthigh(Subj, DIR, blvalue, twstartacq, twendacq, twstartrec, twendrec); % adapt the electrodes based on Colloc
+end
 %% Quality checks & vizualize
 % NB for all these functions: adapt the electrodes based on Colloc
 

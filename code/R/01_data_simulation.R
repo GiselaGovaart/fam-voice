@@ -24,7 +24,7 @@ dat$TestSpeaker_n <- ifelse(dat$TestSpeaker=="1", +0.5, -0.5)
 dat$Group_n <- ifelse(dat$Group=="fam", +0.5, -0.5)
 
 # simulate data
-dat$MMR <- 2.92 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,14) # 1st part: the mean of the MMR for all groups together, 
+dat$MMR <- 6 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,22) # 1st part: the mean of the MMR for all groups together, 
                                                               # 2nd part: making sure the groups are different: adding an effect of 5: S1=2.5, S2=-2/5
                                                               # 3rd part: adding noise: the SD of the MMR is 14
 
@@ -78,7 +78,7 @@ for(i in 1:nrow(dat_rec)){
 dat_rec$Group_n <- ifelse(dat_rec$Group=="fam", +0.5, -0.5)
 
 # simulate data
-dat_rec$MMR <- 2.92 + 5*dat_rec$TestSpeaker_n + rnorm(nrow(dat_rec),0,14) # 1st part: the mean of the MMR for all groups together, 2nd part: making sure the groups are different, 3rd part: adding noise: the SD of the MMR is 14
+dat_rec$MMR <- 6 + 5*dat_rec$TestSpeaker_n + rnorm(nrow(dat_rec),0,22) # 1st part: the mean of the MMR for all groups together, 2nd part: making sure the groups are different, 3rd part: adding noise: the SD of the MMR is 14
 
 # now add dummy values for the other variables
 dat_rec$mumDistTrainS = NA
