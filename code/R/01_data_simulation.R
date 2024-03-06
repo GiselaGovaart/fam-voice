@@ -10,6 +10,7 @@ set.seed(project_seed) # set seed
 # load packages --------------------------------------------------------------------
 library(designr)
 library(tidyverse)
+library(truncnorm)
 
 # Simulate some data for ACQUISITION--------------------------------------------------------------------
 # create experimental design 
@@ -26,19 +27,17 @@ dat$Group_n <- ifelse(dat$Group=="fam", +0.5, -0.5)
 # simulate data
 dat$MMR <- 6 + 5*dat$TestSpeaker_n + rnorm(nrow(dat),0,22) # 1st part: the mean of the MMR for all groups together, 
                                                               # 2nd part: making sure the groups are different: adding an effect of 5: S1=2.5, S2=-2/5
-                                                              # 3rd part: adding noise: the SD of the MMR is 14
+                                                              # 3rd part: adding noise: the SD of the MMR is 22
 
 # now add dummy values for the other variables
-dat$mumDistTrainS = NA
-dat$mumDistNovelS = NA
-dat$timeVoiceFam = NA
+dat$mumDist = NA
 dat$nrSpeakersDaily = NA
 dat$sleepState = NA
+dat$age = NA
 
-dat$mumDistTrainS = rep(abs(rnorm(nrow(dat)/2,1,2)), each=2)
-dat$mumDistNovelS = rep(abs(rnorm(nrow(dat)/2,1,2.5)), each=2)
-dat$timeVoiceFam = rep(round(rnorm(nrow(dat)/2,21,2)), each=2)
-dat$nrSpeakersDaily = rep(round(rnorm(nrow(dat)/2,4,1)), each=2)
+dat$age = rep(abs(rnorm(nrow(dat)/2,90,12)), each=2)
+dat$mumDist = rep(abs(rnorm(nrow(dat),1,2)), each=1)
+dat$nrSpeakersDaily = rep(round(rtruncnorm(nrow(dat)/2,a=1,b= Inf,4,2)), each=2) # truncate dist at 1 (since every child will hear at least one speaker in daily life)
 dat$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat)/2, replace = TRUE), each=2)
 
 
@@ -46,14 +45,13 @@ dat = subset(dat, select = -c(TestSpeaker_n,Group_n) ) # remove these "contrast 
 dat$sleepState = as.factor(dat$sleepState)
 
 # Center and scale: this subtracts the mean from each value and then divides by the SD
-dat$mumDistTrainS <- scale(dat$mumDistTrainS)
-dat$mumDistNovelS <- scale(dat$mumDistNovelS)
-dat$timeVoiceFam <- scale(dat$timeVoiceFam)
+dat$mumDist<- scale(dat$mumDist)
 dat$nrSpeakersDaily <- scale(dat$nrSpeakersDaily)
+dat$age <- scale(dat$age)
 
 
 
-# Simulate some data for ACQUISITION--------------------------------------------------------------------
+# Simulate some data for RECOGNITION--------------------------------------------------------------------
 # create experimental design 
 design <-
   fixed.factor("Group", levels=c("fam", "unfam")) +
@@ -81,16 +79,14 @@ dat_rec$Group_n <- ifelse(dat_rec$Group=="fam", +0.5, -0.5)
 dat_rec$MMR <- 6 + 5*dat_rec$TestSpeaker_n + rnorm(nrow(dat_rec),0,22) # 1st part: the mean of the MMR for all groups together, 2nd part: making sure the groups are different, 3rd part: adding noise: the SD of the MMR is 14
 
 # now add dummy values for the other variables
-dat_rec$mumDistTrainS = NA
-dat_rec$mumDistNovelS = NA
-dat_rec$timeVoiceFam = NA
+dat_rec$mumDist = NA
 dat_rec$nrSpeakersDaily = NA
 dat_rec$sleepState = NA
+dat_rec$age = NA
 
-dat_rec$mumDistTrainS = rep(abs(rnorm(nrow(dat_rec)/3,1,2)), each=3)
-dat_rec$mumDistNovelS = rep(abs(rnorm(nrow(dat_rec)/3,1,2.5)), each=3)
-dat_rec$timeVoiceFam = rep(round(rnorm(nrow(dat_rec)/3,21,2)), each=3)
-dat_rec$nrSpeakersDaily = rep(round(rnorm(nrow(dat_rec)/3,4,1)), each=3)
+dat_rec$age = rep(abs(round(rnorm(nrow(dat_rec)/3,90,12))), each=3)
+dat_rec$mumDist = rep(abs(rnorm(nrow(dat_rec),1,2)), each=1)
+dat_rec$nrSpeakersDaily = rep(round(rtruncnorm(nrow(dat_rec)/3,a=1,b= Inf,4,2)), each=3) # truncate dist at 1 (since every child will hear at least one speaker in daily life)
 dat_rec$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat_rec)/3, replace = TRUE), each=3)
 
 # centering the covariates -  CHECK WHETHER THIS IS NECESSARY
@@ -108,10 +104,9 @@ dat_rec = subset(dat_rec, select = -c(TestSpeaker_n,Group_n) ) # remove these "c
 dat_rec$sleepState = as.factor(dat_rec$sleepState)
 
 # Center and scale
-dat_rec$mumDistTrainS <- scale(dat_rec$mumDistTrainS)
-dat_rec$mumDistNovelS <- scale(dat_rec$mumDistNovelS)
-dat_rec$timeVoiceFam <- scale(dat_rec$timeVoiceFam)
+dat_rec$mumDist <- scale(dat_rec$mumDist)
 dat_rec$nrSpeakersDaily <- scale(dat_rec$nrSpeakersDaily)
+dat_rec$age <- scale(dat_rec$age)
 
 rm(design,i)
 
@@ -120,6 +115,7 @@ rm(design,i)
 # ### CHECK WHETHER THIS IS NECESSARY
 # contrasts(dat$Group) <- c(-0.5, +0.5)
 # contrasts(dat$TestSpeaker) <- c(-0.5, +0.5)
+
 
 
 

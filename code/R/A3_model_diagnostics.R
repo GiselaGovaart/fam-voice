@@ -68,6 +68,10 @@ posterior_predict_MMR_m <-
 MCMC_MMR_m <-
   plot(MMR_m, ask = FALSE) 
 
+# here you get only the density plots without the caterpillars. and you can specify which ones
+mcmc_dens(MMR_m, pars = variables(MMR_m)[1:5])
+
+
 # model diagnostics: posterior predictive checks --------------------------------------------------------
 # If you extract the post pred samples from your posterior distributions 
 # “predictive”: this is the range of values that you would expect if you run the exp very often.

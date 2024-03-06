@@ -19,16 +19,16 @@ library(easystats)
 # num_thin <- 1 # thinning: extract one out of x samples per chain
 
 # load models ----------------------------------------------------------------------------------------------------------------------------------
-MMR_m_orig <- readRDS(here("data", "model_output", "samples_MMR_orig.rds"))
-MMR_m_epoptions <- readRDS(here("data", "model_output", "samples_MMR_equalprior-options.rds"))
+MMR_m_orig <- readRDS(here("data", "model_output/old", "samples_MMR_orig.rds"))
+MMR_m_epoptions <- readRDS(here("data", "model_output/old", "samples_MMR_equalprior-options.rds"))
 
-MMR_m_rec_orig <- readRDS(here("data", "model_output", "samples_MMR_rec_orig.rds"))
-MMR_m_rec_epoptions <- readRDS(here("data", "model_output", "samples_MMR_rec_equalprior-options.rds"))
+MMR_m_rec_orig <- readRDS(here("data", "model_output/old", "samples_MMR_rec_orig.rds"))
+MMR_m_rec_orig_saveparsfalse <- readRDS(here("data", "model_output", "samples_MMR_rec_orig_saveparsfalse.rds"))
+MMR_m_rec_epoptions <- readRDS(here("data", "model_output/old", "samples_MMR_rec_equalpriors.rds"))
 
-MMR_m_rec_sleep <- readRDS(here("data", "model_output", "samples_MMR_rec_sleep.rds"))
-MMR_m_rec_sleep_contrsetperfactor <- readRDS(here("data", "model_output", "samples_MMR_rec_sleep_priorsequalpercontrasts.rds"))
+MMR_m_rec_sleep <- readRDS(here("data", "model_output/old", "samples_MMR_rec_sleep.rds"))
+MMR_m_rec_sleep_contrsetperfactor <- readRDS(here("data", "model_output/old", "samples_MMR_rec_sleep_priorsequalpercontrasts.rds"))
 
-samples_MMR_rec_sleep_priorsequalpercontrasts.rds
 # options ---------------
 # the default contrasts used in model fitting such as with aov or lm. 
 # A character vector of length two, the first giving the function to be used with unordered factors 

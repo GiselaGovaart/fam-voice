@@ -1,3 +1,20 @@
+## Posterior predictive check:
+pp_check(fit_press, ndraws = 100, type = "dens_overlay")
+## Plot posterior predictive distribution of statistical summaries:
+pp_check(fit_press, ndraws = 100, type = "stat", stat = "mean")
+## Plot prior predictive distribution of statistical summaries:
+pp_check(fit_press, ndraws = 100, type = "stat", stat = "mean",
+         prefix = "ppd")
+
+
+# for only the density plots, without the caterpillars
+mcmc_dens(fit_N400_v, pars = variables(fit_N400_v)[1:5])
+
+
+
+
+
+
 
 
 ### FROM HERE DOWNWARDS, THIS CAN GO TO 01_parameter_estimation.R

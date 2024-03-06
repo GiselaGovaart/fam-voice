@@ -179,9 +179,7 @@ priors <- c(set_prior("normal(5.94, 20.52)",  # sd=14 is here the SD of the dist
             set_prior("normal(0, 20.52)",  # this is the prior on the slope
                       class = "b"),
             set_prior("normal(0, 20.52)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case sigma represents the standard deviation of the response variable, mmr in this cas
-                      class = "sigma")) # it's a bit strange because of course, sigma cannot be smaller than zero..an alternative to incorporate that would be normal(14,5)
-# alternative for sigma:
-# prior_sigma <- set_prior("student_t(3, 0, 20.52)", class = "sigma")
+                      class = "sigma")) # brms will automatically truncate the prior specification for σ and allow only positive values (https://vasishth.github.io/bayescogsci/book/ch-reg.html), so we don't have to truncate the distribution ourselves
 
 
 # let's check the default prior for sigma in brms:

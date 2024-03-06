@@ -43,7 +43,7 @@ library(logspline)
 
 # results of model fit
 MMR_m <- readRDS(here("data", "model_output", "samples_MMR.rds"))
-MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec.rds"))
+MMR_m_rec <- readRDS(here("data", "model_output", "samples_MMR_rec_orig.rds"))
 
 
 # Hypotheses -------------------------------------------------------------------
@@ -222,6 +222,10 @@ custom_contrasts <- list(
   list("unfam1-unfam2" = unfam1 - unfam2)
 ) 
 # I checked, the custom contrasts give the same output as (at least for the last two, the first one is given the other way around:) :
+
+(unfam2 - unfam3) - (fam2 - fam3) # this is the interaction that, if significant, shows us that the effect of unfam2 - unfam3 is not solely because of order in experiment. 
+
+
 
 MMR_rec.emm1 = MMR_m_rec %>%
   emmeans(~ Group:TestSpeaker) %>%
@@ -566,7 +570,29 @@ ggplot(stack(insight::get_parameters(rec_MMR_m_prior)), aes(x = values, fill = i
 
 point_estimate(rec_MMR_m_prior, centr = "mean", disp = TRUE)
 
-# # Model for nrSpeakersDaily
+# # Model for the continuous factors:
+# Nr speakers
+# Bayes Factors (Savage-Dickey density ratio)
+BF_rec_nrSpeakers_MMR_m = bf_parameters(MMR_m_rec, parameters = "b_nrSpeakersDaily", direction = ">")
+  
+BF_rec_nrSpeakers_MMR_m <-
+  BF_rec_nrSpeakers_MMR_m %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_rec_nrSpeakers_MMR_m$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
+BF_rec_nrSpeakers_MMR_m
+plot(BF_rec_nrSpeakers_MMR_m)
+
+
+
 # rec_MMR_m_prior <- unupdate(MMR_m_rec) # sample priors from model
 # 
 # # pairwise comparisons of prior distributions
@@ -647,6 +673,7 @@ BF_rec_sleep <-
   )
 
 BF_rec_sleep
+plot(BF_rec_sleep)
 
 # check priors equal?
 # --> they're not, because the first two combine two states. 
@@ -659,10 +686,6 @@ ggplot(stack(insight::get_parameters(sleep_rec_MMR_m_prior)), aes(x = values, fi
   theme(legend.position = "none")
 
 point_estimate(sleep_rec_MMR_m_prior, centr = "mean", disp = TRUE)
-
-
-
-
 
 
 
