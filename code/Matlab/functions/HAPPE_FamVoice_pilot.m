@@ -1,4 +1,4 @@
-function HAPPE_FamVoice_pilot(pp, DIR,filtervalue)
+function HAPPE_FamVoice_pilot(pp, DIR,filtervalue,blvalue)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 %% Load the data
@@ -210,9 +210,6 @@ exportgraphics(gcf, strcat(DIR.qualityAssessment, ...
     'Resolution', 300);
 
 %% Baseline correction
-% params:
-blvalue = -200;
-
 EEG = pop_rmbase(EEG, [blvalue 0]);
 EEG = eeg_checkset(EEG);
 pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_segmented_blcor.set')), ...

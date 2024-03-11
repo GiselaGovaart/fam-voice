@@ -1,26 +1,25 @@
-function plot_colloc_pilot(DIR)
+function plot_ERP_proc_perelectrodeROI(DIR)
 
 
 %% Set up
 % Definelty part of final ROI
-Fz = 4;
-F3 = 5;
-F4 = 6;
+Fz = 14;
+F3 = 6;
+F4 = 7;
 FC5 = 11;
 FC6 = 12;
-Cz = 28;
-C3 = 13;
-C4 = 14;
+Cz = 27;
+C3 = 1;
+C4 = 2;
 
 % Possibly part of final ROI: 
-F7 = 7;
-F8 = 8;
+F7 = 8;
+F8 = 9;
 
-% Eye electrodes to compare with F7 and F8
-F9 = 9;
-F10 = 10;
-EOG1 = 1;
-
+% Eye electrodes to check F7 and F8:
+F9 = 10;
+F10 = 5;
+V2 = 26;
 
 %% Collapsed localizer for ACQUISITION RQ
 % load EEGlab 
@@ -32,16 +31,24 @@ eeglab; close;
 cd(DIR.grandaverage);
 
 % Make GAs for ACQ:
-GA_dev12 = pop_loadset('ga_S12_Dev.set');
-GA_dev4 = pop_loadset('ga_S4_Dev.set');
+GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
+GA_dev12_unfam = pop_loadset('ga_unfam_S12_Dev.set');
+GA_dev4_fam = pop_loadset('ga_fam_S4_Dev.set');
+GA_dev4_unfam = pop_loadset('ga_unfam_S4_Dev.set');
 
-GA_dev_all = pop_mergeset(GA_dev12, GA_dev4);
+GA_dev_all = pop_mergeset(GA_dev12_fam, GA_dev12_unfam);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_fam);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_unfam); 
 GA_dev_all.data = mean(GA_dev_all.data(:,:,:),3);
 
-GA_stan12 = pop_loadset('ga_S12_Stan.set');
-GA_stan4 = pop_loadset('ga_S4_Stan.set');
+GA_stan12_fam = pop_loadset('ga_fam_S12_Stan.set');
+GA_stan12_unfam = pop_loadset('ga_unfam_S12_Stan.set');
+GA_stan4_fam = pop_loadset('ga_fam_S4_Stan.set');
+GA_stan4_unfam = pop_loadset('ga_unfam_S4_Stan.set');
 
-GA_stan_all = pop_mergeset(GA_stan12, GA_stan4);
+GA_stan_all = pop_mergeset(GA_stan12_fam, GA_stan12_unfam);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_fam);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_unfam); 
 GA_stan_all.data = mean(GA_stan_all.data(:,:,:),3);
 
 DIFF = GA_dev_all.data - GA_stan_all.data;
@@ -55,7 +62,9 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 % all data together. 
 % leaving DIFF(Fz,:,:) does not make a differnce though
 
-% ALL
+
+
+%% ALL ACQ
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
     ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
@@ -119,10 +128,12 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_all.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_all.jpeg'), ...
     'Resolution', 300);
 
+
+%%
 % Fz
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
@@ -178,8 +189,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_fz.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_fz.jpeg'), ...
     'Resolution', 300);
 
 % F3
@@ -237,8 +248,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_f3.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_f3.jpeg'), ...
     'Resolution', 300);
 
 % F4
@@ -296,8 +307,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_f4.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_f4.jpeg'), ...
     'Resolution', 300);
 
 % FC5
@@ -355,8 +366,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_FC5.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_FC5.jpeg'), ...
     'Resolution', 300);
 
 % FC6
@@ -414,8 +425,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_FC6.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_FC6.jpeg'), ...
     'Resolution', 300);
 
 % Cz
@@ -473,8 +484,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_Cz.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_Cz.jpeg'), ...
     'Resolution', 300);
 
 % C3
@@ -532,8 +543,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_C3.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_C3.jpeg'), ...
     'Resolution', 300);
 
 
@@ -592,9 +603,10 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_C4.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_C4.jpeg'), ...
     'Resolution', 300);
+
 
 % F7
 fig = figure;
@@ -651,10 +663,9 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_F7.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_F7.jpeg'), ...
     'Resolution', 300);
-
 
 % F8
 fig = figure;
@@ -711,11 +722,11 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_F8.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_F8.jpeg'), ...
     'Resolution', 300);
 
-
+% Eye electrodes:
 % F9
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
@@ -771,8 +782,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_F9.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_F9.jpeg'), ...
     'Resolution', 300);
 
 % F10
@@ -830,23 +841,22 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_F10.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_F10.jpeg'), ...
     'Resolution', 300);
 
-
-% EOG1
+% V2
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
-    DIFF(EOG1,:,:), ...
+    DIFF(V2,:,:), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.dataEOG1F10,:,:), ...
+    GA_dev_all.dataV2F10,:,:), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(EOG1,:,:), ...
+    GA_stan_all.data(V2,:,:), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -864,7 +874,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer ACQ EOG1')
+title('Collapsed localizer ACQ V2')
 xlabel('msec')
 ylabel('µV')
 
@@ -890,28 +900,10 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_EOG1.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_ACQ_V2.jpeg'), ...
     'Resolution', 300);
 
-% %% ERPs with SD: baseline check
-% % Vizualization ERPs with standard diff to check whether the baseline
-% % correction induces artifacts
-% 
-% plot_erp({ ...
-%     {GA_dev_all}, ...
-%     {GA_stan_all}}, ...
-%     'Fz', ...
-%     'plotdiff', 0, ...
-%     'plotstd', 'fill', ...
-%     'permute', 1000, ...  % Does not work, why not?
-%     'avgmode', 'auto', ... 
-%     'labels', {'deviant', 'standard'} ...
-%     );
-% 
-% exportgraphics(gcf, strcat(DIR.plotsCL, ...
-%     ['ERP_Colloc_ACQ_Fz_SD.jpeg']), ...
-%     'Resolution', 300);
 
 
 %% Collapsed localizer for RECOGNITION RQ
@@ -922,26 +914,28 @@ cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
 cd(DIR.grandaverage);
+% Make GAs for RQ:
+GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
+GA_dev12_unfam = pop_loadset('ga_unfam_S12_Dev.set');
+GA_dev4_unfam = pop_loadset('ga_unfam_S4_Dev.set');
+GA_dev3_unfam = pop_loadset('ga_unfam_S3_Dev.set');
 
-% Make GAs for REC:
-GA_dev12 = pop_loadset('ga_S12_Dev.set');
-GA_dev4 = pop_loadset('ga_S4_Dev.set');
-GA_dev3 = pop_loadset('ga_S3_Dev.set');
-
-GA_dev_all = pop_mergeset(GA_dev12, GA_dev4);
-GA_dev_all = pop_mergeset(GA_dev_all, GA_dev3);
+GA_dev_all = pop_mergeset(GA_dev12_fam, GA_dev12_unfam);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_unfam);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev3_unfam); 
 GA_dev_all.data = mean(GA_dev_all.data(:,:,:),3);
 
-GA_stan12 = pop_loadset('ga_S12_Stan.set');
-GA_stan4 = pop_loadset('ga_S4_Stan.set');
-GA_stan3 = pop_loadset('ga_S3_Stan.set');
+GA_stan12_fam = pop_loadset('ga_fam_S12_Stan.set');
+GA_stan12_unfam = pop_loadset('ga_unfam_S12_Stan.set');
+GA_stan4_unfam = pop_loadset('ga_unfam_S4_Stan.set');
+GA_stan3_unfam = pop_loadset('ga_unfam_S3_Stan.set');
 
-GA_stan_all = pop_mergeset(GA_stan12, GA_stan4);
-GA_stan_all = pop_mergeset(GA_stan_all, GA_stan3);
+GA_stan_all = pop_mergeset(GA_stan12_fam, GA_stan12_unfam);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_unfam);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan3_unfam); 
 GA_stan_all.data = mean(GA_stan_all.data(:,:,:),3);
 
 DIFF = GA_dev_all.data - GA_stan_all.data;
-
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
@@ -1017,9 +1011,10 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_all.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_all.jpeg'), ...
     'Resolution', 300);
+
 
 % Fz
 fig = figure;
@@ -1076,8 +1071,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_fz.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_fz.jpeg'), ...
     'Resolution', 300);
 
 % F3
@@ -1135,8 +1130,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_f3.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_f3.jpeg'), ...
     'Resolution', 300);
 
 % F4
@@ -1194,8 +1189,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_f4.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_f4.jpeg'), ...
     'Resolution', 300);
 
 % FC5
@@ -1253,8 +1248,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_FC5.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_FC5.jpeg'), ...
     'Resolution', 300);
 
 % FC6
@@ -1312,8 +1307,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_FC6.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_FC6.jpeg'), ...
     'Resolution', 300);
 
 % Cz
@@ -1371,8 +1366,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_Cz.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_Cz.jpeg'), ...
     'Resolution', 300);
 
 % C3
@@ -1430,8 +1425,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_C3.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_C3.jpeg'), ...
     'Resolution', 300);
 
 
@@ -1490,8 +1485,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_C4.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_C4.jpeg'), ...
     'Resolution', 300);
 
 % F7
@@ -1549,8 +1544,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_F7.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_F7.jpeg'), ...
     'Resolution', 300);
 
 
@@ -1609,14 +1604,9 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_F8.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_F8.jpeg'), ...
     'Resolution', 300);
-
-
-
-
-
 
 
 % F9
@@ -1674,8 +1664,8 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_F9.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_F9.jpeg'), ...
     'Resolution', 300);
 
 % F10
@@ -1733,23 +1723,23 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_F10.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_F10.jpeg'), ...
     'Resolution', 300);
 
 
-% EOG1
+% V2
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
-    DIFF(EOG1,:,:), ...
+    DIFF(V2,:,:), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.dataEOG1F10,:,:), ...
+    GA_dev_all.dataV2F10,:,:), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(EOG1,:,:), ...
+    GA_stan_all.data(V2,:,:), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -1767,7 +1757,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer REC EOG1')
+title('Collapsed localizer REC V2')
 xlabel('msec')
 ylabel('µV')
 
@@ -1793,32 +1783,11 @@ hYLabel.Position(2) = 0;
 set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_EOG1.jpeg'), ...
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'ERP_REC_V2.jpeg'), ...
     'Resolution', 300);
 
 
 
-% %% ERPs with SD: baseline check
-% % Vizualization ERPs with standard diff to check whether the baseline
-% % correction induces artifacts
-% 
-% plot_erp({ ...
-%     {GA_dev_all}, ...
-%     {GA_stan_all}}, ...
-%     'Fz', ...
-%     'plotdiff', 0, ...
-%     'plotstd', 'fill', ...
-%     'permute', 1000, ...  % Does not work, why not?
-%     'avgmode', 'auto', ... 
-%     'labels', {'deviant', 'standard'} ...
-%     );
-% 
-% exportgraphics(gcf, strcat(DIR.plotsCL, ...
-%     ['ERP_Colloc_REC_Fz_SD.jpeg']), ...
-%     'Resolution', 300);
-
 
 end
-
-

@@ -1,4 +1,4 @@
-function DIR = changeSubDirectoryPaths(DIR, manualInfoFolder, filtervalue)
+function DIR = changeSubDirectoryPaths(DIR, manualInfoFolder)
 
 
 % function DIR = changeSubDirectoryPaths(DIR,hptransStr, hpcutoffStr,window, betaStr, threshold, ...
@@ -10,7 +10,7 @@ function DIR = changeSubDirectoryPaths(DIR, manualInfoFolder, filtervalue)
 %         "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr);
 
 
-DIR.overallPath = strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder,"_filter-", filtervalue);
+DIR.overallPath = strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder);
 
 DIR.intermediateProcessing =  strcat(DIR.overallPath,"/01-intermediate_processing/");
 DIR.waveletCleaned =  strcat(DIR.overallPath,"/02-wavelet_cleaned_continuous/");

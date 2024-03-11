@@ -35,7 +35,7 @@ ft_defaults
 Subj = ["01" "02" "04" "05" "06" "07" "08" "09" "10" "11" "12" "13" "15"];
 
 blvalue = -200; % this is just set here because it is needed in both HAPPE_FamVoice and write_amp_table
-filtervalue = "high"; 
+filtervalue = "low"; 
 
 %% Create DIRs 
 manualInfoFolder = "final_usedForBA";
@@ -43,36 +43,16 @@ manualInfoFolder = "final_usedForBA";
 
 %if dir does not exist, create new one
 if ~exist(strcat(DIR.SET_PATH,"01-output/", manualInfoFolder, "_filter-", filtervalue), 'dir')
-    DIR = makeSubDirectory(DIR,manualInfoFolder,filtervalue);
+    DIR = makeSubDirectory_pilot(DIR,manualInfoFolder,filtervalue);
 else
-    DIR = changeSubDirectoryPaths(DIR, manualInfoFolder,filtervalue);
+    DIR = changeSubDirectoryPaths_pilot(DIR, manualInfoFolder,filtervalue);
     % to make sure that the DIR variable is also correct if the directory
     % previously existed.
 end
 
 %% Run preprocessing functions
-% 
-% for pp = Subj
-% %     makeSetsEEG(pp,DIR)
-%     HAPPE_FamVoice_pilot(pp, DIR,filtervalue)
-% end
-% 
-% computeGA_pilot(Subj, DIR);
-% plot_ERP_proc_pilot(DIR);
-% plot_ERP_proc_withSD_pilot(DIR);
-% write_output_tables_pilot(Subj, DIR);
-% 
-% for pp = Subj
-%     plot_ERP_raw_loop_pilot(pp,DIR);
-% end
-% plot_ERP_raw_plot_pilot(Subj,DIR);
-% plot_ERP_proc_indiv_pilot(Subj, DIR);
-
-
-
-%% Run preprocessing functions
 for pp = Subj
-    HAPPE_FamVoice_pilot(pp, DIR, filtervalue)
+    HAPPE_FamVoice_pilot(pp, DIR, filtervalue,blvalue)
 end
 
 write_output_tables_pilot(Subj, DIR);
@@ -93,6 +73,7 @@ if filtervalue == "low"
     % Decide on electrodes (per RQ)
     % For low filter: ACQ: add C4, F7, F8. REC: add C4, F7, F8.
     write_amp_table_pilot_filtlow(Subj, DIR, blvalue, twstartacq, twendacq, twstartrec, twendrec); % adapt the electrodes based on Colloc
+
 elseif filtervalue == "high"
     twstartacq = 200; % CHANGE based on coll loc. HAS TO BE EVEN
     twendacq = 600; % CHANGE based on coll loc. HAS TO BE EVEN
@@ -130,7 +111,7 @@ plot_ERP_proc_pilot(DIR);
 % different electrodes for ACQ and REC (only the conditions that are used 
 % double need to be plotted twice then). 
 
-%plot_ERP_proc_withSD_pilot(DIR); % included already in colloc now
+plot_ERP_proc_withSD_pilot(DIR); 
 
 
 

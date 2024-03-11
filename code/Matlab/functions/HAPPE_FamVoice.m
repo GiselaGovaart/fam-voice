@@ -1,4 +1,4 @@
-function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char, filtervalue)
+function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
 %   Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 % set electrode location for the spectoplots:
@@ -169,13 +169,9 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), 
 % EEG = pop_eegfiltnew(EEG, hpfreq, lpfreq, [], 0, [], 0) ;
 
 % params:
-if filtervalue == "low"
-    hptrans = 0.4;
-    hpcutoff = 0.2;
-elseif filtervalue == "high"
-    hptrans = 1;
-    hpcutoff = 0.5;
-end
+hptrans = 0.4;
+hpcutoff = 0.2;
+
 
 % MADE filter 
 % Calculate filter order using the formula: m = dF / (df / fs), where m = filter order,

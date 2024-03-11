@@ -7,14 +7,13 @@ F3 = 7;
 F4 = 8;
 FC5 = 12;
 FC6 = 13;
-
-% Possibly part of final ROI (in that case: ADD): 
 Cz = 27;
 C3 = 1;
 C4 = 2;
+
+% Possibly part of final ROI (in that case: ADD): 
 F7 = 9;
 F8 = 10;
-
 
 setlist = dir(strcat(DIR.processed,"*_processed_*"));
 
@@ -39,13 +38,19 @@ for ipp = 1:length(Subj)
             baseline = blvalue/2; % divide by 2 because of sr of 500, which means that every sample contains 2 ms.
             window = [twstartacq/2  twendacq/2]; 
             mean_amplitude_all = mean(erp(:, (window(1)-baseline):(window(2)-baseline)), 2);  % substract baseline to get correct latency
+            % compute amp per electrode
             mean_amplitude_fz = mean_amplitude_all(Fz,1);
             mean_amplitude_f3 = mean_amplitude_all(F3,1);
             mean_amplitude_f4 = mean_amplitude_all(F4,1);
             mean_amplitude_fc5 = mean_amplitude_all(FC5,1);
             mean_amplitude_fc6 = mean_amplitude_all(FC6,1);
+            mean_amplitude_cz = mean_amplitude_all(Cz,1);
+            mean_amplitude_c3 = mean_amplitude_all(C3,1);
+            mean_amplitude_c4 = mean_amplitude_all(C4,1);
+            % take mean of all amplitudes in ROI
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
-            mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6)/5;
+            mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
+            mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4)/8;
             outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
         end
     end
@@ -81,13 +86,19 @@ for ipp = 1:length(Subj)
             baseline = blvalue/2; % divide by 2 because of sr of 500, which means that every sample contains 2 ms.
             window = [twstartrec/2  twendrec/2]; 
             mean_amplitude_all = mean(erp(:, (window(1)-baseline):(window(2)-baseline)), 2);  % substract baseline to get correct latency
+            % compute amp per electrode
             mean_amplitude_fz = mean_amplitude_all(Fz,1);
             mean_amplitude_f3 = mean_amplitude_all(F3,1);
             mean_amplitude_f4 = mean_amplitude_all(F4,1);
             mean_amplitude_fc5 = mean_amplitude_all(FC5,1);
             mean_amplitude_fc6 = mean_amplitude_all(FC6,1);
+            mean_amplitude_cz = mean_amplitude_all(Cz,1);
+            mean_amplitude_c3 = mean_amplitude_all(C3,1);
+            mean_amplitude_c4 = mean_amplitude_all(C4,1);
+            % take mean of all amplitudes in ROI
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
-            mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6)/5;
+            mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
+            mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4)/8;
             outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
         end
     end

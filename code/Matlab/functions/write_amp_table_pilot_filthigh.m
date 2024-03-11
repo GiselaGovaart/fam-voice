@@ -2,18 +2,22 @@ function write_amp_table_pilot_filthigh(Subj, DIR, blvalue, twstartacq, twendacq
 
 %% Set electrode nrs
 % Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
+Fz = 4;
+F3 = 5;
+F4 = 6;
+FC5 = 11;
+FC6 = 12;
+Cz = 28;
+C3 = 13;
+C4 = 14;
 
-% Possibly part of final ROI (in that case: ADD): 
-Cz = 27;
-C3 = 1;
-C4 = 2;
-F7 = 9;
-F8 = 10;
+% Possibly part of final ROI: 
+F7 = 7;
+F8 = 8;
+% Eye electrodes to compare with F7 and F8
+F9 = 9;
+F10 = 10;
+EOG1 = 1;
 
 setlist = dir(strcat(DIR.processed,"*_processed_*"));
 

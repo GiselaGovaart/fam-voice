@@ -9,19 +9,21 @@ function plot_ERP_proc_indiv(Subj, DIR)
 DIR.processed = convertStringsToChars(DIR.processed);
 DIR.grandaverage = convertStringsToChars(DIR.grandaverage);
 
-% Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
+%% Set up ADAPT based on final ROI
 
-% Possibly part of final ROI: 
+% Definelty part of final ROI
+Fz = 14;
+F3 = 6;
+F4 = 7;
+FC5 = 11;
+FC6 = 12;
 Cz = 27;
 C3 = 1;
 C4 = 2;
-F7 = 9;
-F8 = 10;
+
+% Possibly part of final ROI: 
+F7 = 8;
+F8 = 9;
 
 %% Make individual plot for training speaker (1 or 2)
 cd(DIR.processed)

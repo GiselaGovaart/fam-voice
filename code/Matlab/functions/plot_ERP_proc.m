@@ -1,21 +1,28 @@
 function plot_ERP_proc(DIR, twstartacq, twendacq, twstartrec, twendrec)
 
+
+%% For these plots, you still need to add the electrodes that are in the ROI
+
 %% Set up
-
-% Set electrodes
 % Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
-
-% Possibly part of final ROI: 
+Fz = 14;
+F3 = 6;
+F4 = 7;
+FC5 = 11;
+FC6 = 12;
 Cz = 27;
 C3 = 1;
 C4 = 2;
-F7 = 9;
-F8 = 10;
+
+% Possibly part of final ROI: 
+F7 = 8;
+F8 = 9;
+
+% Eye electrodes to check F7 and F8:
+F9 = 10;
+F10 = 5;
+V2 = 26;
+
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';

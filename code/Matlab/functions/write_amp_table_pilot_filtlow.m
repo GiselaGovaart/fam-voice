@@ -2,18 +2,22 @@ function write_amp_table_pilot_filtlow(Subj, DIR, blvalue, twstartacq, twendacq,
 
 %% Set electrode nrs
 % Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
+Fz = 4;
+F3 = 5;
+F4 = 6;
+FC5 = 11;
+FC6 = 12;
+Cz = 28;
+C3 = 13;
+C4 = 14;
 
-% Possibly part of final ROI (in that case: ADD): 
-Cz = 27;
-C3 = 1;
-C4 = 2;
-F7 = 9;
-F8 = 10;
+% Possibly part of final ROI: 
+F7 = 7;
+F8 = 8;
+% Eye electrodes to compare with F7 and F8
+F9 = 9;
+F10 = 10;
+EOG1 = 1;
 
 
 setlist = dir(strcat(DIR.processed,"*_processed_*"));
@@ -44,12 +48,15 @@ for ipp = 1:length(Subj)
             mean_amplitude_f4 = mean_amplitude_all(F4,1);
             mean_amplitude_fc5 = mean_amplitude_all(FC5,1);
             mean_amplitude_fc6 = mean_amplitude_all(FC6,1);
+            mean_amplitude_cz = mean_amplitude_all(Cz,1);
+            mean_amplitude_c3 = mean_amplitude_all(C3,1);
             mean_amplitude_c4 = mean_amplitude_all(C4,1);
             mean_amplitude_f7 = mean_amplitude_all(F7,1);
             mean_amplitude_f8 = mean_amplitude_all(F8,1);
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
-            mean_amplitude_c4 + mean_amplitude_f7 +mean_amplitude_f8)/8;
+            mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4 + ...
+            mean_amplitude_f7 + mean_amplitude_f8)/10;
             outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
         end
     end
@@ -90,12 +97,15 @@ for ipp = 1:length(Subj)
             mean_amplitude_f4 = mean_amplitude_all(F4,1);
             mean_amplitude_fc5 = mean_amplitude_all(FC5,1);
             mean_amplitude_fc6 = mean_amplitude_all(FC6,1);
+            mean_amplitude_cz = mean_amplitude_all(Cz,1);
+            mean_amplitude_c3 = mean_amplitude_all(C3,1);
             mean_amplitude_c4 = mean_amplitude_all(C4,1);
             mean_amplitude_f7 = mean_amplitude_all(F7,1);
             mean_amplitude_f8 = mean_amplitude_all(F8,1);
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
-            mean_amplitude_c4 + mean_amplitude_f7 +mean_amplitude_f8)/8;
+            mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4 + ...
+            mean_amplitude_f7 + mean_amplitude_f8)/10;
             outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
         end
     end

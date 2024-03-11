@@ -2,18 +2,18 @@ function plot_ERP_raw_plot(Subj, DIR)
 
 %% Set up
 % Definelty part of final ROI
-Fz = 15;
-F3 = 7;
-F4 = 8;
-FC5 = 12;
-FC6 = 13;
-
-% Possibly part of final ROI: 
+Fz = 14;
+F3 = 6;
+F4 = 7;
+FC5 = 11;
+FC6 = 12;
 Cz = 27;
 C3 = 1;
 C4 = 2;
-F7 = 9;
-F8 = 10;
+
+% Possibly part of final ROI: 
+F7 = 8;
+F8 = 9;
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
