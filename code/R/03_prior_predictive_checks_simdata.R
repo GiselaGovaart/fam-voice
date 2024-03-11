@@ -7,24 +7,19 @@ library(brms)
 
 
 # Set priors ------------------------------------------------------------
-# priors 0.4 Hz filter
-priors_acq_low <- c(set_prior("normal(5.94, 20.52)",  
+priors_acq <- c(set_prior("normal(5.94, 20.52)",  
                               class = "Intercept"),
                     set_prior("normal(0, 20.52)",  
                               class = "b"),
                     set_prior("normal(0, 20.52)",  
                               class = "sigma"))
 
-priors_rec_low <- c(set_prior("normal(5.97, 23.34)",  
+priors_rec <- c(set_prior("normal(5.97, 23.34)",  
                               class = "Intercept"),
                     set_prior("normal(0, 23.34)",  
                               class = "b"),
                     set_prior("normal(0, 23.34)",  
                               class = "sigma")) 
-# priors 1 Hz filter
-
-#### add
-
 
 ## Checks for now with REC data:
 # Prior predictive checks WITHOUT covariates --------------------------------------------------------------------

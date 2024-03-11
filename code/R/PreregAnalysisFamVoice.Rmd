@@ -1,0 +1,26 @@
+---
+title: "Preregistered Analysis FamVoice ACQ"
+output: html_document
+date: "2024-03-08"
+---
+
+```{r, include=FALSE}
+library(here)
+```
+
+First, we simulate some data:
+```{r, message=FALSE}
+source(here("code/R","01_data_simulation.R"), local = knitr::knit_global())
+```
+
+```{r, include=TRUE}
+head(dat)
+summary(dat)
+```
+
+Now we set the priors, based on the pilotdata
+
+This does not work takes too long to knit.. save models in R script
+```{r, message=FALSE}
+source(here("code/R","02_choose_priors.R"), local = knitr::knit_global())
+```
