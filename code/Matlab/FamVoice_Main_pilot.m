@@ -65,9 +65,9 @@ plot_colloc_pilot(DIR);
 % For low filter:
 if filtervalue == "low"
     twstartacq = 200; % CHANGE based on coll loc. HAS TO BE EVEN
-    twendacq = 600; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendacq = 500; % CHANGE based on coll loc. HAS TO BE EVEN
     twstartrec = 200; % CHANGE based on coll loc. HAS TO BE EVEN
-    twendrec = 600; % CHANGE based on coll loc. HAS TO BE EVEN
+    twendrec = 500; % CHANGE based on coll loc. HAS TO BE EVEN
 
     % After looking at ERP_Colloc_ACQ_.. and ERP_Colloc_REC_.. per electrode:
     % Decide on electrodes (per RQ)

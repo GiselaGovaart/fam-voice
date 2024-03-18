@@ -49,13 +49,9 @@ if  any(strcmp(Subj_cbs,(pp)))
     % Charite
     EEG = pop_select(EEG, 'nochannel', {'FC1'});
     EEG = pop_select(EEG, 'nochannel', {'FC2'});
-   % EEG=pop_chanedit(EEG, 'changefield',{25 'labels' 'Fp2'}); % is called V1 originally
-   % EEG=pop_chanedit(EEG, 'changefield',{26 'labels' 'EOG1'}); % is called V2 originally
 elseif any(strcmp(Subj_char,(pp)))
     % Remove Fp1, because it is not included in the setup at the CBS
     EEG = pop_select(EEG, 'nochannel', {'Fp1'});
-    %EEG=pop_chanedit(EEG, 'changefield',{24 'labels' 'EOG1'}); % is called V2 originally
-
 end
 
 % Now make sure the chanlocs from both locations have the same order:
