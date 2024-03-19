@@ -24,7 +24,7 @@ end
 % also the eye electrodes, because we want the wavelet thresholds to be
 % set accordingly, such that we have a higher chance to correct the trials
 % that have eye contamination
-crucialNames = {'Fp2','EOG1','TP9','TP10','F9','F10'};
+crucialNames = {'Fp2','V2','TP9','TP10','F9','F10'};
 for i = 1:length(crucialNames)
     if ismember(crucialNames(i),elecName)
         idxCruc(i) = find(elecName == crucialNames(i));

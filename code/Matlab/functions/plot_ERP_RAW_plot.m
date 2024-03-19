@@ -1,4 +1,6 @@
 function plot_ERP_raw_plot(Subj, DIR)
+% This script basically combines computeGA.m & the plotting code from
+% plot_colloc.m, for the raw data.
 
 %% Set up
 % Definelty part of final ROI
@@ -11,7 +13,7 @@ Cz = 27;
 C3 = 1;
 C4 = 2;
 
-% Possibly part of final ROI: 
+% Possibly part of final ROI (IN THAT CASE, ADD): 
 F7 = 8;
 F8 = 9;
 
@@ -24,9 +26,7 @@ eeglab; close;
 DIR.processed = convertStringsToChars(DIR.processed);
 DIR.grandaverage = convertStringsToChars(DIR.grandaverage);
 
-
 %% Make GA for training speaker (1 or 2)
-
 cd(DIR.processed)
 counter = 1;
 GAargD = cell(counter);
@@ -99,6 +99,10 @@ for ipp = 1:length(Subj)
     end
 end
 
+% t23 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/23_RAW_102.set');
+% t27 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/27_1_RAW_102.set');
+% t57 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/57_RAW_101.set');
+
 % Deviants
 ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed);
 % S1
@@ -111,21 +115,6 @@ pop_saveset(GA_merged, 'filename', 'ga_S12_Stan_RAW.set', ...
         'filepath', DIR.grandaverage);
 pop_saveset(ga_1012, 'filename', 'ga_S12_Dev_RAW.set', ...
         'filepath', DIR.grandaverage);
-
-
-
-
-%test
-% EG23_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/23_RAW_102.set');
-% EG23_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/23_processed_101.set');
-% EG27_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/27_1_RAW_101.set');
-% EG27_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/27_1_processed_101.set');
-% EG57_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/57_RAW_101.set');
-% EG57_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/57_processed_101.set');
-% EG98_R = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/FamVoice98_RAW_101.set');
-% EG98_P = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/finalParams/05-processed/FamVoice98_processed_101.set');
-
-
 
 %% Make GA for Speaker 3
 cd(DIR.processed)
@@ -192,7 +181,6 @@ pop_saveset(GA_merged, 'filename', 'ga_S3_Stan_RAW.set', ...
         'filepath', DIR.grandaverage);
 pop_saveset(ga_103, 'filename', 'ga_S3_Dev_RAW.set', ...
         'filepath', DIR.grandaverage);
-
 
 %% Make GA for Speaker 4
 cd(DIR.processed)
@@ -261,55 +249,50 @@ pop_saveset(GA_merged, 'filename', 'ga_S4_Stan_RAW.set', ...
 pop_saveset(ga_104, 'filename', 'ga_S4_Dev_RAW.set', ...
         'filepath', DIR.grandaverage);
 
-
-
-
 %% PLOT
-
 cd(DIR.grandaverage);
 
 GA_dev12 = pop_loadset('ga_S12_Dev_RAW.set');
-GA_dev12.data = mean(GA_dev12.data(:,:,:),3);
 GA_dev3 = pop_loadset('ga_S3_Dev_RAW.set');
-GA_dev3.data = mean(GA_dev3.data(:,:,:),3);
 GA_dev4 = pop_loadset('ga_S4_Dev_RAW.set');
-GA_dev4.data = mean(GA_dev4.data(:,:,:),3);
+GA_dev_all = pop_mergeset(GA_dev12, GA_dev3);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4); 
+
+GA_dev_all.data = mean(GA_dev_all.data(:,:,:),3);
 
 GA_stan12 = pop_loadset('ga_S12_Stan_RAW.set');
-GA_stan12.data = mean(GA_stan12.data(:,:,:),3);
 GA_stan3 = pop_loadset('ga_S3_Stan_RAW.set');
-GA_stan3.data = mean(GA_stan3.data(:,:,:),3);
 GA_stan4 = pop_loadset('ga_S4_Stan_RAW.set');
-GA_stan4.data = mean(GA_stan4.data(:,:,:),3);
+GA_stan_all = pop_mergeset(GA_stan12, GA_stan3);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4); 
 
-DIFF_12 = GA_dev12.data - GA_stan12.data;
-DIFF_3 = GA_dev3.data - GA_stan3.data;
-DIFF_4 = GA_dev4.data - GA_stan4.data;
+GA_stan_all.data = mean(GA_stan_all.data(:,:,:),3);
 
-GA_dev_all.data = (GA_dev12.data + GA_dev3.data  + GA_dev4.data)/3 ;
-GA_stan_all.data = (GA_stan12.data + GA_stan3.data  + GA_stan4.data)/3 ;
-DIFF_all = GA_dev_all.data - GA_stan_all.data;
+DIFF = GA_dev_all.data - GA_stan_all.data;
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
-
+% Make fig
 fig = figure;
-h1 = plot(GA_dev12.times, ...
-    ((DIFF_all(Fz,:,:)+DIFF_all(F3,:,:)+DIFF_all(F4,:,:)+ ...
-    DIFF_all(FC5,:,:)+DIFF_all(FC6,:,:)) ...
-    /6), ...
+h1 = plot(GA_dev_all.times, ...
+    ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
+    DIFF(FC5,:,:)+ DIFF(FC6,:,:)+ ...
+    DIFF(C3,:,:)+DIFF(C4,:,:)) ...
+    /7), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
-h2 = plot(GA_dev12.times, ...
+h2 = plot(GA_dev_all.times, ...
     ((GA_dev_all.data(Fz,:,:)+GA_dev_all.data(F3,:,:)+GA_dev_all.data(F4,:,:)+ ...
-    GA_dev_all.data(FC5,:,:)+GA_dev_all.data(FC6,:,:)) ...
-    /6), ...
+    GA_dev_all.data(FC5,:,:)+ GA_dev_all.data(FC6,:,:)+ ...
+    GA_dev_all.data(C3,:,:)+GA_dev_all.data(C4,:,:)) ...
+    /7), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
-h3 = plot(GA_dev12.times, ...
+h3 = plot(GA_dev_all.times, ...
     ((GA_stan_all.data(Fz,:,:)+GA_stan_all.data(F3,:,:)+GA_stan_all.data(F4,:,:)+ ...
-    +GA_stan_all.data(FC5,:,:)+GA_stan_all.data(FC6,:,:)) ...
-    /6), ...
+    GA_stan_all.data(FC5,:,:)+ GA_stan_all.data(FC6,:,:)+ ...
+    GA_stan_all.data(C3,:,:)+GA_stan_all.data(C4,:,:)) ...
+    /7), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -327,15 +310,9 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('All speakers')
-subtitle('F3, Fz, F4, C3, C4')
+title('Raw data - all speakers - ROI')
 xlabel('msec')
 ylabel('µV')
-% legend([h1, h2, h3], ...
-%     {'Difference', ...
-%     'Deviant (fɪ)', ...
-%     'Standard (fɛ)'}, ...
-%     'Location','northeast');
 
 % General make prettier
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
@@ -343,16 +320,12 @@ box(ax, 'off'); % remove box
 ax.FontSize = 10; 
 daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
-%set(gca,'color','none'); % if you want transparent backrgound, set both here and above to 'none'
 
 % Ticks
 ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
 ax.XTickLabel = {'-100','0','','','','','','600',''};
 ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
 ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-% ax.TickDir = 'out'; % I like tick direction in better (default)
-% ax.TickLength = [0.02, 0.02]; % I like the standard better, but with this
-% you can make the length of the tick longer
 
 % mchange orientation and location y-label
 hYLabel = get(gca,'YLabel'); % gca = current axes
@@ -364,7 +337,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
 exportgraphics(gcf, strcat(DIR.plotsERPraw, ...
-    'AllSpeakers_F3FzF4FC5FC6_RAW_waveletted.jpeg'), ...
+    'AllSpeakers_ROI_RAW_waveletted.jpeg'), ...
     'Resolution', 300);
 
 

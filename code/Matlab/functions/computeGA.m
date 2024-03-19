@@ -14,7 +14,7 @@ DIR.processed = convertStringsToChars(DIR.processed);
 DIR.grandaverage = convertStringsToChars(DIR.grandaverage);
 
 %% Make GA for training speaker (1 or 2)
-% For FAM
+% For FAM------------------------------------------------------------------
 Subj = Subj_Fam;
 cd(DIR.processed)
 counter = 1;
@@ -101,7 +101,7 @@ pop_saveset(GA_merged, 'filename', 'ga_fam_S12_Stan.set', ...
 pop_saveset(ga_1012, 'filename', 'ga_fam_S12_Dev.set', ...
         'filepath', DIR.grandaverage);
 
-% For UNFAM
+% For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
 cd(DIR.processed)
 counter = 1;
@@ -190,8 +190,7 @@ pop_saveset(ga_1012, 'filename', 'ga_unfam_S12_Dev.set', ...
 
 
 %% Make GA for Speaker 3
-
-% For FAM
+% For FAM -----------------------------------------------------------------
 Subj = Subj_Fam;
 cd(DIR.processed)
 counter = 1;
@@ -258,8 +257,7 @@ pop_saveset(GA_merged, 'filename', 'ga_fam_S3_Stan.set', ...
 pop_saveset(ga_103, 'filename', 'ga_fam_S3_Dev.set', ...
         'filepath', DIR.grandaverage);
 
-
-% For UNFAM
+% For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
 cd(DIR.processed)
 counter = 1;
@@ -327,7 +325,7 @@ pop_saveset(ga_103, 'filename', 'ga_unfam_S3_Dev.set', ...
         'filepath', DIR.grandaverage);
 
 %% Make GA for Speaker 4
-% For FAM
+% For FAM -----------------------------------------------------------------
 Subj = Subj_Fam;
 cd(DIR.processed)
 counter = 1;
@@ -395,8 +393,7 @@ pop_saveset(GA_merged, 'filename', 'ga_fam_S4_Stan.set', ...
 pop_saveset(ga_104, 'filename', 'ga_fam_S4_Dev.set', ...
         'filepath', DIR.grandaverage);
 
-
-% For UNFAM
+% For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
 cd(DIR.processed)
 counter = 1;

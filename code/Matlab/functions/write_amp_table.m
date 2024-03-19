@@ -47,10 +47,19 @@ for ipp = 1:length(Subj)
             mean_amplitude_cz = mean_amplitude_all(Cz,1);
             mean_amplitude_c3 = mean_amplitude_all(C3,1);
             mean_amplitude_c4 = mean_amplitude_all(C4,1);
+%             mean_amplitude_f7 = mean_amplitude_all(F7,1);
+%             mean_amplitude_f8 = mean_amplitude_all(F8,1);
+
             % take mean of all amplitudes in ROI
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
             mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4)/8;
+% in case we add F7+f8:
+%             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
+%             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
+%             mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4) + ...
+%             mean_amplitude_f7 + mean_amplitude_f8/10;
+
             outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
         end
     end
@@ -95,11 +104,18 @@ for ipp = 1:length(Subj)
             mean_amplitude_cz = mean_amplitude_all(Cz,1);
             mean_amplitude_c3 = mean_amplitude_all(C3,1);
             mean_amplitude_c4 = mean_amplitude_all(C4,1);
+%             mean_amplitude_f7 = mean_amplitude_all(F7,1);
+%             mean_amplitude_f8 = mean_amplitude_all(F8,1);
+
             % take mean of all amplitudes in ROI
             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
             mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4)/8;
-            outMat(ipp+1,iCond+1) =  mean_amplitude_roi;
+% in case we add F7+f8:
+%             mean_amplitude_roi = (mean_amplitude_fz + mean_amplitude_f3 + ...
+%             mean_amplitude_f4 + mean_amplitude_fc5 + mean_amplitude_fc6 + ...
+%             mean_amplitude_cz + mean_amplitude_c3 + mean_amplitude_c4) + ...
+%             mean_amplitude_f7 + mean_amplitude_f8/10;
         end
     end
 end

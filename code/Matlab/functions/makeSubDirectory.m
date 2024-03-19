@@ -1,15 +1,5 @@
 function DIR = makeSubDirectory(DIR, manualInfoFolder)
 
-
-
-% function DIR = makeSubDirectory(DIR,hptransStr, hpcutoffStr,window, betaStr, threshold, ...
-%     wavThreshold, version, baseline, blvalue, muscIL, detr)
-% 
-% DIR.overallPath = strcat(DIR.SET_PATH,"01-output/hptrans-",hptransStr, "hpcutoff-", hpcutoffStr, ...
-%         "_window-", window, "_beta",betaStr,"_amp-",int2str(threshold),...
-%         "_wavThreshold-", wavThreshold, "_version-",int2str(version),"_baseline-", baseline, ...
-%         "_blvalue-", int2str(blvalue), "_muscIL-", muscIL,"_detrend-", detr);
-
 DIR.overallPath = strcat(DIR.RAWEEG_PATH,"01-output/", manualInfoFolder);
 
 mkdir(DIR.overallPath);
@@ -29,6 +19,7 @@ mkdir(strcat(DIR.overallPath,"/07-grandaverage/"));
 DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
 mkdir(strcat(DIR.overallPath,"/08-plots/"));
 DIR.plots = strcat(DIR.overallPath,"/08-plots");
+
 %subfolders plot
 mkdir(strcat(DIR.plots,"/01-quality_assessment/"));
 DIR.plotsQA = strcat(DIR.plots,"/01-quality_assessment/");

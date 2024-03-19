@@ -1,8 +1,8 @@
 function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
-%   Preprocessing for the FamVoice data, based on HAPPE 3.3 
+% Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 % set electrode location for the spectoplots:
-Fz = 15;
+Fz = 14;
 
 %% Load the data
 cd(DIR.EEGLAB_PATH);
@@ -34,7 +34,7 @@ figure;
 hold on;
 plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
-xlabel('Frequlency (Hz)');
+xlabel('Frequlency at Fz (Hz)');
 ylabel('absolute power (uV^2)');
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_raw_',pp,'.png')));
@@ -59,14 +59,9 @@ T = struct2table(EEG.chanlocs); % convert the struct array to a table
 sortedT = sortrows(T, 'labels'); % sort the table
 EEG.chanlocs = table2struct(sortedT); % change it back to struct array 
 
-% Already add new electrode posiitons here, to use those for interpolation
-% later on
-% fprintf('Adding electrode positions using spherical template...\n');
-% EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-
 EEG = eeg_checkset(EEG);
 
-%% Detect stimulation pauses
+%% Detect stimulation pauses (code written by Maren Grigutsch)
 longEEG = EEG;
 
 longEEG.setname = [convertStringsToChars(pp)];
@@ -163,11 +158,11 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_wavclean.set')), 
 % hpfreq = 0.3;
 % lpfreq = 30;
 % EEG = pop_eegfiltnew(EEG, hpfreq, lpfreq, [], 0, [], 0) ;
+% We use the MADE filter instead 
 
 % params:
 hptrans = 0.4;
 hpcutoff = 0.2;
-
 
 % MADE filter 
 % Calculate filter order using the formula: m = dF / (df / fs), where m = filter order,
@@ -178,7 +173,7 @@ hpcutoff = 0.2;
 % calculated manually)
 lpfreq = 30;
 
-high_transband = hptrans; % high pass transition band. 
+high_transband = hptrans; % high pass transition band
 low_transband = 10; % low pass transition band
 
 hp_fl_order = 3.3 / (high_transband / EEG.srate);
@@ -224,7 +219,7 @@ pop_saveset(EEG, 'filename', convertStringsToChars(strcat(pp,'_ERPfiltered.set')
 fieldtripEEG = eeglab2fieldtrip(EEG,'preprocessing','none');
 
 cfg = [];
-cfg.length = 20;  % changed the resolution such that I can actually see whether it filtered out 0-0.3Hz
+cfg.length = 20;  % changed the resolution such that I can actually see whether it filtered out 0-0.4 Hz
 cfg.overlap = 0;
 data_segmented = ft_redefinetrial(cfg, fieldtripEEG);
 
@@ -240,7 +235,7 @@ figure;
 hold on;
 plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
-xlabel('Frequency (Hz)');
+xlabel('Frequency at Fz (Hz)');
 ylabel('absolute power (uV^2)');
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_afterfiltering_',pp,'.png')));
@@ -413,7 +408,7 @@ figure;
 hold on;
 plot(freq_segmented.freq, freq_segmented.powspctrm(Fz,:)) 
 ylim([0 40]);
-xlabel('Frequency (Hz)');
+xlabel('Frequency at Fz (Hz)');
 ylabel('absolute power (uV^2)');
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectopo_clean_',pp,'.png')));
@@ -425,19 +420,6 @@ exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('plottopo_clean_',pp,'.png')), ...
     'Resolution', 300);
 
-% % plot mastoids
-% leftMas = find(strcmpi({EEG.chanlocs.labels}, 'TP9'));
-% rightMas = find(strcmpi({EEG.chanlocs.labels}, 'TP10'));
-% close all
-% pop_plottopo(EEG, leftMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
-% exportgraphics(gcf, strcat(DIR.plotsQA, ...
-%     strcat('plottopo_leftMas_clean',pp,'.png')), ...
-%     'Resolution', 300);
-% close all
-% pop_plottopo(EEG, rightMas, 'wavcleanedEEG epochs', 0, 'ydir',1)
-% exportgraphics(gcf, strcat(DIR.plotsQA, ...
-%     strcat('plottopo_rightMas_clean',pp,'.png')), ...
-%     'Resolution', 300);
 
 %% Split by onset tags
 fprintf('Creating EEGs by tags...\n') ;

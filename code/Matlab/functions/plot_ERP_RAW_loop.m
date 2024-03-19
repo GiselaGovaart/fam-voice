@@ -1,30 +1,39 @@
 function plot_ERP_raw_loop(pp,DIR, blvalue, Subj_cbs, Subj_char)
-%   Preprocessing for the FamVoice data, based on HAPPE 3.3 
+% Preprocessing for the FamVoice data, based on HAPPE 3.3 
+% This is a copy of HAPPE_FamVoice.m, but with most preproc steps commented
+% out. Also, all the figures and inbetween data saves are deleted.
+
+% To check what's going on in other steps, you can take these steps in
+% again in this script.
+
+% For now, it's only the first linenoise filter, and the waveletting
+
+% set electrode location for the spectoplots:
+Fz = 14;
 
 %% Load the data
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 close;
 
-EEG = pop_loadbv(DIR.RAWEEG_PATH, convertStringsToChars(strcat(pp, ".vhdr")));
-[ALLEEG EEG CURRENTSET] = pop_newset(ALLEEG, EEG, 0,'setname',convertStringsToChars(pp),'gui','off');
-[EEG ALLEEG CURRENTSET] = eeg_retrieve(ALLEEG,1);
+[EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
+EEG = eeg_hist(EEG,com);
 EEG = eeg_checkset( EEG );
 
-%% Remove non used electrodes
+
+%% Edit channel locations and remove non-used electrodes
+
+[EEG,com] = famvoice_fix_chanlocs(EEG);
+EEG = eeg_hist(EEG,com);
 
 if  any(strcmp(Subj_cbs,(pp)))
     % Remove FC1 and FC2, because it is not included in the setup at the
     % Charite
     EEG = pop_select(EEG, 'nochannel', {'FC1'});
     EEG = pop_select(EEG, 'nochannel', {'FC2'});
-    EEG=pop_chanedit(EEG, 'changefield',{25 'labels' 'Fp2'}); % is called V1 originally
-    EEG=pop_chanedit(EEG, 'changefield',{26 'labels' 'EOG1'}); % is called V2 originally
 elseif any(strcmp(Subj_char,(pp)))
     % Remove Fp1, because it is not included in the setup at the CBS
     EEG = pop_select(EEG, 'nochannel', {'Fp1'});
-    EEG=pop_chanedit(EEG, 'changefield',{24 'labels' 'EOG1'}); % is called V2 originally
-
 end
 
 % Now make sure the chanlocs from both locations have the same order:
@@ -32,12 +41,71 @@ T = struct2table(EEG.chanlocs); % convert the struct array to a table
 sortedT = sortrows(T, 'labels'); % sort the table
 EEG.chanlocs = table2struct(sortedT); % change it back to struct array 
 
-% Already add new electrode posiitons here, to use those for interpolation
-% later on
+% Already add new electrode posiitons here, because otherwise
+% pop_grandaverage in plot_ERP_raw_plot does not work. 
 fprintf('Adding electrode positions using spherical template...\n');
 EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-
 EEG = eeg_checkset(EEG);
+
+%% Detect stimulation pauses (code written by Maren Grigutsch)
+longEEG = EEG;
+
+longEEG.setname = [convertStringsToChars(pp)];
+[ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,longEEG);
+eeglab redraw;
+
+pauses = famvoice_detect_pauses(longEEG);
+
+% Display the trigger time series and the pauses.
+% fig = famvoice_plot_triggers(longEEG,pauses,'pause');
+% exportgraphics(gcf, strcat(DIR.plotsQA, ...
+%     strcat('triggerTimeSeriesAndPauses',pp,'.png')));
+
+%% 
+if ~isempty(pauses)
+   %%Delete the pauses from the dataset
+
+    fprintf('Deleting n=%d pauses from the dataset.\n',size(pauses,1));
+    
+    [EEG,com] = pop_select(longEEG,'nopoint',pauses);
+    EEG = eeg_hist(EEG,com);
+    
+    EEG.setname = [convertStringsToChars(pp) ' without pauses'];
+    [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
+    eeglab redraw;
+    
+    % Display the trigger time series after pauses have been deleted.
+%     fig2 = famvoice_plot_triggers(EEG);
+%     exportgraphics(gcf, strcat(DIR.plotsQA, ...
+%         strcat('triggerTimeSeriesAfterPausesDeleted',pp,'.png')));
+
+   %% Check consistency between datasets before and after deleting pauses.
+
+    fprintf('Checking consistency between datasets before and after deleting pauses...\n')
+    
+    trg = famvoice_triggers;
+    stimType = trg.stimulus;
+    n_long = sum(ismember({longEEG.event.type},stimType));
+    n = sum(ismember({EEG.event.type},stimType));
+    
+    if n_long ~= n
+        error('ERROR: Inconsistent number of stimulus events after deleting pauses: got %d; expected %d',n,n_long);
+    end
+    
+    % Cut epochs around each stimulus trigger and compare the data.
+    epoch_long = pop_epoch(longEEG,stimType,[-0.5 0.5]);
+    epoch = pop_epoch(EEG,stimType,[-0.5 0.5]);
+    m = max(abs(epoch.data(:)-epoch_long.data(:))); 
+
+    fprintf('Comparing data matrices...')
+    if m ~= 0
+        error('Found inconsistent data between datasets; max. diviation: %e uV',m)
+    end
+    
+    fprintf('...ok.\n')
+    clear trg stimTrg n_long n m epoch_long epoch
+%%
+end
 
 %% Filter data 
 % These  filters help the artifact correction later on.
@@ -50,36 +118,41 @@ lineNoiseIn = struct('lineNoiseMethod', 'clean', 'lineNoiseChannels', ...
     'maximumIterations', 10) ;
 [EEG, ~] = cleanLineNoise(EEG, lineNoiseIn) ;
 
+EEG = eeg_checkset(EEG);
+
 %% Detect bad channels
-% find ROI channels
+% % find ROI channels
 % ROI = {'F7','F3','Fz','F4','F8',...
 %     'FC5','FC6','C3','C4', 'TP9', 'TP10'};  
 % % Here I cannot add Cz, that's a consequence of choosing to reref in the end
 % 
 % EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
 
-
 %% Wavelet thresholding
 EEG = happe_waveletThreshold(EEG,'Hard',3);
-
-% Save the wavelet-thresholded EEG as an intermediate output
 EEG = eeg_checkset(EEG);
 
-
-% %% HP filter
+%% Filter for ERP
+% % This is the HAPPE filter:
+% % hpfreq = 0.3;
+% % lpfreq = 30;
+% % EEG = pop_eegfiltnew(EEG, hpfreq, lpfreq, [], 0, [], 0) ;
+% % We use the MADE filter instead 
+% 
+% % params:
+% hptrans = 0.4;
+% hpcutoff = 0.2;
+% 
 % % MADE filter 
 % % Calculate filter order using the formula: m = dF / (df / fs), where m = filter order,
 % % df = transition band width, dF = normalized transition width, fs = sampling rate
 % % dF is specific for the window type. Hamming window dF = 3.3
 % 
-% % params:
-% hptrans = 0.4;
-% hpcutoff = 0.2;
 % % hpfreq = 0.4; % MADE uses 0.1, HAPPE 0.3, we use 0.4 (but
 % % calculated manually)
 % lpfreq = 30;
 % 
-% high_transband = hptrans; % high pass transition band. 
+% high_transband = hptrans; % high pass transition band
 % low_transband = 10; % low pass transition band
 % 
 % hp_fl_order = 3.3 / (high_transband / EEG.srate);
@@ -114,17 +187,9 @@ EEG = eeg_checkset(EEG);
 % EEG = pop_firws(EEG, 'fcutoff', low_cutoff, 'ftype', 'lowpass', 'wtype', ...
 %     'hamming', 'forder', lp_fl_order, 'minphase', 0);
 % EEG = eeg_checkset( EEG );
-% 
+
+
 %% Segmentation
-% For the test phase:
-% •        First digit: 1 for dev, 2 for stan
-% •        Second digit: 0 for deviant, 1,2,3,4 for standard types: 1 = regular standard, 2 = standard pre-preceding the deviant, 3 = standard preceding the deviant, 4 = standard after the deviant.
-% •        Third digit: speakers: 1,2,3,4
-% For the training phase:
-% •        First digit: 1 for fe, 2 for fi
-% •        Second digit: for speaker: 1 for S1, 2 for S2
-
-
 for trial=1:length(EEG.event)
     if strcmp(EEG.event(trial).type,'S 11')
         EEG.event(trial).type = '11';
@@ -190,25 +255,20 @@ EEG = pop_epoch(EEG, onsetTags, ...
     [segmentStart, segmentEnd], 'verbose', ...
     'no', 'epochinfo', 'yes') ;
 
-% Save the segmented EEG as an intermediate output
 EEG = eeg_checkset(EEG);
 
-% %% BL CORR
-% 
-% ROI = {'F7','F3','Fz','F4','F8',...
-%     'FC5','FC6','C3','C4', 'TP9', 'TP10'};  
-% 
-% 
+%% Baseline correction
 % EEG = pop_rmbase(EEG, [blvalue 0]);
 % EEG = eeg_checkset(EEG);
+
+
+%% Artifact rejection
+% % ROI is set above (at "bad channel detection")
 % ROI_indxs = [] ;
 % for i=1:size(ROI,2)
 %     ROI_indxs = [ROI_indxs find(strcmpi({EEG.chanlocs.labels}, ...
 %        ROI{i}))] ;
 % end
-% 
-% %% Artifact rejectsion
-% 
 % 
 % % AMPLITUDE CRITERIA
 % % HAPPE suggests 200 for infants and 150 for children and adults, MADE uses
@@ -225,35 +285,25 @@ EEG = eeg_checkset(EEG);
 % EEG = pop_jointprob(EEG, 1, ...
 %             ROI_indxs, num, num, 0, 1,0) ;% second-to-last 1: reject labeled trials
 % 
-% % Save the post-artifact rejection data as an intermediate output
 % EEG = eeg_checkset(EEG);
+
+
+%% Bad channel interpolation
+% EEG = happe_interpChan(EEG,pp,DIR); 
+% EEG = eeg_checkset(EEG);
+
+
+%% Rereferencing
+% % add Cz
+% [EEG,com] = famvoice_add_reference_channel(EEG);
+% EEG = eeg_hist(EEG,com);
 % 
-% 
-% %% Rereferencing
-% % This code comes from Maren's script "makeSetsEEG.m"
-% 
-% EEG.data(end+1,:,:) = 0;
-% EEG.nbchan = size(EEG.data,1);
-% EEG.chanlocs(end+1).labels = 'Cz';
-% 
-% for chan=1:length(EEG.chanlocs)
-%     EEG.chanlocs(chan).type = 'EEG';
-%     EEG.chanlocs(chan).ref = 'Cz';
-% end
-% 
-% fprintf('Adding electrode positions using spherical template...\n');
-% EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-% % EEG = pop_chanedit(EEG, 'lookup','standard_1005.elc');
-% 
+% % Reref
 % [~,refchan] = intersect({EEG.chanlocs.labels},{'TP9','TP10'});
 % EEG = pop_reref(EEG,refchan,'keepref','on');
 % EEG.setname = strcat(pp,' reref');
 % 
-% % Save the rereferenced data as an intermediate output
-% 
 % EEG = eeg_checkset(EEG);
-% 
-
 
 
 %% Split by onset tags
@@ -274,7 +324,6 @@ for i=1:length(eegByTags)
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
-
 
 
 end
