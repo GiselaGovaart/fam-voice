@@ -5,7 +5,6 @@ function computeGA(DIR, Subj_Fam, Subj_Unfam)
 %     "233" "234" "241" "242" "243" "244"];
 
 % load EEGlab 
-DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 cd(DIR.EEGLAB_PATH);
 eeglab; close;

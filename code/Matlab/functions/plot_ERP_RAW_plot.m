@@ -3,19 +3,7 @@ function plot_ERP_raw_plot(Subj, DIR)
 % plot_colloc.m, for the raw data.
 
 %% Set up
-% Definelty part of final ROI
-Fz = 14;
-F3 = 6;
-F4 = 7;
-FC5 = 11;
-FC6 = 12;
-Cz = 27;
-C3 = 1;
-C4 = 2;
-
-% Possibly part of final ROI (IN THAT CASE, ADD): 
-F7 = 8;
-F8 = 9;
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -98,10 +86,6 @@ for ipp = 1:length(Subj)
         counter = counter+1;
     end
 end
-
-% t23 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/23_RAW_102.set');
-% t27 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/27_1_RAW_102.set');
-% t57 = pop_loadset('/data/p_02453/raw_eeg/exp/01-output/AnalysisTestSubjects/05-processed/57_RAW_101.set');
 
 % Deviants
 ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed);
@@ -272,27 +256,32 @@ DIFF = GA_dev_all.data - GA_stan_all.data;
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
-% Make fig
+% find indices of ROI channels
+indices = zeros(1, numel(ROI_labels));
+
+% loop over labels and find indices
+for i = 1:numel(ROI_labels)
+    label = ROI_labels{i};
+    for j = 1:numel(GA_dev_all.chanlocs)
+        if strcmp(GA_dev_all.chanlocs(j).labels, label)
+            indices(i) = j;
+            break;
+        end
+    end
+end
+
+% make FIG
 fig = figure;
 h1 = plot(GA_dev_all.times, ...
-    ((DIFF(Fz,:,:)+DIFF(F3,:,:)+DIFF(F4,:,:)+ ...
-    DIFF(FC5,:,:)+ DIFF(FC6,:,:)+ ...
-    DIFF(C3,:,:)+DIFF(C4,:,:)) ...
-    /7), ...
+    mean(DIFF(indices(1:8),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev_all.times, ...
-    ((GA_dev_all.data(Fz,:,:)+GA_dev_all.data(F3,:,:)+GA_dev_all.data(F4,:,:)+ ...
-    GA_dev_all.data(FC5,:,:)+ GA_dev_all.data(FC6,:,:)+ ...
-    GA_dev_all.data(C3,:,:)+GA_dev_all.data(C4,:,:)) ...
-    /7), ...
+    mean(GA_dev_all.data(indices(1:8),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev_all.times, ...
-    ((GA_stan_all.data(Fz,:,:)+GA_stan_all.data(F3,:,:)+GA_stan_all.data(F4,:,:)+ ...
-    GA_stan_all.data(FC5,:,:)+ GA_stan_all.data(FC6,:,:)+ ...
-    GA_stan_all.data(C3,:,:)+GA_stan_all.data(C4,:,:)) ...
-    /7), ...
+    mean(GA_stan_all.data(indices(1:8),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -329,9 +318,7 @@ ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
 
 % mchange orientation and location y-label
 hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
+set(hYLabel,'rotation',0,'VerticalAlignment','middle', 'HorizontalAlignment', 'right')
 
 set(gca,'LineWidth',1)
 
@@ -339,7 +326,6 @@ set(gca,'LineWidth',1)
 exportgraphics(gcf, strcat(DIR.plotsERPraw, ...
     'AllSpeakers_ROI_RAW_waveletted.jpeg'), ...
     'Resolution', 300);
-
 
 end
 

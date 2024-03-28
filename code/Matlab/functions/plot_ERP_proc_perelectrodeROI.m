@@ -3,20 +3,9 @@ function plot_ERP_proc_perelectrodeROI(DIR)
 % Plot the ERPs for each electrode seperately, collapsed over Group and
 % Testspeaker, per RQ 
 
-%% Set up
-% Definelty part of final ROI
-Fz = 14;
-F3 = 6;
-F4 = 7;
-FC5 = 11;
-FC6 = 12;
-Cz = 27;
-C3 = 1;
-C4 = 2;
 
-% Possibly part of final ROI (already added): 
-F7 = 8;
-F8 = 9;
+%% Set up
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4', 'F7', 'F8'};
 
 
 %% ACQUISITION RQ
@@ -53,606 +42,85 @@ DIFF = GA_dev_all.data - GA_stan_all.data;
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
-% NB everywhere below, the code DIFF(Fz,:,:) could be changed to DIFF(Fz,:)
-% because the double now only has 2 dimensions. It use to have three, but I
-% averaged (above) over the pps, becuase there are a differnet number of
-% pps for the different speakers, and then matlab would not want to plot
-% all data together. 
-% leaving DIFF(Fz,:,:) does not make a differnce though
-
-
-% Fz ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(Fz,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(Fz,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(Fz,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ Fz')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_fz.jpeg'), ...
-    'Resolution', 300);
-
-% F3 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F3,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F3,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F3,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ F3')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_f3.jpeg'), ...
-    'Resolution', 300);
-
-% F4 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F4,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F4,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F4,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ F4')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_f4.jpeg'), ...
-    'Resolution', 300);
-
-% FC5 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(FC5,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(FC5,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(FC5,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ FC5')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_FC5.jpeg'), ...
-    'Resolution', 300);
-
-% FC6 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(FC6,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(FC6,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(FC6,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ FC6')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_FC6.jpeg'), ...
-    'Resolution', 300);
-
-% Cz ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(Cz,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(Cz,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(Cz,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ Cz')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_Cz.jpeg'), ...
-    'Resolution', 300);
-
-% C3 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(C3,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(C3,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(C3,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ C3')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_C3.jpeg'), ...
-    'Resolution', 300);
-
-% C4 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(C4,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(C4,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(C4,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ C4')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_C4.jpeg'), ...
-    'Resolution', 300);
-
-% F7 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F7,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F7,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F7,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ F7')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_F7.jpeg'), ...
-    'Resolution', 300);
-
-% F8 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F8,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F8,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F8,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer ACQ F8')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_ACQ_F8.jpeg'), ...
-    'Resolution', 300);
-
-
-%% Collapsed localizer for RECOGNITION RQ
+% find indices of ROI channels
+indices = zeros(1, numel(ROI_labels));
+
+% loop over labels and find indices
+for i = 1:numel(ROI_labels)
+    label = ROI_labels{i};
+    for j = 1:numel(GA_dev_all.chanlocs)
+        if strcmp(GA_dev_all.chanlocs(j).labels, label)
+            indices(i) = j;
+            break;
+        end
+    end
+end
+
+
+
+%% ACQ per electrode
+for chan = 1:length(ROI_labels)
+    fig = figure;
+    h1 = plot(GA_dev_all.times, ...
+        DIFF(indices(chan),:), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev_all.times, ...
+        GA_dev_all.data(indices(chan),:), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev_all.times, ...
+        GA_stan_all.data(indices(chan),:), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-20 20];
+    xlims = [-200 700];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    titleText = strcat("ACQ: ",ROI_labels(chan));
+    title(titleText)
+    xlabel('msec')
+    ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    daspect([100 5 2]); % change ratio
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Ticks
+    ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
+    ax.XTickLabel = {'-100','0','','','','','','600',''};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15', '20'};
+
+    % mchange orientation and location y-label
+    hYLabel = get(gca,'YLabel'); % gca = current axes
+    set(hYLabel,'rotation',0,'VerticalAlignment','middle', 'HorizontalAlignment', 'right')
+
+    set(gca,'LineWidth',1)
+
+    % Save figure (for transparent figure, add 'BackgroundColor', 'none'
+    fileName = strcat("ERP_ACQ_", ROI_labels(chan),".jpeg");
+    exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+        fileName), ...
+        'Resolution', 300);
+end
+
+
+%% RECOGNITION RQ
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
 rmpath(genpath(DIR.EEGLAB_PATH)); 
@@ -685,601 +153,68 @@ DIFF = GA_dev_all.data - GA_stan_all.data;
 
 rmpath(genpath(DIR.EEGLAB_PATH)); 
 
-% NB everywhere below, the code DIFF(Fz,:,:) could be changed to DIFF(Fz,:)
-% because the double now only has 2 dimensions. It use to have three, but I
-% averaged (above) over the pps, becuase there are a differnet number of
-% pps for the different speakers, and then matlab would not want to plot
-% all data together. 
-% leaving DIFF(Fz,:,:) does not make a differnce though
 
-% Fz ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(Fz,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(Fz,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(Fz,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
 
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
+%% REC per electrode
+for chan = 1:length(ROI_labels)
+    fig = figure;
+    h1 = plot(GA_dev_all.times, ...
+        DIFF(indices(chan),:), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev_all.times, ...
+        GA_dev_all.data(indices(chan),:), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev_all.times, ...
+        GA_stan_all.data(indices(chan),:), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-20 20];
+    xlims = [-200 700];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    titleText = strcat("REC: ",ROI_labels(chan));
+    title(titleText)
+    xlabel('msec')
+    ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    daspect([100 5 2]); % change ratio
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Ticks
+    ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
+    ax.XTickLabel = {'-100','0','','','','','','600',''};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15', '20'};
+
+    % mchange orientation and location y-label
+    hYLabel = get(gca,'YLabel'); % gca = current axes
+    set(hYLabel,'rotation',0,'VerticalAlignment','middle', 'HorizontalAlignment', 'right')
+
+    set(gca,'LineWidth',1)
+
+    % Save figure (for transparent figure, add 'BackgroundColor', 'none'
+    fileName = strcat("ERP_REC_",ROI_labels(chan),".jpeg");
+    exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+        fileName), ...
+        'Resolution', 300);
+end
 
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC Fz')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_fz.jpeg'), ...
-    'Resolution', 300);
-
-% F3 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F3,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F3,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F3,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC F3')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_f3.jpeg'), ...
-    'Resolution', 300);
-
-% F4 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F4,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F4,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F4,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC F4')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_f4.jpeg'), ...
-    'Resolution', 300);
-
-% FC5 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(FC5,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(FC5,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(FC5,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC FC5')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_FC5.jpeg'), ...
-    'Resolution', 300);
-
-% FC6 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(FC6,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(FC6,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(FC6,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC FC6')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_FC6.jpeg'), ...
-    'Resolution', 300);
-
-% Cz ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(Cz,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(Cz,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(Cz,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC Cz')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_Cz.jpeg'), ...
-    'Resolution', 300);
-
-% C3 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(C3,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(C3,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(C3,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC C3')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_C3.jpeg'), ...
-    'Resolution', 300);
-
-% C4 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(C4,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(C4,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(C4,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC C4')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_C4.jpeg'), ...
-    'Resolution', 300);
-
-% F7 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F7,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F7,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F7,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC F7')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_F7.jpeg'), ...
-    'Resolution', 300);
-
-% F8 ----------------------------------------------------------------------
-fig = figure;
-h1 = plot(GA_dev_all.times, ...
-    DIFF(F8,:,:), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
-hold on;
-h2 = plot(GA_dev_all.times, ...
-    GA_dev_all.data(F8,:,:), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-h3 = plot(GA_dev_all.times, ...
-    GA_stan_all.data(F8,:,:), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-15 15]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca,'YDir','reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0,0],'LineWidth',1);
-hline.Color = 'black';
-vline = line([0 0], ylim,'LineWidth',1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Collapsed localizer REC F8')
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
-box(ax, 'off'); % remove box
-ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
-set(gcf,'color','white'); % white background. gcf = current figure handle
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
-ax.XTickLabel = {'-100','0','','','','','','600',''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
-
-% mchange orientation and location y-label
-hYLabel = get(gca,'YLabel'); % gca = current axes
-set(hYLabel,'rotation',1,'VerticalAlignment','middle')
-hYLabel.Position(1) = -210;
-hYLabel.Position(2) = 0;
-
-set(gca,'LineWidth',1)
-
-% Save figure (for transparent figure, add 'BackgroundColor', 'none'
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'ERP_REC_F8.jpeg'), ...
-    'Resolution', 300);
 
 end

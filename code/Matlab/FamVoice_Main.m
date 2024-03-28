@@ -44,7 +44,7 @@ for pp = Subj
 end
 
 write_output_tables(Subj, DIR);
-computeGA(DIR, Subj_Fam, Subj_Unfam);
+computeGA(DIR, Subj_Fam, Subj_Unfam); %KM only checked first 2 parts
 plot_colloc(DIR);
 
 % After looking at ERP_Colloc_ACQ_all and ERP_Colloc_REC_all (DON'T look at seperate plots per electrode):
@@ -69,7 +69,8 @@ plot_ERP_raw_plot(Subj,DIR);
 
 plot_ERP_proc_indiv(Subj, DIR);
 plot_ERP_proc(DIR, twstartacq, twendacq, twstartrec, twendrec); 
-plot_ERP_proc_withSD(DIR);
+% plot_ERP_proc_withSD(DIR); % change this: you need to compute the SD in
+% while computing GA, otherwise you don't get the var per infant
 plot_ERP_proc_perelectrodeROI(DIR);
 
 

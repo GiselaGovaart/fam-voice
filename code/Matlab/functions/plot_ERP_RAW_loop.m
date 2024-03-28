@@ -8,8 +8,6 @@ function plot_ERP_raw_loop(pp,DIR, blvalue, Subj_cbs, Subj_char)
 
 % For now, it's only the first linenoise filter, and the waveletting
 
-% set electrode location for the spectoplots:
-Fz = 14;
 
 %% Load the data
 cd(DIR.EEGLAB_PATH);
@@ -36,15 +34,15 @@ elseif any(strcmp(Subj_char,(pp)))
     EEG = pop_select(EEG, 'nochannel', {'Fp1'});
 end
 
-% Now make sure the chanlocs from both locations have the same order:
-T = struct2table(EEG.chanlocs); % convert the struct array to a table
-sortedT = sortrows(T, 'labels'); % sort the table
-EEG.chanlocs = table2struct(sortedT); % change it back to struct array 
+% % Now make sure the chanlocs from both locations have the same order:
+% Sort the labels and corresponding data
+[sortedT, idx] = sortrows(struct2table(EEG.chanlocs), 'labels'); % sort the table and get the indices
+sortedEEGdata = EEG.data(idx, :); % rearrange the rows of EEG.data according to the sorted indices
+% Update the channel locations in EEG structure
+EEG.chanlocs = table2struct(sortedT);
+% Update EEG data
+EEG.data = sortedEEGdata;
 
-% Already add new electrode posiitons here, because otherwise
-% pop_grandaverage in plot_ERP_raw_plot does not work. 
-fprintf('Adding electrode positions using spherical template...\n');
-EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
 EEG = eeg_checkset(EEG);
 
 %% Detect stimulation pauses (code written by Maren Grigutsch)
@@ -56,10 +54,6 @@ eeglab redraw;
 
 pauses = famvoice_detect_pauses(longEEG);
 
-% Display the trigger time series and the pauses.
-% fig = famvoice_plot_triggers(longEEG,pauses,'pause');
-% exportgraphics(gcf, strcat(DIR.plotsQA, ...
-%     strcat('triggerTimeSeriesAndPauses',pp,'.png')));
 
 %% 
 if ~isempty(pauses)
@@ -74,11 +68,7 @@ if ~isempty(pauses)
     [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
     eeglab redraw;
     
-    % Display the trigger time series after pauses have been deleted.
-%     fig2 = famvoice_plot_triggers(EEG);
-%     exportgraphics(gcf, strcat(DIR.plotsQA, ...
-%         strcat('triggerTimeSeriesAfterPausesDeleted',pp,'.png')));
-
+  
    %% Check consistency between datasets before and after deleting pauses.
 
     fprintf('Checking consistency between datasets before and after deleting pauses...\n')
@@ -130,6 +120,7 @@ EEG = eeg_checkset(EEG);
 
 %% Wavelet thresholding
 EEG = happe_waveletThreshold(EEG,'Hard',3);
+
 EEG = eeg_checkset(EEG);
 
 %% Filter for ERP
@@ -187,60 +178,15 @@ EEG = eeg_checkset(EEG);
 % EEG = pop_firws(EEG, 'fcutoff', low_cutoff, 'ftype', 'lowpass', 'wtype', ...
 %     'hamming', 'forder', lp_fl_order, 'minphase', 0);
 % EEG = eeg_checkset( EEG );
+% 
 
 
 %% Segmentation
-for trial=1:length(EEG.event)
-    if strcmp(EEG.event(trial).type,'S 11')
-        EEG.event(trial).type = '11';
-    elseif strcmp(EEG.event(trial).type,'S 12')
-        EEG.event(trial).type = '12';
-    elseif strcmp(EEG.event(trial).type,'S 21')
-        EEG.event(trial).type = '21';
-    elseif strcmp(EEG.event(trial).type,'S 22')
-        EEG.event(trial).type = '22';
-    elseif strcmp(EEG.event(trial).type,'S101')
-        EEG.event(trial).type = '101';
-    elseif strcmp(EEG.event(trial).type,'S211')
-        EEG.event(trial).type = '211';
-    elseif strcmp(EEG.event(trial).type,'S221')
-        EEG.event(trial).type = '221';
-    elseif strcmp(EEG.event(trial).type,'S231')
-        EEG.event(trial).type = '231';
-    elseif strcmp(EEG.event(trial).type,'S241')
-        EEG.event(trial).type = '241';        
-    elseif strcmp(EEG.event(trial).type,'S102')
-        EEG.event(trial).type = '102';
-    elseif strcmp(EEG.event(trial).type,'S212')
-        EEG.event(trial).type = '212';
-    elseif strcmp(EEG.event(trial).type,'S222')
-        EEG.event(trial).type = '222';
-    elseif strcmp(EEG.event(trial).type,'S232')
-        EEG.event(trial).type = '232';
-    elseif strcmp(EEG.event(trial).type,'S242')
-        EEG.event(trial).type = '242';  
-    elseif strcmp(EEG.event(trial).type,'S103')
-        EEG.event(trial).type = '103';
-    elseif strcmp(EEG.event(trial).type,'S213')
-        EEG.event(trial).type = '213';
-    elseif strcmp(EEG.event(trial).type,'S223')
-        EEG.event(trial).type = '223';
-    elseif strcmp(EEG.event(trial).type,'S233')
-        EEG.event(trial).type = '233';
-    elseif strcmp(EEG.event(trial).type,'S243')
-        EEG.event(trial).type = '243';  
-    elseif strcmp(EEG.event(trial).type,'S104')
-        EEG.event(trial).type = '104';
-    elseif strcmp(EEG.event(trial).type,'S214')
-        EEG.event(trial).type = '214';
-    elseif strcmp(EEG.event(trial).type,'S224')
-        EEG.event(trial).type = '224';
-    elseif strcmp(EEG.event(trial).type,'S234')
-        EEG.event(trial).type = '234';
-    elseif strcmp(EEG.event(trial).type,'S244')
-        EEG.event(trial).type = '244'; 
-    end
-end
+for trial = 1:length(EEG.event)
+    EEG.event(trial).type = strrep(EEG.event(trial).type, 'S  ', '');
+    EEG.event(trial).type = strrep(EEG.event(trial).type, 'S ', '');
+    EEG.event(trial).type = strrep(EEG.event(trial).type, 'S', '');
+end 
 
 onsetTags = {11, 12, 21, 22, ... %training
     101, 211, 221, 231, 241,... %testS1
@@ -257,10 +203,11 @@ EEG = pop_epoch(EEG, onsetTags, ...
 
 EEG = eeg_checkset(EEG);
 
+
 %% Baseline correction
 % EEG = pop_rmbase(EEG, [blvalue 0]);
 % EEG = eeg_checkset(EEG);
-
+ 
 
 %% Artifact rejection
 % % ROI is set above (at "bad channel detection")
@@ -286,10 +233,11 @@ EEG = eeg_checkset(EEG);
 %             ROI_indxs, num, num, 0, 1,0) ;% second-to-last 1: reject labeled trials
 % 
 % EEG = eeg_checkset(EEG);
-
+% 
 
 %% Bad channel interpolation
-% EEG = happe_interpChan(EEG,pp,DIR); 
+% EEG = happe_interpChan(EEG,pp,DIR);
+% 
 % EEG = eeg_checkset(EEG);
 
 
@@ -304,6 +252,7 @@ EEG = eeg_checkset(EEG);
 % EEG.setname = strcat(pp,' reref');
 % 
 % EEG = eeg_checkset(EEG);
+
 
 
 %% Split by onset tags
@@ -324,7 +273,6 @@ for i=1:length(eegByTags)
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
-
 
 end
 

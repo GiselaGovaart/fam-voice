@@ -40,6 +40,20 @@ if ~isempty(iV1)
     chanlocs(iV1).Z = 0;
 end
 
+% also change channel locations for Fp2, because otherwise there is a
+% minidifference
+iV1 = find(strcmp({chanlocs.labels},'Fp2'));
+if ~isempty(iV1)
+    chanlocs(iV1).labels = 'Fp2';
+    chanlocs(iV1).sph_theta = -18;
+    chanlocs(iV1).sph_phi = 0;
+    chanlocs(iV1).theta = 18;
+    chanlocs(iV1).radius = 0.5000;
+    chanlocs(iV1).X = 0.9511;
+    chanlocs(iV1).Y = -0.3090;
+    chanlocs(iV1).Z = 0;
+end
+
 % Fix location info of electtrode V2 
 iV2 = find(strcmp({chanlocs.labels},'V2'));
 if ~isempty(iV2)
