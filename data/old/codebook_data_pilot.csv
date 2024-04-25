@@ -1,5 +1,0 @@
-"name","type","n","missing","unique","mean","median","mode","mode_value","sd","v","min","max","range","skew","skew_2se","kurt","kurt_2se","category","description"
-"Subj","factor",39,0,14,NA,NA,3,"01",NA,0.923076923076923,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"Group","character",39,0,3,NA,NA,21,"unfam",NA,0.497041420118343,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"TestSpeaker","factor",39,0,4,NA,NA,13,"1",NA,0.666666666666667,NA,NA,NA,NA,NA,NA,NA,NA,NA
-"MMR","numeric",39,0,39,2.26694587179487,1.8162,1.8162,NA,11.7413399850572,NA,-22.7451,27.5557,50.3008,0.00559315989555556,0.00739406076302194,-0.386544002087245,-0.260825781926583,NA,NA

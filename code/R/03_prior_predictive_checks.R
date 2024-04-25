@@ -7,20 +7,12 @@ library(brms)
 library(here)
 
 # Set priors ------------------------------------------------------------
-priors_acq <- c(set_prior("normal(4.22, 21)",  
-                          class = "Intercept"),
-                set_prior("normal(0, 21)",  
-                          class = "b"),
-                set_prior("normal(0, 21)",  
-                          class = "sigma"))
-
-priors_rec <- c(set_prior("normal(3.5, 24)", 
-                          class = "Intercept"),
-                set_prior("normal(0, 24)",  
-                          class = "b"),
-                set_prior("normal(0, 24)", 
-                          class = "sigma")) 
-
+priors <- c(set_prior("normal(3.5, 20)", 
+                      class = "Intercept"),
+            set_prior("normal(0, 20)",  
+                      class = "b"),
+            set_prior("normal(0, 20)",  
+                      class = "sigma")) 
 # Set up sampling ------------------------------------------------------------
 num_chains <- 4 
 num_iter <- 4000 
@@ -36,7 +28,7 @@ priorpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                               age +
                               (1 + TestSpeaker * Group | Subj),
                             data = dat_acq,
-                            prior = priors_acq,
+                            prior = priors,
                             family = gaussian(),
                             control = list(
                               adapt_delta = .99, 
@@ -75,7 +67,7 @@ priorpredcheck_rec_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                               age +
                               (1 + TestSpeaker * Group | Subj),
                             data = dat_rec,
-                            prior = priors_rec,
+                            prior = priors,
                             family = gaussian(),
                             control = list(
                               adapt_delta = .99, 

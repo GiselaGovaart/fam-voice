@@ -28,66 +28,69 @@ Load the pilot data
 ```{r, message=FALSE}
 #source(here("code/R","02_choose_priors.R"), local = knitr::knit_global())   This does not work takes too long to knit.. save models in R script
 # load pilot data --------------------------------------------------------------------
-data_pilot_acq = read_csv(here("data","data_pilot_acq.csv"))
-data_pilot_acq = subset(data_pilot_acq, TestSpeaker == "S1" |TestSpeaker == "S4")
-data_pilot_acq$TestSpeaker = as.factor(data_pilot_acq$TestSpeaker)
+data_pilot = read_csv(here("data","data_pilot.csv"))
+data_pilot$TestSpeaker = as.factor(data_pilot$TestSpeaker)
 ```
 
 Now we have a look at the pilot data:
 ```{r}
-plot(density(data_pilot_acq$MMR),
-     main="Pilot data ACQ",xlab="MMR")
-mean(data_pilot_acq$MMR)
-sd(data_pilot_acq$MMR)
+plot(density(data_pilot$MMR),
+     main="Pilot data",xlab="MMR")
+mean(data_pilot$MMR)
+sd(data_pilot$MMR)
 ```
-We see that the data are normally distributed, with mean = 4.33, SD = 17.59.
+We see that the data are normally distributed, with mean = 3.546836, SD = 16.40196
 
-This means that we will choose a gaussian function as the likelihood function for all models. We will check with our experimental data whether they are also normally distributed. If not, we will adapt the likelihood function accordingly.
+This means that we will choose a Gaussian function as the likelihood function for all models. We will check with our experimental data whether they are also normally distributed. If not, we will adapt the likelihood function accordingly.
 
 Now we run a model with weakly informative priors
 ``` {r}
-prior_p <-
+prior_pilot <-
   c(
-    prior("normal(0, 35)", class = "Intercept") #  weakly informative prior on intercept 
-  , prior("normal(0, 35)", class = "b") #  weakly informative prior on slope
-)
+    prior("normal(0, 35)", class = "Intercept"), #  weakly informative prior on intercept 
+    prior("normal(0, 35)", class = "b") #  weakly informative prior on slope
+  )
+
 # pilot_m = brm(MMR ~ 1 + TestSpeaker + (1 | Subj), 
-#               prior = prior_p,
-#               data = data_pilot_acq,
-#               control = list(
-#                 adapt_delta = .99, 
-#                 max_treedepth = 15),
-#               file = here("data", "model_output", "02_pilot_acq.rds"))
-pilot_m <- readRDS(here("data", "model_output", "02_pilot_acq.rds"))
+#                prior = prior_pilot,
+#                data = data_pilot,
+#                control = list(
+#                  adapt_delta = .99, 
+#                  max_treedepth = 15),
+#                file = here("data", "model_output", "02_pilot.rds")
+#                )
+
+pilot_m <- readRDS(here("data", "model_output", "02_pilot.rds"))
 summary(pilot_m)
 ```
-This model estimates a mean of 4.22, and a sigma of 14.01.
+This model estimates a mean of 3.53, and a sigma of 16.12
 We base our priors on this:
 
-- mean = 4.22
-- sigma = 21 (We add some uncertainly, so we multiply sigma by 1.5)
+- mean = 3.5
+- sigma = 20 (We add some uncertainly, so we multiply sigma by 1.25)
 
 giving us:
 ```{r}
-priors_acq <- c(set_prior("normal(4.22, 21)",  # sd=21 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu
+priors <- c(set_prior("normal(3.5, 20)",  # sd=20 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu
                       class = "Intercept"),
-            set_prior("normal(0, 21)",  # this is the prior on the slope
+            set_prior("normal(0, 20)",  # this is the prior on the slope
                       class = "b"),
-            set_prior("normal(0, 21)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case sigma represents the standard deviation of the response variable, mmr in this case
+            set_prior("normal(0, 20)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case sigma represents the standard deviation of the response variable, mmr in this case
                       class = "sigma")) # brms will automatically truncate the prior specification for σ and allow only positive values (https://vasishth.github.io/bayescogsci/book/ch-reg.html), so we don't have to truncate the distribution ourselves
+
 ```
 
 Let's visualize the priors 
 ```{r}
 # Visualize the priors
 dpri <- data.frame(x = seq(-70,70,by=1))
-dpri$y1 <- dnorm(dpri$x,mean=4.22,sd=21)
-dpri$y2 <- dnorm(dpri$x,mean=0,sd=21)
-dpri$y3 <- dnorm(dpri$x,mean=0,sd=21)
+dpri$y1 <- dnorm(dpri$x,mean=3.5,sd=20)
+dpri$y2 <- dnorm(dpri$x,mean=0,sd=20)
+dpri$y3 <- dnorm(dpri$x,mean=0,sd=20)
 
 dprig <- dpri %>% gather(y1, y2, y3, key="Prior", value="Density")
 dprig$Prior <- factor(dprig$Prior)
-levels(dprig$Prior) <- c("Prior for mu\ndnorm(x, mean=4.22, sd=21)", "Prior for slope\ndnorm(x, mean=0, sd=21)", "Prior for sigma\ndnorm(x, mean=0, sd=21)")
+levels(dprig$Prior) <- c("Prior for mu\ndnorm(x, mean=3.5, sd=20)", "Prior for slope\ndnorm(x, mean=0, sd=20)", "Prior for sigma\ndnorm(x, mean=0, sd=20)")
 ggplot(data=dprig, aes(x=x, y=Density)) + geom_line() + facet_wrap(~Prior, scales="free")
 
 ```
@@ -103,7 +106,7 @@ Here, we check what happens if run the model based on our priors only.
 #                               age +
 #                               (1 + TestSpeaker + Group | Subj),
 #                             data = dat_acq,
-#                             prior = priors_acq,
+#                             prior = priors,
 #                             family = gaussian(),
 #                             init = "random",
 #                             control = list(
@@ -124,14 +127,15 @@ Here, we check what happens if run the model based on our priors only.
 # )
 
 priorpredcheck_acq_m <- readRDS(here("data", "model_output", "03_model_priorpredcheck_acq.rds"))
-summary(priorpredcheck_acq_m)
+
 pp <- posterior_predict(priorpredcheck_acq_m) 
 pp <- t(pp)
 # distribution of mean MMR
 meanMMR = colMeans(pp)
 hist(meanMMR, breaks = 20)
+summary(priorpredcheck_acq_m)
 ```
-In our priors, we specified a mean of 4.22 and an SD of 21. In these plots, we see that the mean of the MMR seems to be indeed a bit above 0, and the SD around 20.
+In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.44, and the SD 15.94
 ```{r}
 # distribution of the effect of TestSpeaker
 TestSpeakerEffect <- colMeans(pp[dat_acq$TestSpeaker=="1",]) - colMeans(pp[dat_acq$TestSpeaker=="2",])
@@ -140,15 +144,17 @@ hist(TestSpeakerEffect, breaks = 20)
 GroupEffect <- colMeans(pp[dat_acq$Group=="fam",]) - colMeans(pp[dat_acq$Group=="unfam",])
 hist(GroupEffect, breaks = 20)
 ```
-We don't get an effect for TestSpeaker or Group (which was also not assumed in our priors).
+We don't get an effect for TestSpeaker nor for Group (which was also not assumed in our priors).
 
+Conclusion: our priors seem to be reasonable.
 
 ### Posterior predictive checks
 Here, we check whether our model can recover our simulated data, with our proposed priors. Our data were simulated as follows:
 
-- mean = 6
+- mean = 5
 - SD = 15
-- effect of Group = 10
+- effect of Group = 5
+- effect of TestSpeaker = 5
 
 
 ```{r}

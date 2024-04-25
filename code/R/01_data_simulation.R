@@ -24,7 +24,7 @@ dat_acq$TestSpeaker_n <- ifelse(dat_acq$TestSpeaker == "1" , +0.5, -0.5)
 dat_acq$Group_n <- ifelse(dat_acq$Group == "fam" , +0.5, -0.5)
 
 # simulate data
-dat_acq$MMR <- 6 +                  # The mean of the MMR for all groups together = 6
+dat_acq$MMR <- 5 +                  # The mean of the MMR for all groups together = 5
   5*dat_acq$TestSpeaker_n +         # Adding an effect of 5 on TestSpeaker
   5*dat_acq$Group_n +               # Adding an effect of 5 on Group
   rnorm(nrow(dat_acq),0,15)         # SD of 15
@@ -76,7 +76,7 @@ for (i in 1:nrow(dat_rec)){
 }
 
 # simulate data
-dat_rec$MMR <- 6 +                  # The mean of the MMR for all groups together = 6
+dat_rec$MMR <- 5 +                  # The mean of the MMR for all groups together = 5
   5*dat_rec$TestSpeaker_n +         # Adding an effect of 5 on TestSpeaker
   5*dat_rec$Group_n +               # Adding an effect of 5 on Group
   rnorm(nrow(dat_rec),0,15)         # SD of 15

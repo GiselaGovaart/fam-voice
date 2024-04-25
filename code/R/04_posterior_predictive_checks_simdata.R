@@ -8,23 +8,16 @@ library(here)
 library(bayesplot)
 
 # Set priors ------------------------------------------------------------
-priors_acq <- c(set_prior("normal(4.22, 17.5)",  
-                          class = "Intercept"),
-                set_prior("normal(0, 17.5)",  
-                          class = "b"),
-                set_prior("normal(0, 17.5)",  
-                          class = "sigma"))
-
-priors_rec <- c(set_prior("normal(3.5, 20)", 
-                          class = "Intercept"),
-                set_prior("normal(0, 20)",  
-                          class = "b"),
-                set_prior("normal(0, 20)", 
-                          class = "sigma")) 
+priors <- c(set_prior("normal(3.5, 20)", 
+                      class = "Intercept"),
+            set_prior("normal(0, 20)",  
+                      class = "b"),
+            set_prior("normal(0, 20)",  
+                      class = "sigma")) 
 
 # Set up sampling ------------------------------------------------------------
 num_chains <- 4 
-num_iter <- 4000 
+num_iter <- 10000 
 num_warmup <- num_iter / 2 
 num_thin <- 1 
 
@@ -40,7 +33,7 @@ postpredcheck_intslope_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                              age +
                              (1 + TestSpeaker | Subj),
                            data = dat_acq,
-                           prior = priors_rec,
+                           prior = priors,
                            family = gaussian(),
                            control = list(
                              adapt_delta = .99, 
@@ -52,7 +45,7 @@ postpredcheck_intslope_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                            thin = num_thin,
                            cores = num_chains, 
                            seed = project_seed,
-                           file = here("data", "model_output", "04_model_posteriorpredcheck_randominterceptslope_acq_TESTwithpriorsrec.rds"),
+                           file = here("data", "model_output", "04_model_posteriorpredcheck_randominterceptslope_acq.rds"),
                            file_refit = "on_change",
                            save_pars = save_pars(all = TRUE)
 )
@@ -64,7 +57,7 @@ postpredcheck_intonly_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                              age +
                              (1 | Subj),
                            data = dat_acq,
-                           prior = priors_acq,
+                           prior = priors,
                            family = gaussian(),
                            control = list(
                              adapt_delta = .99, 
@@ -105,6 +98,8 @@ hist(residuals, breaks = "Scott", main = "Histogram of Residuals", xlab = "Resid
 # Autocorrelation check
 # Significant autocorrelation at lags greater than zero suggest that residuals are not independent
 acf(residuals)
+
+
 
 # Check for non-linearity and heteroskedasticy: Residuals vs. fitted values. 
 # We want a random scatter of points, no pattern or funnel shape
@@ -167,7 +162,7 @@ postpredcheck_rec_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                              age +
                              (1 + TestSpeaker | Subj),
                            data = dat_rec,
-                           prior = priors_rec,
+                           prior = priors,
                            family = gaussian(),
                            control = list(
                              adapt_delta = .99, 
