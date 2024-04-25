@@ -43,6 +43,12 @@ EEG.chanlocs = table2struct(sortedT);
 % Update EEG data
 EEG.data = sortedEEGdata;
 
+% Already add new electrode posiitons here, because otherwise
+% pop_grandaverage in plot_ERP_raw_plot does not work. 
+fprintf('Adding electrode positions using spherical template...\n');
+EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
+EEG = eeg_checkset(EEG);
+
 EEG = eeg_checkset(EEG);
 
 %% Detect stimulation pauses (code written by Maren Grigutsch)
@@ -254,7 +260,6 @@ EEG = eeg_checkset(EEG);
 % EEG = eeg_checkset(EEG);
 
 
-
 %% Split by onset tags
 fprintf('Creating EEGs by tags...\n') ;
 eegByTags = [] ;
@@ -273,6 +278,7 @@ for i=1:length(eegByTags)
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
+
 
 end
 
