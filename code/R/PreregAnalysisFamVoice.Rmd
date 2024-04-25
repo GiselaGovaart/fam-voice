@@ -6,9 +6,14 @@ date: "2024-03-08"
 
 ```{r, include=FALSE}
 library(here)
-```
+library(tidyverse)
+library(brms)
+library(worcs)
 
-First, we simulate some data:
+
+
+```
+### Simulate some data
 ```{r, message=FALSE}
 source(here("code/R","01_data_simulation.R"), local = knitr::knit_global())
 ```
@@ -18,9 +23,176 @@ head(dat)
 summary(dat)
 ```
 
-Now we set the priors, based on the pilotdata
-
-This does not work takes too long to knit.. save models in R script
+### Set priors based on pilot data
+Load the pilot data
 ```{r, message=FALSE}
-source(here("code/R","02_choose_priors.R"), local = knitr::knit_global())
+#source(here("code/R","02_choose_priors.R"), local = knitr::knit_global())   This does not work takes too long to knit.. save models in R script
+# load pilot data --------------------------------------------------------------------
+data_pilot_acq = read_csv(here("data","data_pilot_acq.csv"))
+data_pilot_acq = subset(data_pilot_acq, TestSpeaker == "S1" |TestSpeaker == "S4")
+data_pilot_acq$TestSpeaker = as.factor(data_pilot_acq$TestSpeaker)
 ```
+
+Now we have a look at the pilot data:
+```{r}
+plot(density(data_pilot_acq$MMR),
+     main="Pilot data ACQ",xlab="MMR")
+mean(data_pilot_acq$MMR)
+sd(data_pilot_acq$MMR)
+```
+We see that the data are normally distributed, with mean = 4.33, SD = 17.59.
+
+This means that we will choose a gaussian function as the likelihood function for all models. We will check with our experimental data whether they are also normally distributed. If not, we will adapt the likelihood function accordingly.
+
+Now we run a model with weakly informative priors
+``` {r}
+prior_p <-
+  c(
+    prior("normal(0, 35)", class = "Intercept") #  weakly informative prior on intercept 
+  , prior("normal(0, 35)", class = "b") #  weakly informative prior on slope
+)
+# pilot_m = brm(MMR ~ 1 + TestSpeaker + (1 | Subj), 
+#               prior = prior_p,
+#               data = data_pilot_acq,
+#               control = list(
+#                 adapt_delta = .99, 
+#                 max_treedepth = 15),
+#               file = here("data", "model_output", "02_pilot_acq.rds"))
+pilot_m <- readRDS(here("data", "model_output", "02_pilot_acq.rds"))
+summary(pilot_m)
+```
+This model estimates a mean of 4.22, and a sigma of 14.01.
+We base our priors on this:
+
+- mean = 4.22
+- sigma = 21 (We add some uncertainly, so we multiply sigma by 1.5)
+
+giving us:
+```{r}
+priors_acq <- c(set_prior("normal(4.22, 21)",  # sd=21 is here the SD of the distribution of the prior on mu, so how uncertain we are about the value of mu
+                      class = "Intercept"),
+            set_prior("normal(0, 21)",  # this is the prior on the slope
+                      class = "b"),
+            set_prior("normal(0, 21)",  # this is our expectation about the error in the model, so the residual noise. it's the SD of the likelihood. It's the SD of the MMR in this case sigma represents the standard deviation of the response variable, mmr in this case
+                      class = "sigma")) # brms will automatically truncate the prior specification for σ and allow only positive values (https://vasishth.github.io/bayescogsci/book/ch-reg.html), so we don't have to truncate the distribution ourselves
+```
+
+Let's visualize the priors 
+```{r}
+# Visualize the priors
+dpri <- data.frame(x = seq(-70,70,by=1))
+dpri$y1 <- dnorm(dpri$x,mean=4.22,sd=21)
+dpri$y2 <- dnorm(dpri$x,mean=0,sd=21)
+dpri$y3 <- dnorm(dpri$x,mean=0,sd=21)
+
+dprig <- dpri %>% gather(y1, y2, y3, key="Prior", value="Density")
+dprig$Prior <- factor(dprig$Prior)
+levels(dprig$Prior) <- c("Prior for mu\ndnorm(x, mean=4.22, sd=21)", "Prior for slope\ndnorm(x, mean=0, sd=21)", "Prior for sigma\ndnorm(x, mean=0, sd=21)")
+ggplot(data=dprig, aes(x=x, y=Density)) + geom_line() + facet_wrap(~Prior, scales="free")
+
+```
+
+### Prior predictive checks
+Here, we check what happens if run the model based on our priors only.
+
+```{r}
+# priorpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
+#                               mumDist +
+#                               nrSpeakersDaily  + 
+#                               sleepState + 
+#                               age +
+#                               (1 + TestSpeaker + Group | Subj),
+#                             data = dat_acq,
+#                             prior = priors_acq,
+#                             family = gaussian(),
+#                             init = "random",
+#                             control = list(
+#                               adapt_delta = .99, 
+#                               max_treedepth = 15
+#                             ),
+#                             chains = num_chains,
+#                             iter = num_iter,
+#                             warmup = num_warmup,
+#                             thin = num_thin,
+#                             algorithm = "sampling", 
+#                             cores = num_chains, 
+#                             seed = project_seed,
+#                             file = here("data", "model_output", "03_model_priorpredcheck_acq.rds"),
+#                             file_refit = "on_change",
+#                             save_pars = save_pars(all = TRUE),
+#                             sample_prior = "only"
+# )
+
+priorpredcheck_acq_m <- readRDS(here("data", "model_output", "03_model_priorpredcheck_acq.rds"))
+summary(priorpredcheck_acq_m)
+pp <- posterior_predict(priorpredcheck_acq_m) 
+pp <- t(pp)
+# distribution of mean MMR
+meanMMR = colMeans(pp)
+hist(meanMMR, breaks = 20)
+```
+In our priors, we specified a mean of 4.22 and an SD of 21. In these plots, we see that the mean of the MMR seems to be indeed a bit above 0, and the SD around 20.
+```{r}
+# distribution of the effect of TestSpeaker
+TestSpeakerEffect <- colMeans(pp[dat_acq$TestSpeaker=="1",]) - colMeans(pp[dat_acq$TestSpeaker=="2",])
+hist(TestSpeakerEffect, breaks = 20)
+# distribution of the effect of Group
+GroupEffect <- colMeans(pp[dat_acq$Group=="fam",]) - colMeans(pp[dat_acq$Group=="unfam",])
+hist(GroupEffect, breaks = 20)
+```
+We don't get an effect for TestSpeaker or Group (which was also not assumed in our priors).
+
+
+### Posterior predictive checks
+Here, we check whether our model can recover our simulated data, with our proposed priors. Our data were simulated as follows:
+
+- mean = 6
+- SD = 15
+- effect of Group = 10
+
+
+```{r}
+# postpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
+#                              mumDist +
+#                              nrSpeakersDaily  + 
+#                              sleepState + 
+#                              age +
+#                              (1 + TestSpeaker * Group | Subj),
+#                            data = dat_acq,
+#                            prior = priors_acq,
+#                            family = gaussian(),
+#                            control = list(
+#                              adapt_delta = .99, 
+#                              max_treedepth = 15
+#                            ),
+#                            iter = num_iter, 
+#                            chains = num_chains, 
+#                            warmup = num_warmup,
+#                            thin = num_thin,
+#                            cores = num_chains, 
+#                            seed = project_seed,
+#                            file = here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"),
+#                            file_refit = "on_change",
+#                            save_pars = save_pars(all = TRUE)
+)
+postpredcheck_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"))
+summary(postpredcheck_acq_m)
+plot(postpredcheck_acq_m) # check traces and posterior distributions
+
+```
+
+The model did not converge fully: we have X divergent conversions.
+
+This is also visible in the trace plots: they mostly look like "hairy caterpillars", but there are some traces are diverging outside of the caterpillar. In the model summary, we see that Rhat and ESS are......
+
+We now have a look at whether the model did retrieve the underlying data, even if it did not fully converge.
+
+```{r}
+pp_check(postpredcheck_acq_m, ndraws=50)
+```
+Now we check whether the model is able to retrieve the underlying data. y is the observed data, so the data that we inputted, 
+and y' is the simulated data from the posterior predictive distribution. This looks good: the data overlap.
+
+
+
+

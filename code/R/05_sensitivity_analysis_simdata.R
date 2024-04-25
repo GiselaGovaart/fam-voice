@@ -10,38 +10,41 @@ library(RColorBrewer)
 
 # formula ----------
 formula = MMR ~ 1 + TestSpeaker * Group + 
-  mumDistTrainS * TestSpeaker + 
-  mumDistNovelS * TestSpeaker + 
-  timeVoiceFam * Group +
-  nrSpeakersDaily + 
+  mumDist +
+  nrSpeakersDaily  + 
   sleepState + 
-  (1 + TestSpeaker * Group | Subj) 
+  age +
+  (1 + TestSpeaker * Group | Subj)
 
-# sensitivity analysis --------------------------------------------------------------------
-# priors 0.4 Hz filter
-priors_acq_low <- c(set_prior("normal(5.94, 20.52)",  
-                              class = "Intercept"),
-                    set_prior("normal(0, 20.52)",  
-                              class = "b"),
-                    set_prior("normal(0, 20.52)",  
-                              class = "sigma"))
+# Set priors ------------------------------------------------------------
+priors_acq <- c(set_prior("normal(4.22, 21)",  
+                          class = "Intercept"),
+                set_prior("normal(0, 21)",  
+                          class = "b"),
+                set_prior("normal(0, 21)",  
+                          class = "sigma"))
 
-priors_rec_low <- c(set_prior("normal(5.97, 23.34)",  
-                              class = "Intercept"),
-                    set_prior("normal(0, 23.34)",  
-                              class = "b"),
-                    set_prior("normal(0, 23.34)",  
-                              class = "sigma")) 
+priors_rec <- c(set_prior("normal(3.5, 24)", 
+                          class = "Intercept"),
+                set_prior("normal(0, 24)",  
+                          class = "b"),
+                set_prior("normal(0, 24)", 
+                          class = "sigma")) 
 
+# Set up sampling ------------------------------------------------------------
+num_chains <- 4 
+num_iter <- 4000 
+num_warmup <- num_iter / 2 
+num_thin <- 1 
+
+# ACQUISITION
 # priors for sensitivity analysis:
-# I take the priors for REC
-priors_orig <-
-  c(set_prior("normal(5.97, 23.34)",  
-              class = "Intercept"),
-    set_prior("normal(0, 23.34)",  
-              class = "b"),
-    set_prior("normal(0, 23.34)", 
-              class = "sigma")) 
+priors_orig <- c(set_prior("normal(4.22, 21)",  
+                          class = "Intercept"),
+                set_prior("normal(0, 21)",  
+                          class = "b"),
+                set_prior("normal(0, 21)",  
+                          class = "sigma"))
 
 priors2 <-
   c(set_prior("normal(0, 30)",  
@@ -64,8 +67,8 @@ df <- data.frame(x = c(-50, 50))
 p <- ggplot(df, aes(x=x)) +
   # First, add the prior distribution of the original prior. 
   # The first line creates an area (filled in with color), the second line creates a line graph
-  stat_function(fun = dnorm, n = 1001, args = list(mean = 5.97, sd = sqrt(23.34)), geom = "area", aes(fill = "Original Prior: normal(5.97, 23.34)"), alpha = .5) +
-  stat_function(fun = dnorm, n = 1001, args = list(mean = 5.97, sd = sqrt(23.34))) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 4.22, sd = sqrt(21)), geom = "area", aes(fill = "Original Prior: normal(4.22, 21)"), alpha = .5) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 4.22, sd = sqrt(21))) +
   # Repeat the above for each of the two alternative priors
   stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(30)), geom = "area", aes(fill = "Alternative 1: normal(0, 30)"), alpha = .5) +
   stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(30))) +
@@ -86,7 +89,7 @@ p
 
 # model orig prior (0 divergent transition after warmup)
 m_sens_orig <- brm(formula,
-                   data = dat_rec,
+                   data = dat_acq,
                    prior = priors_orig,
                    iter = 4000, chains = 4, warmup = 2000, thin = 1,
                    family = gaussian(), 
@@ -96,7 +99,7 @@ plot(m_sens_orig) # looks good
 
 # model alternative priors 2 (1 divergent transitions after warmup)
 m_sens_2 <- brm(formula,
-                data = dat_rec,
+                data = dat_acq,
                 prior = priors2,
                 iter = 4000, chains = 4, warmup = 2000, thin = 1,
                 family = gaussian(), 
@@ -106,7 +109,7 @@ plot(m_sens_2) # looks good
 
 # model alternative priors 3 (1 divergent transitions after warmup)
 m_sens_3 <- brm(formula,
-                data = dat_rec,
+                data = dat_acq,
                 prior = priors3,
                 iter = 4000, chains = 4, warmup = 2000, thin = 1,
                 family = gaussian(), 

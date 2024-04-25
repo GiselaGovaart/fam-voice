@@ -96,29 +96,32 @@ priors_rec_low <- c(set_prior("normal(5.97, 23.34)",
 
 # Setting up contrasts for during the model fitting -------------
 # not necessary??
-contrasts(dat$TestSpeaker) <- contr.equalprior
-contrasts(dat$Group) <- contr.equalprior
-contrasts(dat$sleepState) <- contr.equalprior
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior
+contrasts(dat_acq$Group) <- contr.equalprior
+contrasts(dat_acq$sleepState) <- contr.equalprior
 
 contrasts(dat_rec$TestSpeaker) <- contr.equalprior
 contrasts(dat_rec$Group) <- contr.equalprior
 contrasts(dat_rec$sleepState) <- contr.equalprior
 
 
+## Add that in the  analysis. we will try whether TestSpeaker * Group | Subj converges
+
+
 # sampling --------------------------------------------------------------------
 ### Model ACQUISITION
-modelMMR <-
+model_acq <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
         mumDist +
         nrSpeakersDaily  + 
         sleepState + 
         age +
-        (1 + TestSpeaker * Group | Subj),
-      data = dat,
+        (1 + TestSpeaker | Subj),
+      data = dat_acq,
       family = gaussian(), # the likelihood of the data that you are given to the model. 
       # Here you say you expect the data to have a normal distribution.
       # I can check that in my pilot data.
-      prior = priors_acq_low,
+      prior = priors_acq,
       init = "random",
       # Init = random: the initial value of the MonteCarloChain. Random means that your 4 chains all 
       # start from  different value. If you start from 4 different values and they all converge to same 
@@ -137,13 +140,13 @@ modelMMR <-
       algorithm = "sampling", 
       cores = num_chains, # you want to use one core per chain, so keep same value as num_chains here
       seed = project_seed,
-      file = here("data", "model_output", "samples_MMR.rds"),
+      file = here("data", "model_output", "A2_parameter_estimation_acq.rds"),
       file_refit = "on_change",
       save_pars = save_pars(all = TRUE)
   )
 
 ### Model RECOGNITION
-modelMMR_rec <-
+model_rec <-
   brm(MMR ~ 1 + TestSpeaker * Group + 
         mumDist  + 
         nrSpeakersDaily +

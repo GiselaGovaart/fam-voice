@@ -535,6 +535,10 @@ rec_MMR_m <-
   MMR_m_rec %>%
   emmeans(~ TestSpeaker:Group) 
 rec_MMR_m = contrast(rec_MMR_m, method = custom_contrasts)
+contrasts(rec_MMR_m)
+
+contrasts(custom_contrasts) <- contr.equalprior_pairs
+
 
 # Bayes Factors (Savage-Dickey density ratio)
 BF_rec <-
