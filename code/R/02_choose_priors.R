@@ -119,39 +119,28 @@ levels(dprig$Prior) <- c("Prior for mu\ndnorm(x, mean=3.5, sd=20)", "Prior for s
 ggplot(data=dprig, aes(x=x, y=Density)) + geom_line() + facet_wrap(~Prior, scales="free")
 
 
-
-
 # We now set a prior of "normal(0, 20)" on every slope. This is strange because we do not expect effects that large.
 # We would rather expect effects of normal(0,10) max.
-# moreover, we would need to scale these priors for the scaled predictors
-# Assuming an SD of:
-# age: SD=10
-# mumDist: SD = 2
-# nrSpeakersDaily: SD=2
-# we would need to adjust our priors on those coefficients:
-# age: normal(0, 1)
-# mumDist: normal(0, 5)
-# nrSpeakersDaily: normal(0, 5)
-
+# so we could also do this:
 priors_alt <- c(set_prior("normal(3.5, 20)",  
                           class = "Intercept"),
-                set_prior("normal(0, 1)",  
+                set_prior("normal(0, 10)",  
                           class = "b", coef = "age"),
                 set_prior("normal(0, 10)",  
                           class = "b", coef = "Group1"),
-                set_prior("normal(0, 5)",  
+                set_prior("normal(0, 10)",  
                           class = "b", coef = "mumDist"),
-                set_prior("normal(0, 5)",  
+                set_prior("normal(0, 10)",  
                           class = "b", coef = "nrSpeakersDaily"),
                 set_prior("normal(0, 10)",  
-                          class = "b", coef = "sleepStateawake"),
+                          class = "b", coef = "sleepState1"),
                 set_prior("normal(0, 10)",  
-                          class = "b", coef = "sleepStatequietsleep"),
+                          class = "b", coef = "sleepState2"),
                 set_prior("normal(0, 10)",  
                           class = "b", coef = "TestSpeaker1"),
                 set_prior("normal(0, 10)",  
                           class = "b", coef = "TestSpeaker1:Group1" ),
                 set_prior("normal(0, 20)",  
                           class = "sigma"))
-
+# However, this does not really seem to make a difference, so we will leave it.
 

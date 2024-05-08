@@ -10,6 +10,7 @@ set.seed(project_seed) # set seed
 library(designr)
 library(tidyverse)
 library(truncnorm)
+library(easystats)
 
 # Simulate some data for ACQUISITION--------------------------------------------------------------------
 # create experimental design 
@@ -49,8 +50,11 @@ dat_acq$nrSpeakersDaily <- as.numeric(scale(dat_acq$nrSpeakersDaily))
 dat_acq$age <-as.numeric(scale(dat_acq$age))
 
 # Manually setting the contrasts
-contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
+# contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
+# contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior
+contrasts(dat_acq$Group) <- contr.equalprior
+contrasts(dat_acq$sleepState) <- contr.equalprior
 
 
 # Simulate some data for RECOGNITION--------------------------------------------------------------------
@@ -102,10 +106,14 @@ dat_rec$nrSpeakersDaily <- as.numeric(scale(dat_rec$nrSpeakersDaily))
 dat_rec$age <- as.numeric(scale(dat_rec$age))
 
 # Manually setting the contrasts
-contrasts(dat_rec$TestSpeaker) <- matrix(c(-2/3, 1/3, 1/3,
-                                              1/3, -2/3, 1/3), 
-                                            ncol = 2, byrow = TRUE)
-contrasts(dat_rec$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
+# contrasts(dat_rec$TestSpeaker) <- matrix(c(-2/3, 1/3, 1/3,
+#                                               1/3, -2/3, 1/3), 
+#                                             ncol = 2, byrow = TRUE)
+# contrasts(dat_rec$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
+
+contrasts(dat_rec$TestSpeaker) <- contr.equalprior
+contrasts(dat_rec$Group) <- contr.equalprior
+contrasts(dat_rec$sleepState) <- contr.equalprior
 
 rm(design)
 

@@ -9,9 +9,9 @@ library(here)
 library(tidyverse)
 library(brms)
 library(worcs)
-
-
-
+library(ggmcmc)
+library(RColorBrewer)
+library(ggplot2)
 ```
 ### Simulate some data
 ```{r, message=FALSE}
@@ -19,8 +19,8 @@ source(here("code/R","01_data_simulation.R"), local = knitr::knit_global())
 ```
 
 ```{r, include=TRUE}
-head(dat)
-summary(dat)
+head(dat_acq)
+summary(dat_acq)
 ```
 
 ### Set priors based on pilot data
@@ -63,7 +63,8 @@ prior_pilot <-
 pilot_m <- readRDS(here("data", "model_output", "02_pilot.rds"))
 summary(pilot_m)
 ```
-This model estimates a mean of 3.53, and a sigma of 16.12
+This model estimates a mean of 3.53, and a sigma of 16.12.
+
 We base our priors on this:
 
 - mean = 3.5
@@ -99,25 +100,28 @@ ggplot(data=dprig, aes(x=x, y=Density)) + geom_line() + facet_wrap(~Prior, scale
 Here, we check what happens if run the model based on our priors only.
 
 ```{r}
+# num_chains <- 4 
+# num_iter <- 4000 
+# num_warmup <- num_iter / 2 
+# num_thin <- 1 
+
 # priorpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
 #                               mumDist +
 #                               nrSpeakersDaily  + 
 #                               sleepState + 
 #                               age +
-#                               (1 + TestSpeaker + Group | Subj),
+#                               (1 + TestSpeaker | Subj),
 #                             data = dat_acq,
 #                             prior = priors,
 #                             family = gaussian(),
-#                             init = "random",
 #                             control = list(
 #                               adapt_delta = .99, 
 #                               max_treedepth = 15
 #                             ),
-#                             chains = num_chains,
-#                             iter = num_iter,
+#                             iter = num_iter, 
+#                             chains = num_chains, 
 #                             warmup = num_warmup,
 #                             thin = num_thin,
-#                             algorithm = "sampling", 
 #                             cores = num_chains, 
 #                             seed = project_seed,
 #                             file = here("data", "model_output", "03_model_priorpredcheck_acq.rds"),
@@ -135,7 +139,7 @@ meanMMR = colMeans(pp)
 hist(meanMMR, breaks = 20)
 summary(priorpredcheck_acq_m)
 ```
-In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.44, and the SD 15.94
+In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.49, and the SD at 16.
 ```{r}
 # distribution of the effect of TestSpeaker
 TestSpeakerEffect <- colMeans(pp[dat_acq$TestSpeaker=="1",]) - colMeans(pp[dat_acq$TestSpeaker=="2",])
@@ -144,6 +148,7 @@ hist(TestSpeakerEffect, breaks = 20)
 GroupEffect <- colMeans(pp[dat_acq$Group=="fam",]) - colMeans(pp[dat_acq$Group=="unfam",])
 hist(GroupEffect, breaks = 20)
 ```
+
 We don't get an effect for TestSpeaker nor for Group (which was also not assumed in our priors).
 
 Conclusion: our priors seem to be reasonable.
@@ -156,16 +161,37 @@ Here, we check whether our model can recover our simulated data, with our propos
 - effect of Group = 5
 - effect of TestSpeaker = 5
 
+We run the model with more iterations (20000) to ensure full convergence:
 
 ```{r}
+num_chains <- 4 
+num_iter <-20000 
+num_warmup <- num_iter / 2 
+num_thin <- 1 
+```
+
+We also set the contrast such that we get equal priors on the different comparisons. This is important for our Bayes Factor analysis later on.
+
+```{r}
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior
+contrasts(dat_acq$Group) <- contr.equalprior
+contrasts(dat_acq$sleepState) <- contr.equalprior
+
+contrasts(dat_acq$TestSpeaker)
+contrasts(dat_acq$Group) 
+contrasts(dat_acq$sleepState) 
+```
+
+Now let's look at the model:
+```{r}
 # postpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
-#                              mumDist +
-#                              nrSpeakersDaily  + 
-#                              sleepState + 
+#                             mumDist +
+#                             nrSpeakersDaily +
+#                             sleepState +
 #                              age +
-#                              (1 + TestSpeaker * Group | Subj),
+#                              (1 + TestSpeaker | Subj),
 #                            data = dat_acq,
-#                            prior = priors_acq,
+#                            prior = priors,
 #                            family = gaussian(),
 #                            control = list(
 #                              adapt_delta = .99, 
@@ -180,25 +206,423 @@ Here, we check whether our model can recover our simulated data, with our propos
 #                            file = here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"),
 #                            file_refit = "on_change",
 #                            save_pars = save_pars(all = TRUE)
-)
+# )
+
+
 postpredcheck_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"))
 summary(postpredcheck_acq_m)
-plot(postpredcheck_acq_m) # check traces and posterior distributions
-
 ```
 
-The model did not converge fully: we have X divergent conversions.
+There were 50 divergent transitions after warmup. However, the model seems to have converged, since the Rhat and ESS values are good.
 
-This is also visible in the trace plots: they mostly look like "hairy caterpillars", but there are some traces are diverging outside of the caterpillar. In the model summary, we see that Rhat and ESS are......
+We can now check the values the model comes up with for the simulated data:
+b_Intercept is 4.48 (in the data it was simulated as 5)
+It retrieves an effect of 3.34 for TestSpeaker
+It retrieves an effect of 2.74 for Group
+It also hallucinates some effects for the covariates
+sigma is estimated at 12.00.
 
-We now have a look at whether the model did retrieve the underlying data, even if it did not fully converge.
+These effects for TestSpeaker and Group seem a bit low, considering our simulated effects of 5. However, this is actually because of our contrast matrix:
 
+```{r}
+contrasts(dat_acq$TestSpeaker) 
+```
+This contrast matrix is derived from dividing -1 and 1 (sum coding) by the square root of 2. The standardization ensures that the contrast has a variance of 1, meaning that the different contrasts are independent (orthogonal) of each other in case of multiple contrasts. This makes it easier to compare outcomes across different contexts of measurements. This however also means that the coefficients are not easily interpretable in their original units anymore. So to check whether the model has a more or less sensible estimate for the effects of TestSpeaker and Group, we run the model again, with deviation coding of -0.5 and 0.5. In this case, the coding represents the difference between TestSpeaker1 and TestSpeaker2, and Group-fam and Group-unfam:
+
+```{r}
+contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
+contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
+contrasts(dat_acq$sleepState) <- matrix(c(-2/3, 1/3, 1/3,
+                                          1/3, -2/3, 1/3),
+                                        ncol = 2, byrow = TRUE)
+
+contrasts(dat_acq$TestSpeaker) 
+contrasts(dat_acq$Group)
+contrasts(dat_acq$sleepState)
+```
+
+We now run the model again:
+```{r}
+# postpredcheck_sumcontrast_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
+#                              mumDist +
+#                              nrSpeakersDaily +
+#                              sleepState +
+#                              age +
+#                              (1 + TestSpeaker | Subj),
+#                            data = dat_acq,
+#                            prior = priors,
+#                            family = gaussian(),
+#                            control = list(
+#                              adapt_delta = .99, 
+#                              max_treedepth = 15
+#                            ),
+#                            iter = num_iter, 
+#                            chains = num_chains, 
+#                            warmup = num_warmup,
+#                            thin = num_thin,
+#                            cores = num_chains, 
+#                            seed = project_seed,
+#                            file = here("data", "model_output", "04_model_posteriorpredcheck_sumcontrast_acq.rds"),
+#                            file_refit = "on_change",
+#                            save_pars = save_pars(all = TRUE)
+# )
+
+postpredcheck_sumcontrast_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_sumcontrast_acq.rds"))
+summary(postpredcheck_sumcontrast_acq_m)
+
+```
+Here we see that the model is actually perfectly able to retrieve the data:
+b_Intercept is 5.01 (in the data it was simulated as 5)
+It retrieves an effect of 4.70 for TestSpeaker (in the data it was simulated as 5)
+It retrieves an effect of 4.66 for Group (in the data it was simulated as 5)
+It also hallucinates some minor effects for the covariates
+sigma is estimated at 12.40 (simulated as 15)
+
+This model has 33 divergent transitions. However, Rhat and the ESS values are good.
+
+```{r}
+# set contrasts back
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior
+contrasts(dat_acq$Group) <- contr.equalprior
+contrasts(dat_acq$sleepState) <- contr.equalprior
+```
+
+Now we continue checking our model with the model that uses the coding we will use in the final analysis:
+```{r}
+plot(postpredcheck_acq_m) # check traces and posterior distributions
+```
+
+Here we see that the traces all look like nice hairy caterpillars, meaning that the chains have mixed. The posterior distribitions also look good (and we checked the estimates in the summary already) 
+
+
+Now we check whether the model is able to retrieve the underlying data. y is the observed data, so the data that we inputted, 
+and y' is the simulated data from the posterior predictive distribution. 
 ```{r}
 pp_check(postpredcheck_acq_m, ndraws=50)
 ```
-Now we check whether the model is able to retrieve the underlying data. y is the observed data, so the data that we inputted, 
-and y' is the simulated data from the posterior predictive distribution. This looks good: the data overlap.
+This looks good: the data overlap.
+
+It thus seems as if both our priors and our model are adequate for our simulated data. We assume that this will also be the case for our experimental data. 
+
+
+### Sensitivity analysis
+To check how dependent the model's outcome is on the priors, we perform a sensitivity analysis. We will check the estimates of our model with our proposed priors ``normal(3.5,20)``, and three alternative priors:
+
+- ``normal(0,20)``: the same SD  but the a mean of zero
+- ``normal(0,30)``: weakly informative, because of the large SD
+- ``normal(0,50)``: uninformative, not really biologically plausible anymore
+
+```{r}
+priors_orig <- 
+  c(set_prior("normal(3.5, 20)",  
+              class = "Intercept"),
+    set_prior("normal(0, 20)",  
+              class = "b"),
+    set_prior("normal(0, 20)",  
+              class = "sigma"))
+
+priors1 <- 
+  c(set_prior("normal(0, 20)",  # changing the mean of the intercept to 0
+              class = "Intercept"),
+    set_prior("normal(0, 20)",  
+              class = "b"),
+    set_prior("normal(0, 20)",  
+              class = "sigma"))
+priors2 <-
+  c(set_prior("normal(0, 30)",  
+              class = "Intercept"),
+    set_prior("normal(0, 30)",  
+              class = "b"), # weakly informative prior on intercept & slopes: this is still biologically plausible
+    set_prior("normal(0, 30)", 
+              class = "sigma")) 
+
+priors3 <-
+  c(set_prior("normal(0, 50)",  
+              class = "Intercept"),
+    set_prior("normal(0, 50)",  
+              class = "b"), # uninformative prior on intercept & slopes: this is not biologically plausible
+    set_prior("normal(0, 50)", 
+              class = "sigma")) 
+
+```
+
+Let's plot these different priors:
+
+```{r, echo =FALSE}
+# set colors
+col1 = "#F8766D"
+col2 = "#FCAE00"
+col3 = "#00BFC4"
+col4 = "#C77CFF"
+# Plot the priors (code adapted from https://osf.io/eyd4r/)
+legend_colors <- c("Orig: normal(3.5, 20)" = col1, "Alt 1: normal(0, 20)" = col2, "Alt 2: normal(0, 30)" = col3, "Alt 3: normal(0, 50)" = col4)
+# Save the x-axis limits in a dataframe
+df <- data.frame(x = c(-50, 50))
+p <- ggplot(df, aes(x=x)) +
+  # First, add the prior distribution of the original prior. 
+  # The first line creates an area (filled in with color), the second line creates a line graph
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 3.5, sd = sqrt(20)), geom = "area", aes(fill = "Orig: normal(3.5, 20)"), alpha = .5) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 3.5, sd = sqrt(20))) +
+  # Repeat the above for each of the two alternative priors
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(20)), geom = "area", aes(fill = "Alt 1: normal(0, 20)"), alpha = .5) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(20))) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(30)), geom = "area", aes(fill = "Alt 2: normal(0, 30)"), alpha = .5) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(30))) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50)), geom = "area", aes(fill = "Alt 3: normal(0, 50)"), alpha = .5) +
+  stat_function(fun = dnorm, n = 1001, args = list(mean = 0, sd = sqrt(50))) +
+  scale_fill_manual(name='Priors', values = legend_colors,
+                    breaks = c("Orig: normal(3.5, 20)", "Alt 1: normal(0, 20)",
+                               "Alt 2: normal(0, 30)", "Alt 3: normal(0, 50)")) +
+  ggtitle("Comparison of Priors") +
+  xlab(bquote(beta[Intercept])) +
+  theme_light() +    
+  theme(legend.position = c(0.8, 0.8),
+        axis.title.x=element_text(family = "sans", size = 18),
+        axis.title.y=element_blank(),
+        plot.title = element_text(hjust = 0.5, family="sans", size = 18))
+# Print the plot
+p
+```
+
+We ran the model of the posterior checks with these three alternative priors, such that we can compare the different estimates:
+
+```{r}
+m_sens_orig <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"))
+m_sens_1 <- readRDS(here("data", "model_output", "05_model_sensitivity_altern1_acq.rds"))
+m_sens_2 <- readRDS(here("data", "model_output", "05_model_sensitivity_altern2_acq.rds"))
+m_sens_3 <- readRDS(here("data", "model_output", "05_model_sensitivity_altern3_acq.rds"))
+
+posterior_summary(m_sens_orig, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
+posterior_summary(m_sens_1, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
+posterior_summary(m_sens_2, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
+posterior_summary(m_sens_3, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
+```
+
+We can now also plot different estimates for the different priors:
+
+```{r, echo=FALSE, warning =FALSE}
+# Visualize posterior distributions
+m_sens_orig_tranformed <- ggs(m_sens_orig) # the ggs function transforms the brms output into a longformat tibble, that we can use to make different types of plots.
+m_sens_1_tranformed <- ggs(m_sens_1)
+m_sens_2_tranformed <- ggs(m_sens_2)
+m_sens_3_tranformed <- ggs(m_sens_3)
+
+# plot posterior density for Intercept
+ggplot() + 
+  geom_density(data = filter(m_sens_orig_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 10000), aes(x = value, fill  = "Orig: normal(3.5, 20)"), alpha = 1) +
+  geom_density(data = filter(m_sens_1_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 1: normal(0, 20)"), alpha = .5) +
+  geom_density(data = filter(m_sens_2_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 2: normal(0, 30)"), alpha = .5) +
+  geom_density(data = filter(m_sens_3_tranformed,
+                             Parameter == "b_Intercept", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 3: normal(0, 50)"),  alpha = .5) +
+  scale_x_continuous(name   = "Value",
+                     limits = c(-3, 13)) + 
+  scale_fill_manual(name='Priors', values = legend_colors, 
+                    breaks = c("Orig: normal(3.5, 20)", "Alt 1: normal(0, 20)",
+                               "Alt 2: normal(0, 30)", "Alt 3: normal(0, 50)")) +
+  # set v-lines for the CIs
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[1,3],
+             col = col1,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[1,4],
+             col = col1,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[1,3],
+             col = col2,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[1,4],
+             col = col2,
+             linetype = 2) +  
+  geom_vline(xintercept = summary(m_sens_2)$fixed[1,3],
+             col = col3,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_2)$fixed[1,4],
+             col = col3,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[1,3],
+             col = col4,
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[1,4],
+             col = col4,
+             linetype = 2) +
+  theme_light() +
+  theme(legend.position = c(0.8, 0.8)) +
+  labs(title = "Posterior Density of the Intercept for different priors")
 
 
 
+# plot posterior density for effect TestSpeaker
+ggplot() + 
+  geom_density(data = filter(m_sens_orig_tranformed,
+                             Parameter == "b_TestSpeaker1", 
+                             Iteration > 10000), aes(x = value, fill  = "Orig: normal(3.5, 20)"), alpha = .5) +
+  geom_density(data = filter(m_sens_1_tranformed,
+                             Parameter == "b_TestSpeaker1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 1: normal(0, 20)"), alpha = .5) +
+  geom_density(data = filter(m_sens_2_tranformed,
+                             Parameter == "b_TestSpeaker1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 2: normal(0, 30)"), alpha = .5) +
+  geom_density(data = filter(m_sens_3_tranformed,
+                             Parameter == "b_TestSpeaker1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 3: normal(0, 50)"),  alpha = .5) +
+  scale_x_continuous(name   = "Value",
+                     limits = c(-13, 8)) + 
+  scale_fill_manual(name='Priors', values = legend_colors,
+                    breaks = c("Orig: normal(3.5, 20)", "Alt 1: normal(0, 20)", 
+                               "Alt 2: normal(0, 30)", "Alt 3: normal(0, 50)")) +
+  #set v-lines for the CIs
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[2,3],
+             col = "yellow",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[2,4],
+             col = "yellow",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[2,3],
+             col = "#F8766D",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[2,4],
+             col = "#F8766D",
+             linetype = 2) +  
+  geom_vline(xintercept = summary(m_sens_2)$fixed[2,3],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_2)$fixed[2,4],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[2,3],
+             col = "#619CFF",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[2,4],
+             col = "#619CFF",
+             linetype = 2) +
+  theme_light() +
+  theme(legend.position = c(0.8, 0.8)) +
+  labs(title = "Posterior Density of the Effect of TestSpeaker for different priors")
+
+# plot posterior density for effect Group
+ggplot() + 
+  geom_density(data = filter(m_sens_orig_tranformed,
+                             Parameter == "b_Group1", 
+                             Iteration > 10000), aes(x = value, fill  = "Orig: normal(3.5, 20)"), alpha = .5) +
+  geom_density(data = filter(m_sens_1_tranformed,
+                             Parameter == "b_Group1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 1: normal(0, 20)"), alpha = .5) +
+  geom_density(data = filter(m_sens_2_tranformed,
+                             Parameter == "b_Group1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 2: normal(0, 30)"), alpha = .5) +
+  geom_density(data = filter(m_sens_3_tranformed,
+                             Parameter == "b_Group1", 
+                             Iteration > 10000), aes(x = value, fill  = "Alt 3: normal(0, 50)"),  alpha = .5) +
+  scale_x_continuous(name   = "Value",
+                     limits = c(-13, 8)) + 
+  scale_fill_manual(name='Priors', values = legend_colors,
+                    breaks = c("Orig: normal(3.5, 20)", "Alt 1: normal(0, 20)", 
+                               "Alt 2: normal(0, 30)", "Alt 3: normal(0, 50)")) +
+  #set v-lines for the CIs
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[3,3],
+             col = "yellow",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_orig)$fixed[3,4],
+             col = "yellow",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[3,3],
+             col = "#F8766D",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_1)$fixed[3,4],
+             col = "#F8766D",
+             linetype = 2) +  
+  geom_vline(xintercept = summary(m_sens_2)$fixed[3,3],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_2)$fixed[3,4],
+             col = "#00BA38",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[3,3],
+             col = "#619CFF",
+             linetype = 2) +
+  geom_vline(xintercept = summary(m_sens_3)$fixed[3,4],
+             col = "#619CFF",
+             linetype = 2) +
+  theme_light() +
+  theme(legend.position = c(0.8, 0.8)) +
+  labs(title = "Posterior Density of the Effect of Group for different priors")
+
+```
+
+As we can see from the (plotted) estimates, the different priors barely have any effect on the estimates of the model. This means that our model is not overly sensitive to the priors.
+
+We will run the same sensitivity analysis for our model with our experimental data.
+
+### Parameter estimation experimental data
+
+For the experimental data, we will use the following code for parameter estimation, assuming the same data structure, and the data called ```dat_exp_acq```
+
+```
+# scaling the continuous predictors:
+dat_exp_acq$mumDist<- scale(dat_exp_acq$mumDist)
+dat_exp_acq$age <- scale(dat_exp_acq$age)
+dat_exp_acq$nrSpeakersDaily <- scale(dat_exp_acq$nrSpeakersDaily)
+
+# Setting orthogonal contrasts, such that the priors for the different contrasts we compare 
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior
+contrasts(dat_acq$Group) <- contr.equalprior
+contrasts(dat_acq$sleepState) <- contr.equalprior
+
+# Setting up the samping:
+num_chains <- 4 # number of chains = number of processor cores
+num_iter <- 40000 # number of samples per chain: because I use Savage-Dickey for hypothesis testing, so we need a LOT of samples
+num_warmup <- num_iter / 2 # number of warm-up samples per chain
+num_thin <- 1 # thinning: extract one out of x samples per chain
+
+# Running the model
+model_acq <- brm(MMR ~ 1 + TestSpeaker * Group +
+                   mumDist +
+                   nrSpeakersDaily +
+                   sleepState +
+                   age +
+                   (1 + TestSpeaker | Subj),
+                 data = dat_acq,
+                 prior = priors,
+                 family = gaussian(),
+                 control = list(
+                   adapt_delta = .99,
+                   max_treedepth = 15
+                 ),
+                 iter = num_iter,
+                 chains = num_chains,
+                 warmup = num_warmup,
+                 thin = num_thin,
+                 cores = num_chains,
+                 seed = project_seed,
+                 file = here("data", "model_output", "A2_model_acq.rds"),
+                 file_refit = "on_change",
+                 save_pars = save_pars(all = TRUE)
+)
+```
+
+### Model Diagnostics
+We will then run some model diagnostics.
+First, we will plot the traces, to check model convergence, with ```plot(model_acq, ask = FALSE)```. We will also check the posterior samples of the posterior predictive distribution, with
+``` 
+posterior_predict_model_acq <-
+  MMR_m %>%
+  posterior_predict(ndraws = 2000)
+  
+PPC_MMR_m <-
+  posterior_predict_model_acq %>%
+  ppc_stat_grouped(
+    y = pull(dat_exp_acq, MMR),
+    group = pull(dat_exp_acq, TestSpeaker_Group),
+    stat = "mean"
+  ) +
+  ggtitle("Posterior predictive samples")
+```
+
+### Hypothesis testing
 

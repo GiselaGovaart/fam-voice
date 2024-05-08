@@ -26,7 +26,7 @@ priorpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                               nrSpeakersDaily  + 
                               sleepState + 
                               age +
-                              (1 + TestSpeaker * Group | Subj),
+                              (1 + TestSpeaker | Subj),
                             data = dat_acq,
                             prior = priors,
                             family = gaussian(),
@@ -65,7 +65,7 @@ priorpredcheck_rec_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                               nrSpeakersDaily  + 
                               sleepState + 
                               age +
-                              (1 + TestSpeaker * Group | Subj),
+                              (1 + TestSpeaker | Subj),
                             data = dat_rec,
                             prior = priors,
                             family = gaussian(),

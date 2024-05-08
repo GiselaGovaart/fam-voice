@@ -3,12 +3,6 @@
 # use the function open_data(your_data_frame) or closed_data(your_data_frame)
 # to store the data.
 
-# install packages --------------------------------------------------------------------
-# install.packages(worcs)
-# install.packages(here)
-# install.packages(tidyr)
-
-
 # load packages --------------------------------------------------------------------
 library(worcs)
 library(here)
@@ -87,7 +81,6 @@ setwd(here("data"))
 # worcs:::write_worcsfile(".worcs")
 open_data(data_pilot, worcs_directory = ".")
 setwd(here())
-
 
 
 # Experimental data ---------------------------------------------------------

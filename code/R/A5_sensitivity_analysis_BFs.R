@@ -1,7 +1,7 @@
 # sensitivity analysis for BF
 
 # code adapted from Nicenboim, Bruno, Daniel Schad, and Shravan Vasishth. "An introduction to Bayesian data analysis for cognitive science.
-# "https://vasishth.github.io/bayescogsci/book/
+# https://vasishth.github.io/bayescogsci/book/
 
 ### load packages ------------------------
 library(brms)
@@ -27,14 +27,14 @@ for (i in 1:length(prior_sd)) {
                 nrSpeakersDaily +
                 sleepState +
                 age +
-                (1 + TestSpeaker * Group | Subj),
+                (1 + TestSpeaker  | Subj),
               data = dat_rec,
               family = gaussian(), 
               prior =
                 c(
-                  prior(normal(5.97, 23.34), class = Intercept),
+                  prior(normal(3.5, 20), class = Intercept),
                   set_prior(paste0("normal(0,", psd, ")"), class = "b"),
-                  set_prior("normal(0, 23.34)", class = "sigma")
+                  set_prior("normal(0, 20)", class = "sigma")
                 ),
               init = "random",
               control = list(
