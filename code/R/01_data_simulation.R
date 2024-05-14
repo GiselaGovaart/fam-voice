@@ -52,9 +52,9 @@ dat_acq$age <-as.numeric(scale(dat_acq$age))
 # Manually setting the contrasts
 # contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
 # contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_acq$Group) <- contr.equalprior
-contrasts(dat_acq$sleepState) <- contr.equalprior
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
+contrasts(dat_acq$Group) <- contr.equalprior_pairs
+contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
 
 
 # Simulate some data for RECOGNITION--------------------------------------------------------------------
@@ -111,9 +111,9 @@ dat_rec$age <- as.numeric(scale(dat_rec$age))
 #                                             ncol = 2, byrow = TRUE)
 # contrasts(dat_rec$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
 
-contrasts(dat_rec$TestSpeaker) <- contr.equalprior
-contrasts(dat_rec$Group) <- contr.equalprior
-contrasts(dat_rec$sleepState) <- contr.equalprior
+contrasts(dat_rec$TestSpeaker) <- contr.equalprior_pairs
+contrasts(dat_rec$Group) <- contr.equalprior_pairs
+contrasts(dat_rec$sleepState) <- contr.equalprior_pairs
 
 rm(design)
 

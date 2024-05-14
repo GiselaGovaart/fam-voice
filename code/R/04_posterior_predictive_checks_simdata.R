@@ -106,9 +106,9 @@ postpredcheck_sumcontrast_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                            save_pars = save_pars(all = TRUE)
 )
 # set contrasts back
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_acq$Group) <- contr.equalprior
-contrasts(dat_acq$sleepState) <- contr.equalprior
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
+contrasts(dat_acq$Group) <- contr.equalprior_pairs
+contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
 
 # check traces and posterior distributions
 plot(postpredcheck_acq_m)

@@ -1,8 +1,3 @@
-
-# TODO: the contrasts are currently different for pMAP and BF: correct
-
-
-
 # RNG --------------------------------------------------------
 project_seed <- 2049
 set.seed(project_seed) # set seed
@@ -52,15 +47,6 @@ model_acq <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_a
 # RQ4: nrSpeakersDaily
 # RQ5: sleepState
 
-# For the Recognition RQ, we want the following comparisons
-# S1 = S1, S2 = S4, S3 = S3
-# RQ1: unfam S2 - fam S1
-# RQ2: unfam S2 - unfam S3
-# RQ3: unfam S1 - unfam S2
-# general:
-# RQ4: nrSpeakersDaily
-# RQ5: sleepState
-
 
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 # We use p-values here, but just to check the robustness, to check with other experiments with frequentist methods.
@@ -76,6 +62,14 @@ custom_contrasts_sleep <- list(
   list("quietsleep vs activesleep" =c(0, 1, -1))
 )
 
+##  Effect all ------------------------
+pMAP_all_acq = 
+  model_acq %>%
+  p_map() %>%
+  mutate(
+    "p < .05" = ifelse(p_MAP < .05, "*", "")
+  )
+
 ## Simple Effect Group ------------------------
 pMAP_Group_simple_acq = 
   model_acq %>%
@@ -87,6 +81,9 @@ pMAP_Group_simple_acq =
   )
 pMAP_Group_simple_acq
 
+# check whether the effect is driven by a certain level of the other two factors:
+emmip(model_acq, TestSpeaker ~ Group | sleepState)
+
 ##  Effect Speaker ------------------------
 pMAP_Speaker_acq = 
   model_acq %>%
@@ -97,18 +94,22 @@ pMAP_Speaker_acq =
     "p < .05" = ifelse(p_MAP < .05, "*", "")
   )
 pMAP_Speaker_acq
+# check whether the effect is driven by a certain level of the other two factors:
+emmip(model_acq, Group ~ TestSpeaker | sleepState)
 
 ## Effect SleepState ------------------------
 pMAP_SleepState_acq = 
   model_acq %>%
   emmeans(~ sleepState) %>%
-  pairs() %>%
+  contrast(method = custom_contrasts_sleep) %>%
   p_map() %>%
   mutate(
     "p < .05" = ifelse(p_MAP < .05, "*", "")
   )
 pMAP_SleepState_acq
 
+# check whether the effect is driven by a certain level of the other two factors:
+emmip(model_acq, Group ~ sleepState | TestSpeaker)
 
 # Bayes Factors --------------------------------------------------------
 # https://doi.org/10.3389/fpsyg.2019.02767
@@ -121,6 +122,28 @@ model_acq_prior <- unupdate(model_acq) # sample priors from model
 # just samples from the prior distribution. Because you want to compare prior and posterior distributions
 # you want to know how much your data influenced the posterior distribution. For that, you compare 
 # the prior and the posterior distributions.
+
+##  Effect all ------------------------
+# Bayes Factors (Savage-Dickey density ratio)
+BF_all_acq <-
+  model_acq %>%
+  bf_parameters(prior = model_acq_prior) %>%
+  arrange(log_BF) # sort according to BF
+
+# add rule-of-thumb interpretation
+BF_all_acq <-
+  BF_all_acq %>%
+  add_column(
+    "interpretation" = interpret_bf(
+      BF_all_acq$log_BF,
+      rules = "raftery1995",
+      log = TRUE,
+      include_value = TRUE,
+      protect_ratio = TRUE,
+      exact = TRUE
+    ),
+    .after = "log_BF"
+  )
 
 ## Simple Effect Group ------------------------
 # pairwise comparisons of prior distributions
@@ -218,47 +241,6 @@ BF_Speaker_acq <-
 
 BF_Speaker_acq
 
-# # Model for nrSpeakersDaily
-# # pairwise comparisons of prior distributions
-# nrSpeakers_MMR_m_prior_pairwise <-
-#   MMR_m_prior %>%
-#   emmeans(~ nrSpeakersDaily) 
-# 
-# # pairwise comparisons of posterior distributions
-# nrSpeakers_MMR_m_pairwise <-
-#   MMR_m %>%
-#   emmeans(~ nrSpeakersDaily) 
-# 
-# # Bayes Factors (Savage-Dickey density ratio)
-# # Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
-# # So if that density is very high, you have no support for your Ha. (because there are a lot
-# # of values around zero)
-# BF_nrSpeakers_MMR_m <-
-#   nrSpeakers_MMR_m_pairwise %>%
-#   bf_parameters(prior = nrSpeakers_MMR_m_prior_pairwise) %>%
-#   arrange(log_BF) # sort according to BF
-# 
-# # add rule-of-thumb interpretation
-# # Add rule of thumb interpretation: looks at value and tells use what it means according to the
-# # rules of raftery1995. You add the column for interpretability, but you want to keep the other 
-# # stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
-# # if off with a rule of thumb!
-# BF_nrSpeakers_MMR_m <-
-#   BF_nrSpeakers_MMR_m %>%
-#   add_column(
-#     "interpretation" = interpret_bf(
-#       BF_nrSpeakers_MMR_m$log_BF,
-#       rules = "raftery1995",
-#       log = TRUE,
-#       include_value = TRUE,
-#       protect_ratio = TRUE,
-#       exact = TRUE
-#     ),
-#     .after = "log_BF"
-#   )
-# 
-# BF_nrSpeakers_MMR_m
-
 
 ##  Effect SleepState ------------------------
 # pairwise comparisons of prior distributions
@@ -313,6 +295,17 @@ BF_SleepState_acq
 # this is also explained well in JASP
 
 # merge info and save to file --------------------------------------------------------
+pMAP_all_acq = subset(pMAP_all_acq,select= -c(Effects, Component))
+BF_all_acq = subset(BF_all_acq,select= -c(Effects, Component))
+
+pMAP_BF_all <-
+  full_join(
+    pMAP_all_acq,
+    BF_all_acq,
+    by = "Parameter"
+  ) %>% 
+  as_tibble()
+
 pMAP_BF_Group <-
   full_join(
     pMAP_Group_simple_acq,
@@ -338,7 +331,7 @@ pMAP_BF_SleepState <-
   as_tibble()
 
 pMAP_BF_all = 
-  rbind(pMAP_BF_Group, pMAP_BF_Speaker, pMAP_BF_SleepState)
+  rbind(pMAP_BF_all, pMAP_BF_Group, pMAP_BF_Speaker, pMAP_BF_SleepState)
 
 # save as .rds
 saveRDS(

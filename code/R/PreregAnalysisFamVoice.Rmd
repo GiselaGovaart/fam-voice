@@ -139,7 +139,7 @@ meanMMR = colMeans(pp)
 hist(meanMMR, breaks = 20)
 summary(priorpredcheck_acq_m)
 ```
-In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.49, and the SD at 16.
+In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.44, and the SD at 15.75.
 ```{r}
 # distribution of the effect of TestSpeaker
 TestSpeakerEffect <- colMeans(pp[dat_acq$TestSpeaker=="1",]) - colMeans(pp[dat_acq$TestSpeaker=="2",])
@@ -173,9 +173,9 @@ num_thin <- 1
 We also set the contrast such that we get equal priors on the different comparisons. This is important for our Bayes Factor analysis later on.
 
 ```{r}
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_acq$Group) <- contr.equalprior
-contrasts(dat_acq$sleepState) <- contr.equalprior
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
+contrasts(dat_acq$Group) <- contr.equalprior_pairs
+contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
 
 contrasts(dat_acq$TestSpeaker)
 contrasts(dat_acq$Group) 
@@ -213,14 +213,14 @@ postpredcheck_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorp
 summary(postpredcheck_acq_m)
 ```
 
-There were 50 divergent transitions after warmup. However, the model seems to have converged, since the Rhat and ESS values are good.
+There were 80 divergent transitions after warmup. However, the model seems to have converged, since the Rhat and ESS values are good.
 
 We can now check the values the model comes up with for the simulated data:
-b_Intercept is 4.48 (in the data it was simulated as 5)
-It retrieves an effect of 3.34 for TestSpeaker
-It retrieves an effect of 2.74 for Group
+b_Intercept is 4.68 (in the data it was simulated as 5)
+It retrieves an effect of 4.10 for TestSpeaker
+It retrieves an effect of 3.42 for Group
 It also hallucinates some effects for the covariates
-sigma is estimated at 12.00.
+sigma is estimated at 12.16.
 
 These effects for TestSpeaker and Group seem a bit low, considering our simulated effects of 5. However, this is actually because of our contrast matrix:
 
