@@ -222,72 +222,8 @@ It retrieves an effect of 3.42 for Group
 It also hallucinates some effects for the covariates
 sigma is estimated at 12.16.
 
-These effects for TestSpeaker and Group seem a bit low, considering our simulated effects of 5. However, this is actually because of our contrast matrix:
 
-```{r}
-contrasts(dat_acq$TestSpeaker) 
-```
-This contrast matrix is derived from dividing -1 and 1 (sum coding) by the square root of 2. The standardization ensures that the contrast has a variance of 1, meaning that the different contrasts are independent (orthogonal) of each other in case of multiple contrasts. This makes it easier to compare outcomes across different contexts of measurements. This however also means that the coefficients are not easily interpretable in their original units anymore. So to check whether the model has a more or less sensible estimate for the effects of TestSpeaker and Group, we run the model again, with deviation coding of -0.5 and 0.5. In this case, the coding represents the difference between TestSpeaker1 and TestSpeaker2, and Group-fam and Group-unfam:
-
-```{r}
-contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$sleepState) <- matrix(c(-2/3, 1/3, 1/3,
-                                          1/3, -2/3, 1/3),
-                                        ncol = 2, byrow = TRUE)
-
-contrasts(dat_acq$TestSpeaker) 
-contrasts(dat_acq$Group)
-contrasts(dat_acq$sleepState)
-```
-
-We now run the model again:
-```{r}
-# postpredcheck_sumcontrast_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
-#                              mumDist +
-#                              nrSpeakersDaily +
-#                              sleepState +
-#                              age +
-#                              (1 + TestSpeaker | Subj),
-#                            data = dat_acq,
-#                            prior = priors,
-#                            family = gaussian(),
-#                            control = list(
-#                              adapt_delta = .99, 
-#                              max_treedepth = 15
-#                            ),
-#                            iter = num_iter, 
-#                            chains = num_chains, 
-#                            warmup = num_warmup,
-#                            thin = num_thin,
-#                            cores = num_chains, 
-#                            seed = project_seed,
-#                            file = here("data", "model_output", "04_model_posteriorpredcheck_sumcontrast_acq.rds"),
-#                            file_refit = "on_change",
-#                            save_pars = save_pars(all = TRUE)
-# )
-
-postpredcheck_sumcontrast_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_sumcontrast_acq.rds"))
-summary(postpredcheck_sumcontrast_acq_m)
-
-```
-Here we see that the model is actually perfectly able to retrieve the data:
-b_Intercept is 5.01 (in the data it was simulated as 5)
-It retrieves an effect of 4.70 for TestSpeaker (in the data it was simulated as 5)
-It retrieves an effect of 4.66 for Group (in the data it was simulated as 5)
-It also hallucinates some minor effects for the covariates
-sigma is estimated at 12.40 (simulated as 15)
-
-This model has 33 divergent transitions. However, Rhat and the ESS values are good.
-
-```{r}
-# set contrasts back
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_acq$Group) <- contr.equalprior
-contrasts(dat_acq$sleepState) <- contr.equalprior
-```
-
-Now we continue checking our model with the model that uses the coding we will use in the final analysis:
+Now we check the traces and posterior distributions
 ```{r}
 plot(postpredcheck_acq_m) # check traces and posterior distributions
 ```
@@ -303,7 +239,6 @@ pp_check(postpredcheck_acq_m, ndraws=50)
 This looks good: the data overlap.
 
 It thus seems as if both our priors and our model are adequate for our simulated data. We assume that this will also be the case for our experimental data. 
-
 
 ### Sensitivity analysis
 To check how dependent the model's outcome is on the priors, we perform a sensitivity analysis. We will check the estimates of our model with our proposed priors ``normal(3.5,20)``, and three alternative priors:
@@ -455,8 +390,6 @@ ggplot() +
   theme(legend.position = c(0.8, 0.8)) +
   labs(title = "Posterior Density of the Intercept for different priors")
 
-
-
 # plot posterior density for effect TestSpeaker
 ggplot() + 
   geom_density(data = filter(m_sens_orig_tranformed,
@@ -555,6 +488,8 @@ ggplot() +
 
 ```
 
+The alternative models have 294, 29, and 6 divergent transitions, respectively. For Alt 1, Rhat is sometimes 1.01. The estimates, however, seem to be reliable for all models (since they are very similar).
+
 As we can see from the (plotted) estimates, the different priors barely have any effect on the estimates of the model. This means that our model is not overly sensitive to the priors.
 
 We will run the same sensitivity analysis for our model with our experimental data.
@@ -570,9 +505,9 @@ dat_exp_acq$age <- scale(dat_exp_acq$age)
 dat_exp_acq$nrSpeakersDaily <- scale(dat_exp_acq$nrSpeakersDaily)
 
 # Setting orthogonal contrasts, such that the priors for the different contrasts we compare 
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_acq$Group) <- contr.equalprior
-contrasts(dat_acq$sleepState) <- contr.equalprior
+contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
+contrasts(dat_acq$Group) <- contr.equalprior_pairs
+contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
 
 # Setting up the samping:
 num_chains <- 4 # number of chains = number of processor cores

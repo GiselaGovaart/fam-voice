@@ -51,64 +51,30 @@ postpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
 )
 
 
-postpredcheck_acq_m_altpriors <- brm(MMR ~ 1 + TestSpeaker * Group + 
-                             mumDist +
-                             nrSpeakersDaily +
-                             sleepState +
-                             age +
-                             (1 + TestSpeaker | Subj),
-                           data = dat_acq,
-                           prior = priors_alt,
-                           family = gaussian(),
-                           control = list(
-                             adapt_delta = .99, 
-                             max_treedepth = 15
-                           ),
-                           iter = num_iter, 
-                           chains = num_chains, 
-                           warmup = num_warmup,
-                           thin = num_thin,
-                           cores = num_chains, 
-                           seed = project_seed,
-                           file = here("data", "model_output", "04_model_posteriorpredcheck_acq_altpriors.rds"),
-                           file_refit = "on_change",
-                           save_pars = save_pars(all = TRUE)
-)
+# postpredcheck_acq_m_altpriors <- brm(MMR ~ 1 + TestSpeaker * Group + 
+#                              mumDist +
+#                              nrSpeakersDaily +
+#                              sleepState +
+#                              age +
+#                              (1 + TestSpeaker | Subj),
+#                            data = dat_acq,
+#                            prior = priors_alt,
+#                            family = gaussian(),
+#                            control = list(
+#                              adapt_delta = .99, 
+#                              max_treedepth = 15
+#                            ),
+#                            iter = num_iter, 
+#                            chains = num_chains, 
+#                            warmup = num_warmup,
+#                            thin = num_thin,
+#                            cores = num_chains, 
+#                            seed = project_seed,
+#                            file = here("data", "model_output", "04_model_posteriorpredcheck_acq_altpriors.rds"),
+#                            file_refit = "on_change",
+#                            save_pars = save_pars(all = TRUE)
+# )
 
-# set contrast to sum contrasts to be able to interpret the coeffients more directly, to check what effects are estimated for TestSpeaker and Group.
-contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
-contrasts(dat_acq$sleepState) <- matrix(c(-2/3, 1/3, 1/3,
-                                          1/3, -2/3, 1/3),
-                                        ncol = 2, byrow = TRUE)
-
-postpredcheck_sumcontrast_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group + 
-                             mumDist +
-                             nrSpeakersDaily +
-                             sleepState +
-                             age +
-                             (1 + TestSpeaker | Subj),
-                           data = dat_acq,
-                           prior = priors,
-                           family = gaussian(),
-                           control = list(
-                             adapt_delta = .99, 
-                             max_treedepth = 15
-                           ),
-                           iter = num_iter, 
-                           chains = num_chains, 
-                           warmup = num_warmup,
-                           thin = num_thin,
-                           cores = num_chains, 
-                           seed = project_seed,
-                           file = here("data", "model_output", "04_model_posteriorpredcheck_sumcontrast_acq.rds"),
-                           file_refit = "on_change",
-                           save_pars = save_pars(all = TRUE)
-)
-# set contrasts back
-contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
-contrasts(dat_acq$Group) <- contr.equalprior_pairs
-contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
 
 # check traces and posterior distributions
 plot(postpredcheck_acq_m)
@@ -124,11 +90,11 @@ summary(postpredcheck_acq_m)
 # sigma should be ~15
 # the posterior distributions look quite close to this:
 # They are also normally distributed, and for example do not have 2 bumps
-# b_Intercept is 4.48
-# It retrieves an effect of 3.34 for TestSpeaker
-# It retrieves an effect of 2.74 for Group
+# b_Intercept is 4.68
+# It retrieves an effect of 4.10 for TestSpeaker
+# It retrieves an effect of 3.42 for Group
 # It also hallucinates some effects for the covariates
-# sigma is 12.00
+# sigma is 12.16
 
 # Posterior check
 pp_check(postpredcheck_acq_m, ndraws=50)

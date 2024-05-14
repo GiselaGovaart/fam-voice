@@ -119,7 +119,8 @@ m_sens_1 <- brm(MMR ~ 1 + TestSpeaker * Group +
                 file_refit = "on_change",
                 save_pars = save_pars(all = TRUE)
 )
-plot(m_sens_1) # looks good
+# 294 divergent transitions.
+plot(m_sens_1) # looks okay, Rhat is 1.01 in some cases, but the estimates are still good
 
 # model alternative priors 2
 m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group + 
@@ -145,9 +146,10 @@ m_sens_2 <- brm(MMR ~ 1 + TestSpeaker * Group +
                file_refit = "on_change",
                save_pars = save_pars(all = TRUE)
 )
+# 29 divergent transitions.
 plot(m_sens_2) # looks good
 
-# model alternative priors 3 (1 divergent transitions after warmup)
+# model alternative priors 3 
 m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group + 
                   mumDist +
                   nrSpeakersDaily +
@@ -171,6 +173,7 @@ m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group +
                 file_refit = "on_change",
                 save_pars = save_pars(all = TRUE)
 )
+# 6 divergent transitions
 plot(m_sens_3) # looks good
 
 summary(m_sens_orig) # Rhat and ESS'es look good
