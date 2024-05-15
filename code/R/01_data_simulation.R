@@ -41,7 +41,7 @@ dat_acq$age = NA
 dat_acq$age = rep(abs(round(rnorm(nrow(dat_acq)/2,95,10))), each=2)
 dat_acq$mumDist = rep(abs(round(rnorm(nrow(dat_acq),1,2),digits=4)), each=1)
 dat_acq$nrSpeakersDaily = rep(round(rtruncnorm(nrow(dat_acq)/2,a=1,b= Inf,4,2)), each=2) # truncate dist at 1 (since every child will hear at least one speaker in daily life)
-dat_acq$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat_acq), replace = TRUE))
+dat_acq$sleepState = rep(sample(c("awake", "asleep"), nrow(dat_acq), replace = TRUE, prob = c(0.8, 0.2))) # because most children will be awake
 dat_acq$sleepState = as.factor(dat_acq$sleepState)
 
 # Center and scale: this subtracts the mean from each value and then divides by the SD
@@ -50,8 +50,6 @@ dat_acq$nrSpeakersDaily <- as.numeric(scale(dat_acq$nrSpeakersDaily))
 dat_acq$age <-as.numeric(scale(dat_acq$age))
 
 # Manually setting the contrasts
-# contrasts(dat_acq$TestSpeaker) <- matrix(c(-0.5, 0.5), ncol = 1)
-# contrasts(dat_acq$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
 contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
 contrasts(dat_acq$Group) <- contr.equalprior_pairs
 contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
@@ -94,7 +92,7 @@ dat_rec$age = NA
 dat_rec$age = rep(abs(round(rnorm(nrow(dat_rec)/3,90,12))), each=3)
 dat_rec$mumDist = rep(abs(round(rnorm(nrow(dat_rec),1,2),digits=4)), each=1)
 dat_rec$nrSpeakersDaily = rep(round(rtruncnorm(nrow(dat_rec)/3,a=1,b= Inf,4,2)), each=3) # truncate dist at 1 (since every child will hear at least one speaker in daily life)
-dat_rec$sleepState = rep(sample(c("awake", "activesleep", "quietsleep"), nrow(dat_rec)/3, replace = TRUE), each=3)
+dat_rec$sleepState = rep(sample(c("awake", "asleep"), nrow(dat_rec), replace = TRUE, prob = c(0.8, 0.2))) # because most children will be awake
 
 dat_rec = subset(dat_rec, select = -c(Group_n, TestSpeaker_n)) # remove these "contrast coding columns" because we only use them for data simulation
 
@@ -106,11 +104,6 @@ dat_rec$nrSpeakersDaily <- as.numeric(scale(dat_rec$nrSpeakersDaily))
 dat_rec$age <- as.numeric(scale(dat_rec$age))
 
 # Manually setting the contrasts
-# contrasts(dat_rec$TestSpeaker) <- matrix(c(-2/3, 1/3, 1/3,
-#                                               1/3, -2/3, 1/3), 
-#                                             ncol = 2, byrow = TRUE)
-# contrasts(dat_rec$Group) <- matrix(c(-0.5, 0.5), ncol = 1)
-
 contrasts(dat_rec$TestSpeaker) <- contr.equalprior_pairs
 contrasts(dat_rec$Group) <- contr.equalprior_pairs
 contrasts(dat_rec$sleepState) <- contr.equalprior_pairs

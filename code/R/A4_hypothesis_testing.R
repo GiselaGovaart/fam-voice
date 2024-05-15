@@ -33,8 +33,8 @@ model_acq <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_a
 
 # Hypotheses -------------------------------------------------------------------
 # For the Acquisition RQ, we want the following comparisons
-# 1. For test_speaker = Speaker1, the mmr is different for group=fam vs group = unfam. 
-# 2. For test_speaker = Speaker2, the mmr is different for group=fam vs group = unfam. 
+# 1. For test_speaker = Speaker1, the mmr is different for group=fam vs group = unfam.
+# 2. For test_speaker = Speaker2, the mmr is different for group=fam vs group = unfam.
 # 3. For both groups together: mmr is larger for test_speaker = S1 as for test_speaker = S2
 # 4. For both groups and speakers together: if nrSpeakersDaily is higher, MMR is larger
 # This means we want the following contrasts:
@@ -54,13 +54,6 @@ model_acq <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_a
 # Bayesian equivalent of the p-value, related to the odds that a parameter (described by its posterior distribution) has against the null hypothesis (h0) using Mills' (2014, 2017) Objective Bayesian Hypothesis Testing framework. It corresponds to the density value at 0 divided by the density at the Maximum A Posteriori (MAP).
 # https://doi.org/10.3389/fpsyg.2019.02767
 # The MAP-based p-value is related to the odds that a parameter has against the null hypothesis (Mills and Parent, 2014; Mills, 2017). It is mathematically defined as the density value at 0 divided by the density at the Maximum A Posteriori (MAP), i.e., the equivalent of the mode for continuous distributions.
-
-# set custom contrast sleep
-custom_contrasts_sleep <- list(
-  list("awake - activesleep and quietsleep" = c(1, -1/2, -1/2)),
-  list("quietsleep - awake and activesleep" = c(-1/2, -1/2, 1)),
-  list("quietsleep vs activesleep" =c(0, 1, -1))
-)
 
 ##  Effect all ------------------------
 pMAP_all_acq = 
@@ -101,7 +94,7 @@ emmip(model_acq, Group ~ TestSpeaker | sleepState)
 pMAP_SleepState_acq = 
   model_acq %>%
   emmeans(~ sleepState) %>%
-  contrast(method = custom_contrasts_sleep) %>%
+  pairs() %>%
   p_map() %>%
   mutate(
     "p < .05" = ifelse(p_MAP < .05, "*", "")
@@ -166,6 +159,7 @@ BF_Group_simple_acq <-
   Group_simple_pairwise_acq %>%
   bf_parameters(prior = Group_simple_pairwise_prior_acq) %>%
   arrange(log_BF) # sort according to BF
+
 
 # add rule-of-thumb interpretation
 # Add rule of thumb interpretation: looks at value and tells use what it means according to the
@@ -247,13 +241,13 @@ BF_Speaker_acq
 SleepState_pairwise_prior_acq <-
   model_acq_prior %>%
   emmeans(~ sleepState) %>% # estimated marginal means
-  contrast(method = custom_contrasts_sleep) 
+  pairs()
   
 # pairwise comparisons of posterior distributions
 SleepState_pairwise_acq <-
   model_acq %>%
   emmeans(~ sleepState) %>%
-  contrast(method = custom_contrasts_sleep)
+  pairs()
   
 # Bayes Factors (Savage-Dickey density ratio)
 # Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
@@ -284,6 +278,7 @@ BF_SleepState_acq <-
   )
 
 BF_SleepState_acq
+
 
 # output BF: 
 # - “Evidence against the null: 0” this does not have to be 0. Can be another model for example

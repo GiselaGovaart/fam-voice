@@ -12,6 +12,10 @@ library(worcs)
 library(ggmcmc)
 library(RColorBrewer)
 library(ggplot2)
+library(easystats)
+library(emmeans) 
+library(logspline)
+
 ```
 ### Simulate some data
 ```{r, message=FALSE}
@@ -139,7 +143,7 @@ meanMMR = colMeans(pp)
 hist(meanMMR, breaks = 20)
 summary(priorpredcheck_acq_m)
 ```
-In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.44, and the SD at 15.75.
+In our priors, we specified a mean of 3.5 and an SD of 20. In these plots and the model summary, we see that the mean of the MMR is estimated at 3.32, and the SD at 15.9.
 ```{r}
 # distribution of the effect of TestSpeaker
 TestSpeakerEffect <- colMeans(pp[dat_acq$TestSpeaker=="1",]) - colMeans(pp[dat_acq$TestSpeaker=="2",])
@@ -161,7 +165,7 @@ Here, we check whether our model can recover our simulated data, with our propos
 - effect of Group = 5
 - effect of TestSpeaker = 5
 
-We run the model with more iterations (20000) to ensure full convergence:
+We run the model with more iterations (20.000) to ensure full convergence. 
 
 ```{r}
 num_chains <- 4 
@@ -170,7 +174,7 @@ num_warmup <- num_iter / 2
 num_thin <- 1 
 ```
 
-We also set the contrast such that we get equal priors on the different comparisons. This is important for our Bayes Factor analysis later on.
+We also set the contrast such that we get equal priors on the different comparisons. This is important for our Bayes Factor analysis later on. However, since we only have factors with max. 2 levels, this is the same as deviation coding with 0.5 and -0.5
 
 ```{r}
 contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
@@ -208,19 +212,18 @@ Now let's look at the model:
 #                            save_pars = save_pars(all = TRUE)
 # )
 
-
 postpredcheck_acq_m <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_acq.rds"))
 summary(postpredcheck_acq_m)
 ```
 
-There were 80 divergent transitions after warmup. However, the model seems to have converged, since the Rhat and ESS values are good.
+There were 15 divergent transitions after warmup. However, the model seems to have converged, since the Rhat and ESS values are good enough. We have some Rhat values of 1.01, but this is still acceptable.
 
 We can now check the values the model comes up with for the simulated data:
-b_Intercept is 4.68 (in the data it was simulated as 5)
-It retrieves an effect of 4.10 for TestSpeaker
-It retrieves an effect of 3.42 for Group
+b_Intercept is 4.03 (in the data it was simulated as 5)
+It retrieves an effect of 4.57 for TestSpeaker
+It retrieves an effect of 3.37 for Group
 It also hallucinates some effects for the covariates
-sigma is estimated at 12.16.
+sigma is estimated at 11.87.
 
 
 Now we check the traces and posterior distributions
@@ -488,7 +491,7 @@ ggplot() +
 
 ```
 
-The alternative models have 294, 29, and 6 divergent transitions, respectively. For Alt 1, Rhat is sometimes 1.01. The estimates, however, seem to be reliable for all models (since they are very similar).
+The alternative models have 88, 643, and 222 divergent transitions, respectively. For Alt 2 and Alt 3, Rhat is sometimes 1.01. The estimates, however, seem to be reliable for all models (since they are very similar).
 
 As we can see from the (plotted) estimates, the different priors barely have any effect on the estimates of the model. This means that our model is not overly sensitive to the priors.
 
@@ -504,7 +507,7 @@ dat_exp_acq$mumDist<- scale(dat_exp_acq$mumDist)
 dat_exp_acq$age <- scale(dat_exp_acq$age)
 dat_exp_acq$nrSpeakersDaily <- scale(dat_exp_acq$nrSpeakersDaily)
 
-# Setting orthogonal contrasts, such that the priors for the different contrasts we compare 
+# Setting orthogonal contrasts, such that the priors for the different contrasts we compare are orthogonal (not so important in this case since we only have 2 level factors)
 contrasts(dat_acq$TestSpeaker) <- contr.equalprior_pairs
 contrasts(dat_acq$Group) <- contr.equalprior_pairs
 contrasts(dat_acq$sleepState) <- contr.equalprior_pairs
@@ -560,4 +563,48 @@ PPC_MMR_m <-
 ```
 
 ### Hypothesis testing
+Now we want to test our hypotheses. Our main research question is: Is there a Voice Familiarity Benefit for phoneme acquisition in infants? We address three sub-questions:
+
+1.	Do infants discriminate a vowel contrast better when they were trained on this contrast with a familiar voice?
+2.	Does this voice familiarity benefit for phoneme acquisition generalize to a novel voice? That is, do infants discriminate a vowel contrast spoken by a novel voice better when they were trained on this contrast by a familiar voice?
+3.	Do infants discriminate a vowel contrast better when it is spoken by the speaker by which they were trained?
+
+Hypothesis 1 (directional): \n
+We expect that infants discriminate a vowel contrast better from the training voice when this speaker’s voice was familiar during the training, shown by a more negative mismatch response (MMR; our dependent variable, see below) in the FamTrain group than in the UnFamTrain group condition in the TrainVoiceTest (speaker 1).\n
+Hypothesis 2 (non-directional): \n
+We expect a difference between the FamTrain group and the UnFamTrain group on the NovelVoiceTest (speaker 2). 
+Hypothesis 3 (directional): \n
+We expect to find that infants discriminate the vowel contrast better in the TrainVoiceTest than in the NovelVoiceTest, shown by a more negative MMR in TrainVoiceTest (speaker 1) than in the NovelVoiceTest (speaker 2), irrespective of training group.\n
+
+\n\n
+We thus want the following comparisons
+1. For TestSpeaker = 1, the MMR is more negative for group=fam vs group = unfam.
+2. For TestSpeaker = 2, the mmr is different for group=fam vs group = unfam.
+3. For both groups together: mmr is larger for TestSpeaker = 1 as for TestSpeaker = 2
+4. For both groups and speakers together: if nrSpeakersDaily is higher, MMR is larger
+This means we want the following contrasts:
+for Group:TestSpeaker:
+RQ1: Groupfam TestSpeaker1 - Groupunfam TestSpeaker1
+RQ2: Groupfam TestSpeaker2 - Groupunfam TestSpeaker2
+for TestSpeaker:
+RQ3: TestSpeaker1 - TestSpeaker2
+general:
+RQ4: nrSpeakersDaily
+RQ5: sleepState
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

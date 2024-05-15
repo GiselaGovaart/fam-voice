@@ -176,10 +176,10 @@ m_sens_3 <- brm(MMR ~ 1 + TestSpeaker * Group +
 # 6 divergent transitions
 plot(m_sens_3) # looks good
 
-summary(m_sens_orig) # Rhat and ESS'es look good
-summary(m_sens_1) # Rhat and ESS'es look good
-summary(m_sens_2) # Rhat and ESS'es look good
-summary(m_sens_3) # Rhat and ESS'es look good
+summary(m_sens_orig) # Rhat and ESS'es look good, Rhat of max 1.01. 15 divergent transitions
+summary(m_sens_1) # Rhat and ESS'es look , Rhat of max 1.00. 88 divergent transitions
+summary(m_sens_2) # Rhat and ESS'es look good, Rhat of max 1.01. 643 divergent transitions
+summary(m_sens_3) # Rhat and ESS'es look good, Rhat of max 1.01. 222 divergent transitions
 
 posterior_summary(m_sens_orig, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
 posterior_summary(m_sens_1, variable=c("b_Intercept","b_TestSpeaker1", "b_Group1", "sigma"))
