@@ -87,22 +87,13 @@ pMAP_Speaker_acq =
     "p < .05" = ifelse(p_MAP < .05, "*", "")
   )
 pMAP_Speaker_acq
+
 # check whether the effect is driven by a certain level of the other two factors:
 emmip(model_acq, Group ~ TestSpeaker | sleepState)
 
-## Effect SleepState ------------------------
-pMAP_SleepState_acq = 
-  model_acq %>%
-  emmeans(~ sleepState) %>%
-  pairs() %>%
-  p_map() %>%
-  mutate(
-    "p < .05" = ifelse(p_MAP < .05, "*", "")
-  )
-pMAP_SleepState_acq
-
-# check whether the effect is driven by a certain level of the other two factors:
-emmip(model_acq, Group ~ sleepState | TestSpeaker)
+# caveats --------------------------------------------------------
+# 1) p_MAP allows to assess the presence of an effect, not its *magnitude* or *importance* (https://easystats.github.io/bayestestR/articles/probability_of_direction.html)
+# 2) p_MAP is sensitive only to the amount of evidence for the *alternative hypothesis* (i.e., when an effect is truly present). It is *not* able to reflect the amount of evidence in favor of the *null hypothesis*. A high value suggests that the effect exists, but a low value indicates uncertainty regarding its existence (but not certainty that it is non-existent) (https://doi.org/10.3389/fpsyg.2019.02767).
 
 # Bayes Factors --------------------------------------------------------
 # https://doi.org/10.3389/fpsyg.2019.02767
@@ -235,51 +226,6 @@ BF_Speaker_acq <-
 
 BF_Speaker_acq
 
-
-##  Effect SleepState ------------------------
-# pairwise comparisons of prior distributions
-SleepState_pairwise_prior_acq <-
-  model_acq_prior %>%
-  emmeans(~ sleepState) %>% # estimated marginal means
-  pairs()
-  
-# pairwise comparisons of posterior distributions
-SleepState_pairwise_acq <-
-  model_acq %>%
-  emmeans(~ sleepState) %>%
-  pairs()
-  
-# Bayes Factors (Savage-Dickey density ratio)
-# Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
-# So if that density is very high, you have no support for your Ha. (because there are a lot
-# of values around zero)
-BF_SleepState_acq <-
-  SleepState_pairwise_acq %>%
-  bf_parameters(prior = SleepState_pairwise_prior_acq) %>%
-  arrange(log_BF) # sort according to BF
-
-# add rule-of-thumb interpretation
-# Add rule of thumb interpretation: looks at value and tells use what it means according to the
-# rules of raftery1995. You add the column for interpretability, but you want to keep the other 
-# stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
-# if off with a rule of thumb!
-BF_SleepState_acq <-
-  BF_SleepState_acq %>%
-  add_column(
-    "interpretation" = interpret_bf(
-      BF_SleepState_acq$log_BF,
-      rules = "raftery1995",
-      log = TRUE,
-      include_value = TRUE,
-      protect_ratio = TRUE,
-      exact = TRUE
-    ),
-    .after = "log_BF"
-  )
-
-BF_SleepState_acq
-
-
 # output BF: 
 # - “Evidence against the null: 0” this does not have to be 0. Can be another model for example
 # BA(10): first looking at alternative and then null. 
@@ -317,16 +263,8 @@ pMAP_BF_Speaker <-
   ) %>% 
   as_tibble()
 
-pMAP_BF_SleepState <-
-  full_join(
-    pMAP_SleepState_acq,
-    BF_SleepState_acq,
-    by = "Parameter"
-  ) %>% 
-  as_tibble()
-
 pMAP_BF_all = 
-  rbind(pMAP_BF_all, pMAP_BF_Group, pMAP_BF_Speaker, pMAP_BF_SleepState)
+  rbind(pMAP_BF_all, pMAP_BF_Group, pMAP_BF_Speaker)
 
 # save as .rds
 saveRDS(

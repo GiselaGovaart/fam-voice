@@ -8,12 +8,13 @@ library(here)
 library(bayesplot)
 
 # Set priors ------------------------------------------------------------
-priors <- c(set_prior("normal(3.5, 20)", 
+priors <- c(set_prior("normal(3.5, 20)",  
                       class = "Intercept"),
-            set_prior("normal(0, 20)",  
+            set_prior("normal(0, 10)",  
                       class = "b"),
             set_prior("normal(0, 20)",  
-                      class = "sigma")) 
+                      class = "sigma"))
+
 
 # Set up sampling ------------------------------------------------------------
 num_chains <- 4 
@@ -49,32 +50,6 @@ postpredcheck_acq_m <- brm(MMR ~ 1 + TestSpeaker * Group +
                            file_refit = "on_change",
                            save_pars = save_pars(all = TRUE)
 )
-
-
-# postpredcheck_acq_m_altpriors <- brm(MMR ~ 1 + TestSpeaker * Group + 
-#                              mumDist +
-#                              nrSpeakersDaily +
-#                              sleepState +
-#                              age +
-#                              (1 + TestSpeaker | Subj),
-#                            data = dat_acq,
-#                            prior = priors_alt,
-#                            family = gaussian(),
-#                            control = list(
-#                              adapt_delta = .99, 
-#                              max_treedepth = 15
-#                            ),
-#                            iter = num_iter, 
-#                            chains = num_chains, 
-#                            warmup = num_warmup,
-#                            thin = num_thin,
-#                            cores = num_chains, 
-#                            seed = project_seed,
-#                            file = here("data", "model_output", "04_model_posteriorpredcheck_acq_altpriors.rds"),
-#                            file_refit = "on_change",
-#                            save_pars = save_pars(all = TRUE)
-# )
-
 
 # check traces and posterior distributions
 plot(postpredcheck_acq_m)

@@ -7,12 +7,13 @@ library(brms)
 library(here)
 
 # Set priors ------------------------------------------------------------
-priors <- c(set_prior("normal(3.5, 20)", 
+priors <- c(set_prior("normal(3.5, 20)",  
                       class = "Intercept"),
-            set_prior("normal(0, 20)",  
+            set_prior("normal(0, 10)",  
                       class = "b"),
             set_prior("normal(0, 20)",  
-                      class = "sigma")) 
+                      class = "sigma"))
+
 # Set up sampling ------------------------------------------------------------
 num_chains <- 4 
 num_iter <- 4000 
