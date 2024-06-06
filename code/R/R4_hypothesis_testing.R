@@ -39,7 +39,8 @@ model_rec <- readRDS(here("data", "model_output", "04_model_posteriorpredcheck_r
 # RQ3: unfam S1 - unfam S2
 # general:
 # RQ4: nrSpeakersDaily
-# RQ5: sleepState
+# Check:
+# (unfam2-unfam3)-(fam2-fam3): if significant, this shows us that the effect of unfam2 - unfam3 is not solely because of order in experiment
 
 # MAP-Based p-Value (pMAP) --------------------------------------------------------
 # We use p-values here, but just to check the robustness, to check with other experiments with frequentist methods.
@@ -60,24 +61,18 @@ unfam3 = c(0,0,0,0,0,1)
 custom_contrasts <- list(
   list("unfam2-fam1" = unfam2 - fam1),
   list("unfam2-unfam3" = unfam2 - unfam3),
-  list("unfam1-unfam2" = unfam1 - unfam2),
-  list("(unfam2-unfam3)-(fam2-fam3)" = (unfam2 - unfam3) - (fam2 - fam3)) # this is the interaction that, if significant, shows us that the effect of unfam2 - unfam3 is not solely because of order in experiment. 
+  list("unfam2-unfam1" = unfam2 - unfam1),
+  list("unfam1-unfam3" = unfam1 - unfam3),
+#  list("(unfam1-unfam3)-(fam1-fam3)" = (unfam1 - unfam3) - (fam1 - fam3)) # this is the interaction that, if significant, shows us that a possible effect of unfam3 being more negative than unfam1 is not solely because of order in experiment. 
 ) 
 
-# set custom contrast sleep
-custom_contrasts_sleep <- list(
-  list("awake - activesleep and quietsleep" = c(1, -1/2, -1/2)),
-  list("quietsleep - awake and activesleep" = c(-1/2, -1/2, 1)),
-  list("quietsleep vs activesleep" =c(0, 1, -1))
-)
-
 ##  Effect all ------------------------
-pMAP_all_rec = 
-  model_rec %>%
-  p_map() %>%
-  mutate(
-    "p < .05" = ifelse(p_MAP < .05, "*", "")
-  )
+# pMAP_all_rec = 
+#   model_rec %>%
+#   p_map() %>%
+#   mutate(
+#     "p < .05" = ifelse(p_MAP < .05, "*", "")
+#   )
 
 ## Effects Custom contrasts ------------------------
 pMAP_customcontrasts_rec = 
@@ -90,16 +85,6 @@ pMAP_customcontrasts_rec =
   )
 pMAP_customcontrasts_rec
 
-## Effect SleepState ------------------------
-pMAP_SleepState_rec = 
-  model_rec %>%
-  emmeans(~ sleepState) %>%
-  contrast(method = custom_contrasts_sleep) %>%
-  p_map() %>%
-  mutate(
-    "p < .05" = ifelse(p_MAP < .05, "*", "")
-  )
-pMAP_SleepState_rec
 
 # Bayes Factors --------------------------------------------------------
 # https://doi.org/10.3389/fpsyg.2019.02767
@@ -113,27 +98,27 @@ model_rec_prior <- unupdate(model_rec) # sample priors from model
 # you want to know how much your data influenced the posterior distribution. For that, you compare 
 # the prior and the posterior distributions.
 
-##  Effect all ------------------------
-# Bayes Factors (Savage-Dickey density ratio)
-BF_all_rec <-
-  model_rec %>%
-  bf_parameters(prior = model_rec_prior) %>%
-  arrange(log_BF) # sort according to BF
-
-# add rule-of-thumb interpretation
-BF_all_rec <-
-  BF_all_rec %>%
-  add_column(
-    "interpretation" = interpret_bf(
-      BF_all_rec$log_BF,
-      rules = "raftery1995",
-      log = TRUE,
-      include_value = TRUE,
-      protect_ratio = TRUE,
-      exact = TRUE
-    ),
-    .after = "log_BF"
-  )
+# ##  Effect all ------------------------
+# # Bayes Factors (Savage-Dickey density ratio)
+# BF_all_rec <-
+#   model_rec %>%
+#   bf_parameters(prior = model_rec_prior) %>%
+#   arrange(log_BF) # sort according to BF
+# 
+# # add rule-of-thumb interpretation
+# BF_all_rec <-
+#   BF_all_rec %>%
+#   add_column(
+#     "interpretation" = interpret_bf(
+#       BF_all_rec$log_BF,
+#       rules = "raftery1995",
+#       log = TRUE,
+#       include_value = TRUE,
+#       protect_ratio = TRUE,
+#       exact = TRUE
+#     ),
+#     .after = "log_BF"
+#   )
 
 ## Effects Custom contrasts ------------------------
 # pairwise comparisons of prior distributions
@@ -179,56 +164,13 @@ BF_customcontrasts_rec <-
 BF_customcontrasts_rec
 
 ## check whether the priors were equal 
-ggplot(stack(insight::get_parameters(customcontrasts_pairwise_rec)), aes(x = values, fill = ind)) +
+ggplot(stack(insight::get_parameters(customcontrasts_pairwise_prior_rec)), aes(x = values, fill = ind)) +
   geom_density(linewidth = 1) +
   facet_grid(ind ~ .) +
   labs(x = "prior difference values") +
   theme(legend.position = "none")
 
-point_estimate(customcontrasts_pairwise_rec, centr = "mean", disp = TRUE)
-
-##  Effect SleepState ------------------------
-# pairwise comparisons of prior distributions
-SleepState_pairwise_prior_rec <-
-  model_rec_prior %>%
-  emmeans(~ sleepState) %>% # estimated marginal means
-  contrast(method = custom_contrasts_sleep) 
-  
-# pairwise comparisons of posterior distributions
-SleepState_pairwise_rec <-
-  model_rec %>%
-  emmeans(~ sleepState) %>%
-  contrast(method = custom_contrasts_sleep)
-  
-# Bayes Factors (Savage-Dickey density ratio)
-# Calculates the density around 0 for the subtracted (posterior - prior) distributions. 
-# So if that density is very high, you have no support for your Ha. (because there are a lot
-# of values around zero)
-BF_SleepState_rec <-
-  SleepState_pairwise_rec %>%
-  bf_parameters(prior = SleepState_pairwise_prior_rec) %>%
-  arrange(log_BF) # sort according to BF
-
-# add rule-of-thumb interpretation
-# Add rule of thumb interpretation: looks at value and tells use what it means according to the
-# rules of raftery1995. You add the column for interpretability, but you want to keep the other 
-# stuff too because the cool thing is that BA gives you something continuous. So don’t just cut 
-# if off with a rule of thumb!
-BF_SleepState_rec <-
-  BF_SleepState_rec %>%
-  add_column(
-    "interpretation" = interpret_bf(
-      BF_SleepState_rec$log_BF,
-      rules = "raftery1995",
-      log = TRUE,
-      include_value = TRUE,
-      protect_ratio = TRUE,
-      exact = TRUE
-    ),
-    .after = "log_BF"
-  )
-
-BF_SleepState_rec
+point_estimate(customcontrasts_pairwise_prior_rec, centr = "mean", disp = TRUE)
 
 # output BF: 
 # - “Evidence against the null: 0” this does not have to be 0. Can be another model for example
@@ -240,16 +182,16 @@ BF_SleepState_rec
 # this is also explained well in JASP
 
 # merge info and save to file --------------------------------------------------------
-pMAP_all_rec = subset(pMAP_all_rec,select= -c(Effects, Component))
-BF_all_rec = subset(BF_all_rec,select= -c(Effects, Component))
-
-pMAP_BF_all <-
-  full_join(
-    pMAP_all_rec,
-    BF_all_rec,
-    by = "Parameter"
-  ) %>% 
-  as_tibble()
+# pMAP_all_rec = subset(pMAP_all_rec,select= -c(Effects, Component))
+# BF_all_rec = subset(BF_all_rec,select= -c(Effects, Component))
+# 
+# pMAP_BF_all <-
+#   full_join(
+#     pMAP_all_rec,
+#     BF_all_rec,
+#     by = "Parameter"
+#   ) %>% 
+#   as_tibble()
 
 pMAP_BF_customcontrasts <-
   full_join(
@@ -259,16 +201,10 @@ pMAP_BF_customcontrasts <-
   ) %>% 
   as_tibble()
 
-pMAP_BF_SleepState <-
-  full_join(
-    pMAP_SleepState_rec,
-    BF_SleepState_rec,
-    by = "Parameter"
-  ) %>% 
-  as_tibble()
+# pMAP_BF_all = 
+#   rbind(pMAP_BF_all, pMAP_BF_customcontrasts)
 
-pMAP_BF_all = 
-  rbind(pMAP_BF_all, pMAP_BF_Group, pMAP_BF_Speaker, pMAP_BF_SleepState)
+pMAP_BF_all = pMAP_BF_customcontrasts
 
 # save as .rds
 saveRDS(

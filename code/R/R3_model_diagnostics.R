@@ -15,8 +15,8 @@ library(corrplot)
 #color_scheme_set("viridisE")
 
 # load and prepare data --------------------------------------------------------------------
-dat_acq <-
-  dat_acq %>%
+dat_exp_rec <-
+  dat_exp_rec %>%
   unite( # unite columns for posterior predictive checks
     # unites the two columns TestSpeaker and Group Because brms made a posterior distribution
     # with TestSpeaker_Group, because it looks at an interaction. 
@@ -29,17 +29,17 @@ dat_acq <-
   select(Subj, TestSpeaker_Group, TestSpeaker, Group, MMR)
 
 # results of model fit
-model_acq <- readRDS(here("data", "model_output", "A2_model_acq.rds"))
+model_rec <- readRDS(here("data", "model_output", "A2_model_rec.rds"))
 
 # model diagnostics: trace plots of MCMC draws --------------------------------------------------------
 # these are the caterpillar plots. It gives you a caterpillar for each effect
 # it takes that samples that were shown in ESS
 # Here you have all your samples (the ones from ESS). 
-MCMC_model_acq <-
-  plot(model_acq, ask = FALSE) 
+MCMC_model_rec <-
+  plot(model_rec, ask = FALSE) 
 
 # here you get only the density plots without the caterpillars. and you can specify which ones
-mcmc_dens(model_acq, pars = variables(model_acq)[1:9])
+mcmc_dens(model_rec, pars = variables(model_rec)[1:9])
 
 # model diagnostics: posterior predictive checks --------------------------------------------------------
 # If you extract the post pred samples from your posterior distributions 
@@ -55,29 +55,29 @@ mcmc_dens(model_acq, pars = variables(model_acq)[1:9])
 # posterior samples of the posterior predictive distribution
 # you need the posterior distribution to compute with, so you need to still extract this information
 # before, we only had summaries
-posterior_predict_model_acq <-
-  model_acq %>%
+posterior_predict_model_rec <-
+  model_rec %>%
   posterior_predict(ndraws = 2000) # 2000 samples per observation
 # We get a dataframe of size 2000:128, because there were 128 observations. 
 # And now we have for each observation a distribution with 2000 sampling points!
 
-PPS_acq <-
-  posterior_predict_model_acq %>%
+PPS_rec <-
+  posterior_predict_model_rec %>%
   ppc_stat_grouped(
-    y = pull(dat_exp_acq, MMR),
-    group = pull(dat_exp_acq, TestSpeaker_Group),
+    y = pull(dat_exp_rec, MMR),
+    group = pull(dat_exp_rec, TestSpeaker_Group),
     stat = "mean"
   ) +
   ggtitle("Posterior predictive samples")
 
-PPS_acq
+PPS_rec
 
 # model performance: Bayesian R2 --------------------------------------------------------
 
 # Conditional R2 takes into account both fixed and random effects
 # Marginal R2 only considers the variance of the fixed effects (without the random effects)
-R2_acq <- r2(model_acq)
-R2_acq
+R2_rec <- r2(model_rec)
+R2_rec
 # If marginal is very low, that means if you only look at the fixed effects, your model 
 # does not explain a lot of your data. 
 # You would always expect marginal to be lower than Conditional, but not so much lower.
@@ -87,9 +87,9 @@ R2_acq
 
 # summary of posterior distributions of model parameters + model diagnostics: Rhat --------------------------------------------------------
 # This is just a nice and fast way to create your table for the paper.
-params_model_acq <-
+params_model_rec <-
   model_parameters(
-    model_acq,
+    model_rec,
     centrality = "mean",
     # do we care about the mean or the median? Since we know that the posterior distributions are normal, 
     # we want the mean. If during the post pred checks you see that it’s not normal, you might wanna use “median”
@@ -101,11 +101,11 @@ params_model_acq <-
     effects = "fixed" # options: "fixed", "random", "all". 
   )
 
-params_model_acq
+params_model_rec
 
 # save as .RData (compressed)
 save(
-  params_model_acq,
-  file = here("data", "model_output", "params_model_acq.RData")
+  params_model_rec,
+  file = here("data", "model_output", "params_model_rec.RData")
 )
 

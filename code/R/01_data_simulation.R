@@ -65,21 +65,21 @@ design <-
 dat_rec <- design.codes(design)
 
 # define a sum contrast for data sim
-dat_rec$Group_n <- ifelse(dat_rec$Group=="fam", +0.5, -0.5)
+dat_rec$Group_n <- ifelse(dat_rec$Group=="fam", 0.5, -0.5)
 dat_rec$TestSpeaker_n = NA
 for (i in 1:nrow(dat_rec)){
   if (dat_rec$TestSpeaker[i]== "1"){
     dat_rec$TestSpeaker_n[i] = +0.5
   }else if (dat_rec$TestSpeaker[i]== "2"){
-    dat_rec$TestSpeaker_n[i] = 0
-  }else{
     dat_rec$TestSpeaker_n[i] = -0.5
+  }else{
+    dat_rec$TestSpeaker_n[i] = 0
   }
 }
 
 # simulate data
 dat_rec$MMR <- 5 +                  # The mean of the MMR for all groups together = 5
-  5*dat_rec$TestSpeaker_n +         # Adding an effect of 5 on TestSpeaker
+#  5*dat_rec$TestSpeaker_n +         # Adding an effect of 5 on TestSpeaker
   5*dat_rec$Group_n +               # Adding an effect of 5 on Group
   rnorm(nrow(dat_rec),0,15)         # SD of 15
 
@@ -110,7 +110,7 @@ contrasts(dat_rec$sleepState) <- contr.equalprior_pairs
 
 rm(design)
 
-## Checking the data -----------------------------------------------------------------------------------------------
+## Checking the data ACQ -----------------------------------------------------------------------------------------------
 # mean and sd
 mean(dat_acq$MMR)
 sd(dat_acq$MMR)
@@ -159,3 +159,57 @@ ggplot(aes(x = MMR, y = Group, color = TestSpeaker), data = dat_acq) +
 ggplot(aes(x = MMR, y = Group), data = dat_acq) +
   geom_boxplot() 
 
+## Checking the data REC -----------------------------------------------------------------------------------------------
+# mean and sd
+mean(dat_rec$MMR)
+sd(dat_rec$MMR)
+
+# effect of Group
+testdatfam = subset(dat_rec, Group == "fam")
+testdatunfam = subset(dat_rec, Group == "unfam")
+mean(testdatfam$MMR) - mean(testdatunfam$MMR)
+
+# effect of TestSpeaker
+testdat1 = subset(dat_rec, TestSpeaker == "1")
+testdat2 = subset(dat_rec, TestSpeaker == "2")
+testdat3 = subset(dat_rec, TestSpeaker == "3")
+
+mean(testdat1$MMR)
+mean(testdat2$MMR)
+mean(testdat3$MMR)
+
+mean(testdat1$MMR) - mean(testdat2$MMR)
+
+# Plotting
+plot(density(dat_rec$MMR),
+     main="Simulated data REC",xlab="MMR")
+
+ggplot(aes(x = MMR, y = age, color = TestSpeaker), data = dat_rec) +
+  geom_point() + 
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+
+ggplot(aes(x = MMR, y = nrSpeakersDaily), data = dat_rec) +
+  geom_point() + 
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+
+ggplot(aes(x = MMR, y = age, color = Group), data = dat_rec) +
+  geom_point() + 
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+
+ggplot(aes(x = MMR, y = mumDist, color = TestSpeaker), data = dat_rec) +
+  geom_point() + 
+  stat_smooth(method = "lm", 
+              formula = y ~ x, 
+              geom = "smooth") 
+
+ggplot(aes(x = MMR, y = Group, color = TestSpeaker), data = dat_rec) +
+  geom_boxplot()
+
+ggplot(aes(x = MMR, y = Group), data = dat_rec) +
+  geom_boxplot() 

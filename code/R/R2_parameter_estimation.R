@@ -33,9 +33,9 @@ num_thin <- 1 # thinning: extract one out of x samples per chain
 
 # centering the covariates -----------------------------------------------------
 # Center and scale: this subtracts the mean from each value and then divides by the SD
-dat_exp_acq$mumDist<- scale(dat_exp_acq$mumDist)
-dat_exp_acq$age <- scale(dat_exp_acq$age)
-dat_exp_acq$nrSpeakersDaily <- scale(dat_exp_acq$nrSpeakersDaily)
+dat_exp_rec$mumDist<- scale(dat_exp_rec$mumDist)
+dat_exp_rec$age <- scale(dat_exp_rec$age)
+dat_exp_rec$nrSpeakersDaily <- scale(dat_exp_rec$nrSpeakersDaily)
 
 
 # Centering covariates is generally good practice. Moreover, it is often important to  
@@ -55,19 +55,19 @@ priors <- c(set_prior("normal(3.5, 20)",
                       class = "sigma")) 
 
 # Setting up contrasts for during the model fitting -------------
-contrasts(dat_exp_acq$TestSpeaker) <- contr.equalprior
-contrasts(dat_exp_acq$Group) <- contr.equalprior
-contrasts(dat_exp_acq$sleepState) <- contr.equalprior
+contrasts(dat_exp_rec$TestSpeaker) <- contr.equalprior
+contrasts(dat_exp_rec$Group) <- contr.equalprior
+contrasts(dat_exp_rec$sleepState) <- contr.equalprior
 
 # sampling --------------------------------------------------------------------
-### Model ACQUISITION
-model_acq <- brm(MMR ~ 1 + TestSpeaker * Group +
+### Model RECOGNITION
+model_rec <- brm(MMR ~ 1 + TestSpeaker * Group +
                    mumDist +
                    nrSpeakersDaily +
                    sleepState +
                    age +
                    (1 + TestSpeaker | Subj),
-                 data = dat_exp_acq,
+                 data = dat_exp_rec,
                  prior = priors,
                  family = gaussian(),
                  control = list(
@@ -80,7 +80,7 @@ model_acq <- brm(MMR ~ 1 + TestSpeaker * Group +
                  thin = num_thin,
                  cores = num_chains,
                  seed = project_seed,
-                 file = here("data", "model_output", "A2_model_acq.rds"),
+                 file = here("data", "model_output", "A2_model_rec.rds"),
                  file_refit = "on_change",
                  save_pars = save_pars(all = TRUE)
 )

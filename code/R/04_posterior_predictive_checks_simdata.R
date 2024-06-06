@@ -108,18 +108,15 @@ plot(postpredcheck_rec_m)
 # the traces look like good hairy caterpillars
 # since we simulated the data ourselves, we know the true values that the model needs to recover, 
 # and we can check whether these distributions make sense: 
-# the simulated data was: dat_rec$MMR <- 6 + 5*dat_rec$Group_n + rnorm(nrow(dat_rec),0,15)
-# so the mean (intercept) should be ~6
-# Group (beta) shoud be ~ 10
+# the simulated data was: dat_rec$MMR <- 5 + 5*dat_rec$Group_n + rnorm(nrow(dat_rec),0,15)
+# so the mean (intercept) should be ~5
+# Group (beta) shoud be ~ 5
 # sigma should be ~15
 # the posterior distributions look quite close to this:
-# They are also normally distributed, and for example do not have 2 bumps
-# b_Intercept is around 10
-# It seems to retrieve a very small effect for TestSpeaker, and no effect for group
-# sigma is around 20
-# for the interactions, at least 0 is always in the distribution, it does not hallucinate crazy things (except may an effect for nrSpeakersDaily awake?)
-# sigma for TestSpeaker and for Group seem to be okay, and the effect of sigma is around 20
-
+#   b_Intercept is 2.98 (in the data it was simulated as 5, and our prior was ```normal(3.5,20)```). 
+#   It retrieves an effect of 3.31 for Group (we simulated the effect as 5). 
+#   It also hallucinates some (small) effects for the covariates. 
+#   Sigma is estimated at 14.34 (simulated as 15).
 
 # Posterior check
 pp_check(postpredcheck_rec_m, ndraws=50)
@@ -133,11 +130,6 @@ summary(postpredcheck_rec_m)
 
 # # posterior summary for reporting
 # posterior_summary(m1, variable="b_TestSpeaker2")
-
-
-
-
-
 
 
 # 
