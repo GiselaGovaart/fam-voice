@@ -4,7 +4,7 @@ This repository contains the scripts for the project FamVoice, which investigate
 
 ## Where do I start?
 
-You can load this project in RStudio by opening the file called 'FamVoiceWORCS.Rproj'.
+You can load this project in RStudio by opening the file called 'FamVoiceWORCS.Rproj'. This project was preregistered (under embargo) on 15 August 2024.
 
 ## Project structure
 
@@ -15,9 +15,6 @@ README.md                 | Description of project           | Human editable
 FamVoiceWORCS.Rproj       | Project file                     | Loads project 
 LICENSE                   | User permissions                 | Read only     
 .worcs                    | WORCS metadata YAML              | Read only     
-code/Rprepare_data.R      | Script to process raw data       | Human editable
-manuscript/manuscript.rmd | Source code for paper            | Human editable
-manuscript/references.bib | BibTex references for manuscript | Human editable
 renv.lock                 | Reproducible R environment       | Read only     
 
 <!--  You can consider adding the following to this file:                    -->
@@ -34,11 +31,6 @@ principles of Open Science throughout a research project.
 
 To learn how WORCS helps researchers meet the TOP-guidelines and FAIR principles,
 read the preprint at https://osf.io/zcvbs/
-
-## WORCS: Advice for authors
-
-* To get started with `worcs`, see the [setup vignette](https://cjvanlissa.github.io/worcs/articles/setup.html)
-* For detailed information about the steps of the WORCS workflow, see the [workflow vignette](https://cjvanlissa.github.io/worcs/articles/workflow.html)
 
 ## WORCS: Advice for readers
 
