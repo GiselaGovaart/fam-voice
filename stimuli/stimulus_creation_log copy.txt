@@ -1,0 +1,390 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\fswiss\fcharset0 Helvetica-Oblique;
+\f3\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red251\green0\blue255;\red0\green0\blue0;
+\red0\green0\blue0;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0\cname textColor;\cssrgb\c100000\c7248\c100000;\cssrgb\c0\c1\c1;
+\cssrgb\c0\c0\c0;\cssrgb\c100000\c100000\c99985\c0;}
+{\*\listtable{\list\listtemplateid1\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid2\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid3\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid1}
+{\list\listtemplateid2\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid102\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid103\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid104\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2880\lin2880 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid105\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li3600\lin3600 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid106\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li4320\lin4320 }{\listname ;}\listid2}
+{\list\listtemplateid3\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid202\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid203\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid3}
+{\list\listtemplateid4\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid302\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid4}
+{\list\listtemplateid5\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid402\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid403\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid5}
+{\list\listtemplateid6\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid501\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid502\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid6}
+{\list\listtemplateid7\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid601\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid602\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid603\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid7}
+{\list\listtemplateid8\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid701\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid702\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid8}
+{\list\listtemplateid9\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid801\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid802\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid803\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid9}
+{\list\listtemplateid10\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid901\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid902\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid903\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid10}
+{\list\listtemplateid11\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1001\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1002\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1003\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid11}
+{\list\listtemplateid12\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1101\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1102\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1103\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listname ;}\listid12}
+{\list\listtemplateid13\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1201\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1202\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1203\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2160\lin2160 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1204\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li2880\lin2880 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1205\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li3600\lin3600 }{\listname ;}\listid13}
+{\list\listtemplateid14\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1301\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listname ;}\listid14}
+{\list\listtemplateid15\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1401\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1402\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid15}
+{\list\listtemplateid16\listhybrid{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{disc\}}{\leveltext\leveltemplateid1501\'01\uc0\u8226 ;}{\levelnumbers;}\fi-360\li720\lin720 }{\listlevel\levelnfc23\levelnfcn23\leveljc0\leveljcn0\levelfollow0\levelstartat1\levelspace360\levelindent0{\*\levelmarker \{hyphen\}}{\leveltext\leveltemplateid1502\'01\uc0\u8259 ;}{\levelnumbers;}\fi-360\li1440\lin1440 }{\listname ;}\listid16}}
+{\*\listoverridetable{\listoverride\listid1\listoverridecount0\ls1}{\listoverride\listid2\listoverridecount0\ls2}{\listoverride\listid3\listoverridecount0\ls3}{\listoverride\listid4\listoverridecount0\ls4}{\listoverride\listid5\listoverridecount0\ls5}{\listoverride\listid6\listoverridecount0\ls6}{\listoverride\listid7\listoverridecount0\ls7}{\listoverride\listid8\listoverridecount0\ls8}{\listoverride\listid9\listoverridecount0\ls9}{\listoverride\listid10\listoverridecount0\ls10}{\listoverride\listid11\listoverridecount0\ls11}{\listoverride\listid12\listoverridecount0\ls12}{\listoverride\listid13\listoverridecount0\ls13}{\listoverride\listid14\listoverridecount0\ls14}{\listoverride\listid15\listoverridecount0\ls15}{\listoverride\listid16\listoverridecount0\ls16}}
+\paperw11900\paperh16840\margl1440\margr1440\vieww27320\viewh17460\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b\fs28 \cf0 How did I get from the original recordings to the final stimuli\
+
+\f1\b0 \
+All analysis were done with Praat 6.1.29 \
+\
+For each speaker, I have the original recordings in Recordings/SpeakerX/orig. I cut these recordings into different files:\
+- SX_Syllables (in Recordings/SpeakerX)\
+- SX_Words (in Recordings/SpeakerX)\
+- SX_Story1 to SX_Story6 (in Recordings/SpeakerX/stories)\
+- SX_Sentence (in Recordings/SpeakerX/sentence)\
+\
+
+\f0\b \ul SYLLABLES (with the File SX_Syllables.wav)
+\f1\b0 \ulnone \
+- I annotated all the syllables to SX_Syllabes.TextGrid (in (in Recordings/SpeakerX)\
+Then I ran the following scripts:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}move-boundaries-zero-crossing.praat\
+{\listtext	\uc0\u8226 	}interval-in-tier-to-wav.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}For this step, I created the folders:\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/syllables\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}(F1F2F3Dur_analysis\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}-> open output txt file in excel and have a look\
+{\listtext	\uc0\u8259 	}in the end, I did not use this)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}move-sounds-select-long-sounds.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}In this step, I created the folders\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/e/<70ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/e/>70ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/e/<75ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/e/>75ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/i/<70ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/i/>70ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/i/<75ms\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/wavs/vowels/I/>75ms\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}I wanted to select the vowels that were longer than 75 ms. I also played around with the shorter vowels (created plot etc)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls1\ilvl0\cf0 {\listtext	\uc0\u8226 	}draw-formants.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}This takes the vowels from the above folders (eg e/<70ms) and plots them. I used these plots to decide to take only the vowels that were longer than 75 ms.\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /Recordings/SpeakerX/wavs/vowels/e/>75ms/\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: \cf2 \CocoaLigature0 /Recordings/SpeakerX/\cf0 \CocoaLigature1 analyses/all_75ms_SX.pdf\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls1\ilvl1\cf0 {\listtext	\uc0\u8259 	}draw-formats_fourSpeakers.praat \
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls1\ilvl2\cf0 {\listtext	\uc0\u8259 	}I also used this one, but 4 speakers in one plot was a bit too much\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+To select the appropriate stimuli:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}(mahaldist_75_166smallestMHD.praat: to create very pretty categories. This turned out to be too pretty\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}Input: \cf2 \CocoaLigature0 /wavs/vowels/i/>75ms/ and /wavs/vowels/e/>75ms/\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}Output:  \
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf2 {\listtext	\uc0\u8259 	}All the vowels, with the column mahal: \CocoaLigature0 /analyses/75_table_all_i_SX.Table and /analyses/75_table_all_e_SX.Table\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}Only the 166 vowels with the smallest mahal: \cf2 \CocoaLigature0 /analyses/75_table_166_i_SX.Table and /analyses/75_table_166_e_SX.Table\cf0 \CocoaLigature1 \
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}I also did this for the 70 ms vowels, but did not continue with these. All the tables and plots for that are in /analyses/old)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}(plot-166-tokens-mahal_75.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/75_table_166_e_SX and then it takes the wavs from /e/>75ms/\
+\ls2\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}output: analyses/166_75ms_SX.pdf (since these were not used, they are in analyses/old/))\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}mahaldist_75_25SD.praat:\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}This script makes tables for the sounds that lie within \cf3 2,5 OR 2 OR 1,5 SD\cf0  mahal-distance from the category mean. I ended up using:\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf0 {\listtext	\uc0\u8259 	}S1: 2,5 SD\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf4 {\listtext	\uc0\u8259 	}S2: 2 SD\
+{\listtext	\uc0\u8259 	}S3: 2 SD\
+{\listtext	\uc0\u8259 	}S4: 2 SD (but only for e, because for i, there are in total only 167 tokens longer than 75 ms. So for I, I took the table _all_ instead of _2SD_ (see also comments in \cf0 selectFinalStimuli_S34.praat)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}mahaldist_75_25SD_ERBs.praat:\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}rerun the script for ERBs for S1 and S2, for S1 with SD=2,5 and for S2 with SD=2 \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 {\listtext	\uc0\u8226 	}plot-25SD-tokens-mahal_75.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/75_table_25SD_e_SX (OR 2SD OR 15SD) and then it takes the wavs from /e/>75ms/\
+\ls2\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}output: /analyses/25SD_75ms_SX.pdf \cf2 \CocoaLigature0 (OR 2SD OR 15SD)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 \CocoaLigature1 {\listtext	\uc0\u8226 	}selectFinalStimuli_S1.praat and selectFinalStimuli_S2.praat and selectFinalStimuli_S34.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}In this script, I remove some of the outlier tokens manually (\cf3 only for S2\cf0 : 10 for e, and 7 for i)\
+{\listtext	\uc0\u8259 	}Then I randomly select 166 per category\
+{\listtext	\uc0\u8259 	}input: \
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf0 {\listtext	\uc0\u8259 	}S1: \cf2 \CocoaLigature0 /Recordings/Speaker1/analyses/75_table_\cf3 25SD\cf2 _e_Speaker1.Table and same for i\
+\ls2\ilvl2\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}S2: /\cf2 \CocoaLigature0 Recordings/Speaker2/analyses/75_table_\cf3 2SD\cf2 _e_Speaker2.Table and same for i\
+\pard\tx2380\tx2880\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2880\fi-2880\pardirnatural\partightenfactor0
+\ls2\ilvl3\cf2 \CocoaLigature1 {\listtext	\uc0\u8259 	}For S2, I later on exchanged one sound (because it was invading the other vowel categories, see withOld-fi_158_trainingdistr_S2_plusTeststim_table_trainingsstimTable__FINAL-realignedSTIMS.pdf:\
+\pard\tx3100\tx3600\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li3600\fi-3600\pardirnatural\partightenfactor0
+\ls2\ilvl4\cf2 {\listtext	\uc0\u8259 	}I exchanged fi_158.wav, which originally was fi291 (fi_\cf4 58 was fi95.wav - I made a mistake with that and first did the whole process with fi_58. I took that all back though) (in wavs/syllables and in \CocoaLigature0 166_finalStim_i_Speaker2.Table\CocoaLigature1 ), with the sound fi109.wa\cf2 v\
+{\listtext	\uc0\u8259 	}I exchanged the infos in \CocoaLigature0 166_finalStim_i_Speaker2.Table with the script exchange_fi_158_S2.praat, and then\CocoaLigature1  I reran all the steps for S2 from here on again.\
+{\listtext	\uc0\u8259 	}For the step in \cf0 explode-textgrid-tgutils.praat, I did it manually! So I took the old fi_158.wav out of the directory syllables/orig, and put the file fi109.wav in syllables/orig, under the name fi_158.wav. I then manually created a TextGrid for the new fi_158.wav and normalized from there\
+{\listtext	\uc0\u8259 	}I also exchanged some other. In total, I exchanged:\
+\pard\tx3820\tx4320\tx4535\tx5102\tx5669\tx6236\tx6803\li4320\fi-4320\pardirnatural\partightenfactor0
+\ls2\ilvl5\cf0 {\listtext	\uc0\u8259 	}S1: fe_18 was fe30. I exchanged it for fe9\
+{\listtext	\uc0\u8259 	}S2: fi_158 was fi291. I exchanged it for fi109\
+{\listtext	\uc0\u8259 	}S2: fi_9 was fi15. I exchanged it for fi12\
+{\listtext	\uc0\u8259 	}S2: fi_23 was fi41. I exchanged it for fi19\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf2 {\listtext	\uc0\u8259 	}\cf4 S3: \CocoaLigature0 /Rec\cf2 ordings/Speaker1/analyses/75_table_\cf3 2SD\cf2 _e_Speaker1.Table and same for i\cf3 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}S4:  \cf4 \CocoaLigature0 /R\cf2 ecordings/Speaker1/analyses/75_table_\cf3 2SD\cf2 _e_Speaker1.Table and /Recordings/Speaker1/analyses/75_table_\cf3 all\cf2 _i_Speaker1.Table\cf0 \CocoaLigature1 \
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}output:\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls2\ilvl2\cf0 {\listtext	\uc0\u8259 	}\cf2 \CocoaLigature0 166_finalStim_i_SpeakerX.Table\
+\ls2\ilvl2\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}\cf2 \CocoaLigature0 166_finalStim_e_SpeakerX.Table\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls2\ilvl0\cf0 \CocoaLigature1 {\listtext	\uc0\u8226 	}move-selected-finalStims.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls2\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: the sound files in \cf2 \CocoaLigature0 /wavs/syllables/\
+\ls2\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}then takes the wav files that are in \cf2 \CocoaLigature0 166_finalStim_i_SpeakerX.Table and 166_finalStim_e_SpeakerX.Table, and saves these files in \
+\ls2\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}output: \cf2 \CocoaLigature0 /wavs/syllables/selected_syllables_fe/ and ~fi/\cf0 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \ul \ulc0 The next steps were done for the training speakers S1 and S2 only:\ulnone \
+To prepare the TextGrid for Sophia to re-align the 332 stimuli that will be used as training stimuli for S1 and S2:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}concatenate-sounds-withISI.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /wavs/syllables/selected_syllables_fe/ and ~fi/\cf0 \CocoaLigature1 \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}autom_align_syllables.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: concatenated_fe_SX.wav and concatenated_fi_SX.wav (the output from the above script)\
+{\listtext	\uc0\u8259 	}Takes 166 concatenated fi\'92s or fe\'92s, and then creates a text grid with that text, and automatically aligns (not very well, that\'92s why they were manually realigned)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}OUTPUT of above two steps:\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}Recordings/SpeakerX/syllables/TextGridsLong/concatenated_fe_SX.wav, concatenated_fi_SX.wav\
+{\listtext	\uc0\u8259 	}Recordings/SpeakerX/syllables/TextGridsLong/automAligned_notCorrected/concatenated_fe_SX.TextGrid, concatenated_fi_SX.TextGrid\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}These long files were then re-aligned by Sophia\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/syllables/TextGridsLong/concatenated_fe_SX.TextGrid, concatenated_fi_SX.TextGrid\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}explode-textgrid-tgutils.praat \
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}to \cf2 \CocoaLigature0 Separate the long TextGrids into interval-sized parts: separate the long TextGrid into separate, syllable-sized .wav and .TextGrid files\
+\ls3\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}Input: SpeakerX/syllables/TextGridsLong/concatenated_fe_SX.wav, concatenated_fi_SX.wav and SpeakerX/syllables/TextGridsLong/concatenated_fe_SX.TextGrid, concatenated_fi_SX.TextGrid\
+{\listtext	\uc0\u8259 	}Output:  SpeakerX/syllables/orig: there are both the .wavs and the .TextGrids\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}(These were then used to make table_trainingstim_fe_SpeakerX.Table, see below at find-teststims-S1S2.praat)\
+{\listtext	\uc0\u8226 	}normalize-duration.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls3\ilvl1\cf0 {\listtext	\uc0\u8259 	}normalizes the duration AND intensity of the trainingsstimuli\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls3\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: SpeakerX/syllables/orig\
+{\listtext	\uc0\u8259 	}output: SpeakerX/syllables/normalized\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls3\ilvl0\cf0 {\listtext	\uc0\u8226 	}THESE NORMALIZED OUTPUT STIMULI WERE THEN COPIED TO Stimuli/stimuli-final/TrainingSyllables\
+{\listtext	\uc0\u8226 	}NB after running the script normalize-duration.praat for S1 and S2, I moved the .wavs in SpeakerX/syllables/orig to two separate folders within that directory (SpeakerX/syllables/orig/fe and /fi; I needed this for the find-teststims-S1S2.praat script)\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f2\i \cf0 (OLD: To select the teststimuli:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls4\ilvl0\cf0 {\listtext	\uc0\u8226 	}find-teststims-S1S2.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls4\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: SpeakerX/syllables/orig/fe and /fi\
+{\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/analyses/table_trainingstim_fe_SpeakerX.Table and table_trainingstim_fi_SpeakerX.Table\
+{\listtext	\uc0\u8259 	}output: in praat\'92s info window: the filenames of the test stimuli. That file is saved in Recordings/SpeakerX/analyses/teststimuli_filenames_SpeakerX.txt\
+{\listtext	\uc0\u8259 	}I then copied the corresponding .wav files from Stimuli/stimuli-final/TestSyllables/SX\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls5\ilvl0\cf0 {\listtext	\uc0\u8226 	}plot-finalStims_S12_filenames1-166.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls5\ilvl1\cf0 {\listtext	\uc0\u8259 	}Plots the final training stims plus test stims (manually entered into the script, the output from the info window in praat from find-teststims-S1S2.praat)\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls5\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/table_trainingstim_fe_SX\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: trainingdistr_SX_plusTeststim_table_trainingsstimTable__FINAL-realignedSTIMS.pdf\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls5\ilvl1\cf0 {\listtext	\uc0\u8259 	}it was also used once with:\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls5\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/166_finalStim_e_SX\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: trainingdistr_S1_plusTeststim_166_finalStimTable)
+\f1\i0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 To select the teststimuli:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls6\ilvl0\cf0 {\listtext	\uc0\u8226 	}find-teststims-S1S2_ERBs.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls6\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: SpeakerX/syllables/orig/fe and /fi\
+{\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/analyses/table_trainingstim_fe_SpeakerX_ERBs.Table and table_trainingstim_fi_SpeakerX_ERBs.Table\
+{\listtext	\uc0\u8259 	}output: in praat\'92s info window: the filenames of the test stimuli. That file is saved in Recordings/SpeakerX/analyses/teststimuli_filenames_SpeakerX.txt\
+{\listtext	\uc0\u8259 	}I then copied the corresponding .wav files from Stimuli/stimuli-final/TestSyllables/SX\
+{\listtext	\uc0\u8259 	}I did the above steps again after changing fe_18, fi_9, fi_23, so the table_trainingstim_fe_SpeakerX_ERBs.Table tables were updated. I also checked whether the test-stims were still the same, and they were. \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls7\ilvl0\cf0 {\listtext	\uc0\u8226 	}plot-finalStims_S12_filenames1-166_ERBs.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls7\ilvl1\cf0 {\listtext	\uc0\u8259 	}Plots the final training stims plus test stims (manually entered into the script, the output from the info window in praat from find-teststims-S1S2.praat)\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls7\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/table_trainingstim_fe_SX\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: trainingdistr_SX_plusTeststim_table_trainingsstimTable__FINAL-realignedSTIMS.pdf\
+{\listtext	\uc0\u8259 	}Output after changing fe_18, fi_9, fi_23: FINAL-STIMS_trainingdistr_SX_plusTeststim_table_trainingsstimTable__FINAL-realignedSTIMS.pdf\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\ul The following steps were done for S3 and S4:\ulnone \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f2\i \cf0 OLD: To select the teststimuli:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls8\ilvl0\cf0 {\listtext	\uc0\u8226 	}find-teststims-S3S4.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls8\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /wavs/syllables/selected_syllables_fi/ oder _fe and then it does the analyses on /wavs/vowels/i/>75ms/ or /e/\
+\ls8\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/analyses/table_trainingstim_fe_SpeakerX.Table and table_trainingstim_fi_SpeakerX.Table (not needed for the experiment, but needed for plot-finalStims_S34.praat\
+{\listtext	\uc0\u8259 	}output: in praat\'92s info window: the filenames of the test stimuli. That file is saved in Recordings/SpeakerX/analyses/teststimuli_filenames_SpeakerX.txt\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls8\ilvl0\cf0 {\listtext	\uc0\u8226 	}Then I copied the teststims from /Recordings/wavs/syllables/ to /Recordings/syllables/orig, and renamed them: I added a \'93_\'94 between fe/i and the number\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls9\ilvl0\cf0 {\listtext	\uc0\u8226 	}plot-finalStims_S34.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls9\ilvl1\cf0 {\listtext	\uc0\u8259 	}Plots the final training stims plus test stims (manually entered into the script, the output from the info window in praat from find-teststims-S3S4.praat)\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls9\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/table_trainingstim_fe_SX\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: testStims_plottedInHypotheticalTrainingStims_SX_final.pdf
+\f1\i0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 To select the teststimuli:\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls10\ilvl0\cf0 {\listtext	\uc0\u8226 	}find-teststims-S3S4_ERBs.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls10\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /wavs/syllables/selected_syllables_fi/ oder _fe and then it does the analyses on /wavs/vowels/i/>75ms/ or /e/\
+\ls10\ilvl1\cf0 \CocoaLigature1 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/analyses/table_trainingstim_fe_SpeakerX_ERBs.Table and table_trainingstim_fi_SpeakerX_ERBs.Table (not needed for the experiment, but needed for plot-finalStims_S34_ERBs.praat\
+{\listtext	\uc0\u8259 	}output: in praat\'92s info window: the filenames of the test stimuli. That file is saved in Recordings/SpeakerX/analyses/teststimuli_filenames_SpeakerX.txt\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls10\ilvl2\cf0 {\listtext	\uc0\u8259 	}Since I needed to change the teststims for S4 after changing to ERBs, this file is called teststimuli_filenames_Speaker4_Charite.txt\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls10\ilvl0\cf0 {\listtext	\uc0\u8226 	}Then I copied the teststims from /Recordings/wavs/syllables/ to /Recordings/syllables/orig, and renamed them: I added a \'93_\'94 between fe/i and the number\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls10\ilvl1\cf0 {\listtext	\uc0\u8259 	}Since I needed to change the teststims for S4 after changing to ERBs, this folder is called orig_Charite\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls11\ilvl0\cf0 {\listtext	\uc0\u8226 	}plot-finalStims_S34_ERBs.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls11\ilvl1\cf0 {\listtext	\uc0\u8259 	}Plots the final training stims plus test stims (manually entered into the script, the output from the info window in praat from find-teststims-S3S4_ERBs.praat)\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls11\ilvl2\cf0 {\listtext	\uc0\u8259 	}input: \cf2 \CocoaLigature0 /analyses/table_trainingstim_fe_SX_ERBs\cf0 \CocoaLigature1 \
+{\listtext	\uc0\u8259 	}output: testStims_plottedInHypotheticalTrainingStims_SX_final_ERBs.pdf\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls12\ilvl0\cf0 {\listtext	\uc0\u8226 	}normalize-duration.praat (and normalize-duration_Charite.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls12\ilvl1\cf0 {\listtext	\uc0\u8259 	}I manually created TextGrids for the two teststim files in /Recordings/syllables/orig/\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls12\ilvl2\cf0 {\listtext	\uc0\u8259 	}and for orig_Charite (for S4)\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls12\ilvl1\cf0 {\listtext	\uc0\u8259 	}Input: /Recordings/syllables/orig/ the two .wav and .TextGrid files for the two teststims\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls12\ilvl2\cf0 {\listtext	\uc0\u8259 	}and for orig_Charite (for S4)\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls12\ilvl1\cf0 {\listtext	\uc0\u8259 	}Output: /Recordings/syllables/normalized/ The two teststims normalized for duration and intensity\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls12\ilvl2\cf0 {\listtext	\uc0\u8259 	}and for normalized_Charite (for S4)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls12\ilvl0\cf0 {\listtext	\uc0\u8226 	}THESE NORMALIZED OUTPUT STIMULI WERE THEN COPIED TO Stimuli/stimuli-final/TestSyllables/SX\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls12\ilvl1\cf0 {\listtext	\uc0\u8259 	}and TestSyllables_S4_Charite\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+These steps were then carried out in Stimuli/stimuli-final/\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls13\ilvl0\cf0 {\listtext	\uc0\u8226 	}_rename_files.praat: \
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls13\ilvl1\cf0 {\listtext	\uc0\u8259 	}input: this script is copied within each of the following subfolders in Stimuli/stimuli-final/, in order to rename them according to the structure necessary for Presentation\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls13\ilvl2\cf0 {\listtext	\uc0\u8259 	}Sentence\
+{\listtext	\uc0\u8259 	}TrainingSyllables/S1 and S2\
+{\listtext	\uc0\u8259 	}TestSyllables/S1 to S2\
+\pard\tx2380\tx2880\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2880\fi-2880\pardirnatural\partightenfactor0
+\ls13\ilvl3\cf0 {\listtext	\uc0\u8259 	}in this _rename_files.praat version, the files are renames twice, once in which FE is standard, once in which FI is standard, and copied to the according folder:\
+\pard\tx3100\tx3600\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li3600\fi-3600\pardirnatural\partightenfactor0
+\ls13\ilvl4\cf0 {\listtext	\uc0\u8259 	}Stimuli-Presentation-StanFe\
+{\listtext	\uc0\u8259 	}Stimuli-Presentation-StanFi\
+\pard\tx2380\tx2880\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2880\fi-2880\pardirnatural\partightenfactor0
+\ls13\ilvl3\cf0 {\listtext	\uc0\u8259 	}and for S4_Charite, only renamed once, and then copied to Stimuli-Presentation-StanFe\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls13\ilvl1\cf0 {\listtext	\uc0\u8259 	}Output: renamed files in the folders:\
+\pard\tx1660\tx2160\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li2160\fi-2160\pardirnatural\partightenfactor0
+\ls13\ilvl2\cf0 {\listtext	\uc0\u8259 	}Stimuli-Presentation-StanFe\
+{\listtext	\uc0\u8259 	}Stimuli-Presentation-StanFi\
+{\listtext	\uc0\u8259 	}Stimuli-Presentation-StanFe_Charite\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls13\ilvl0\cf0 {\listtext	\uc0\u8226 	}I did this all again after exchanging S1\'92s fe_30 and S2\'92s fi_9 and fi_23. I exchanged those 3 files in the Stimuli-final/TrainingSyllables/Sx. Then I reran the _rename_files.praat script, but now I saved it in 
+\f3 \cf2 \CocoaLigature0 Stimuli-FINAL_Charite-CBS/. Then, 
+\f1 \cf0 \CocoaLigature1 I copied the Sentence and Test files from Stimuli-Presentation-StanFe_Charite to 
+\f3 \cf2 \CocoaLigature0 Stimuli-FINAL_Charite-CBS
+\f1 \cf0 \CocoaLigature1 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\ul Other graphs:\ulnone \
+I also made frequency analyses plots, they are in Stimuli/Analyses_FreqDist/ :\
+Input were: \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls14\ilvl0\cf2 {\listtext	\uc0\u8226 	}All the vowels, with the column mahal: \CocoaLigature0 /analyses/75_table_all_i_SX.Table and /analyses/75_table_all_e_SX.Table\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls14\ilvl0\cf0 \CocoaLigature1 {\listtext	\uc0\u8226 	}Only the 166 vowels with the smallest mahal: \cf2 \CocoaLigature0 /analyses/75_table_166_i_SX.Table and /analyses/75_table_166_e_SX.Table\
+\ls14\ilvl0\cf0 \CocoaLigature1 {\listtext	\uc0\u8226 	}I did this also for the 70_ etc\
+{\listtext	\uc0\u8226 	}see document: Stimuli/speaker_distributions_KC.docx\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 Somehow, I combined the tables for i and e for this, I don\'92t know how (maybe manually? \
+\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b \cf0 \ul SENTENCE
+\f1\b0 \ulnone \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls15\ilvl0\cf0 {\listtext	\uc0\u8226 	}I edited together a good instance of the sentence for all 4 speakers:\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls15\ilvl1\cf0 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/sentence/SX_Sentence.wav\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls15\ilvl0\cf0 {\listtext	\uc0\u8226 	}For S1 and S2: I normalized the intensity with normalize-intensity.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls15\ilvl1\cf0 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/sentence/normalized-intensity/SX_Sentence_65dB.wav\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls15\ilvl0\cf0 {\listtext	\uc0\u8226 	}For S1 and S2: I added pauses in the beginning and end of the wav file\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls15\ilvl1\cf0 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/sentence/normalized-intensity/SX_Sentence_65dB_withPauses.wav\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls15\ilvl0\cf0 {\listtext	\uc0\u8226 	}These files were then copied to Stimuli/Stimuli-final/Sentence\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\b \cf0 \ul STORIES
+\f1\b0 \ulnone \
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls16\ilvl0\cf0 {\listtext	\uc0\u8226 	}I edited together a good instance of the six stories for all 4 speakers:\cf5 \
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls16\ilvl1\cf5 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/stories/SX_Story1.wav to SX_Story6.wav\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls16\ilvl0\cf5 {\listtext	\uc0\u8226 	}I normalized the intensity with normalize-intensity.praat\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls16\ilvl1\cf5 {\listtext	\uc0\u8259 	}output: Recordings/SpeakerX/stories/normalized-intensity/SX_StoryX_65dB.wav\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls16\ilvl0\cf5 {\listtext	\uc0\u8226 	}These files were then copied to Stimuli/Stimuli-final/Stories\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls16\ilvl0\cf5 \cb6 {\listtext	\uc0\u8226 	}calc-duration-stories.praat to calculate the duration of the stories, in order to figure out which ones to pair in the familiarization phase\
+{\listtext	\uc0\u8226 	}I then checked all the stories one more time, and still found some mistakes:\
+\pard\tx940\tx1440\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li1440\fi-1440\pardirnatural\partightenfactor0
+\ls16\ilvl1\cf5 {\listtext	\uc0\u8259 	}speaker3, story 5: still had \'93F\'fcnftens\'94 in the beginning\
+{\listtext	\uc0\u8259 	}speaker2, story 4: still had 2 times \'93Br\'fcderlichen, worum hast du Angst?\'94\
+{\listtext	\uc0\u8259 	}speaker1, story 1: still had a long part in the beginning double\
+{\listtext	\uc0\u8259 	}speaker4, story 3: title is not there (THIS IS NOT CORRECTED, since we do not use S4 in the voice familiarization)\
+\pard\tx220\tx720\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\li720\fi-720\pardirnatural\partightenfactor0
+\ls16\ilvl0\cf5 {\listtext	\uc0\u8226 	}concatenating-files_story-randomization.praat: puts the stories together in files per day for the different randomization groups\
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf5 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+\cf0 \cb1 \
+}
