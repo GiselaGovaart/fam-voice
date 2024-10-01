@@ -36,6 +36,8 @@ for ipp = 1:length(Subj)
     setNameS1 = setNameS11;
     elseif isfile(strcat(DIR.processed,setNameS12))
     setNameS1 = setNameS12;
+    else
+        setNameS1 = 0;
     end
 
     setNameS21 = strcat(Subj(ipp),"_processed_231.set");
@@ -44,6 +46,8 @@ for ipp = 1:length(Subj)
     setNameS2 = setNameS21;
     elseif isfile(strcat(DIR.processed,setNameS22))
     setNameS2 = setNameS22;
+    else
+        setNameS2 = 0;
     end
 
     % set the trial numbers, but only if the file is there
@@ -57,7 +61,6 @@ for ipp = 1:length(Subj)
     if isfile(strcat(DIR.processed,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
-
     end
     if isfile(strcat(DIR.processed,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
@@ -123,6 +126,8 @@ for ipp = 1:length(Subj)
     setNameS1 = setNameS11;
     elseif isfile(strcat(DIR.processed,setNameS12))
     setNameS1 = setNameS12;
+    else
+        setNameS1 = 0;
     end
 
     setNameS21 = strcat(Subj(ipp),"_processed_231.set");
@@ -131,6 +136,8 @@ for ipp = 1:length(Subj)
     setNameS2 = setNameS21;
     elseif isfile(strcat(DIR.processed,setNameS22))
     setNameS2 = setNameS22;
+    else
+        setNameS2 = 0;
     end
 
     % set the trial numbers, but only if the file is there
@@ -213,8 +220,8 @@ for ipp = 1:length(Subj)
     if isfile(strcat(DIR.processed,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
-
     end
+
     if isfile(strcat(DIR.processed,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
