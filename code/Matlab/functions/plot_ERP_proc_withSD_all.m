@@ -4,8 +4,6 @@ function plot_ERP_proc_withSD_all(DIR, Subj)
 %     "211" "212" "213" "214" "221" "222" "223" "224" "231" "232" ...
 %     "233" "234" "241" "242" "243" "244"];
 
-
-
 % load EEGlab
 rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
@@ -122,7 +120,7 @@ for ipp = 1:length(Subj)
     end
 
     if isfile(strcat(DIR.processed,setNameS41)) && isfile(strcat(DIR.processed,setNameS42))
-        trials43 = trialsS41+trialsS42;
+        trialsS4 = trialsS41+trialsS42;
     end
 
     % read out whether more than 3 channels from ROI were kicked out
@@ -241,7 +239,7 @@ plot_erp({ ...
     );
 
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
-    ['ERP_ACQ_Fz_SD.jpeg']), ...
+    ['ERP_ACQ_Fz_SD_all.jpeg']), ...
     'Resolution', 300);
 
 plot_erp({ ...
@@ -256,7 +254,7 @@ plot_erp({ ...
     );
 
 exportgraphics(gcf, strcat(DIR.plotsQA, ...
-    ['ERP_REC_Fz_SD.jpeg']), ...
+    ['ERP_REC_Fz_SD_all.jpeg']), ...
     'Resolution', 300);
 
 end

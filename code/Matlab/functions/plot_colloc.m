@@ -70,7 +70,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -91,7 +91,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -150,7 +150,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -171,7 +171,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -207,7 +207,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -228,7 +228,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -265,7 +265,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -286,7 +286,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -322,7 +322,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -343,7 +343,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -425,7 +425,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -446,7 +446,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -483,7 +483,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -504,7 +504,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -540,7 +540,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -561,7 +561,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -597,7 +597,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -618,7 +618,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
@@ -654,7 +654,7 @@ h3 = plot(GA_dev_all.times, ...
 hold on;
 
 % Set axes
-ylims = [-15 15]; 
+ylims = [-10 10]; 
 xlims = [-200 700];
 ylim(ylims);
 xlim(xlims);
@@ -675,7 +675,7 @@ ylabel('µV')
 ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure. 
 box(ax, 'off'); % remove box
 ax.FontSize = 10; 
-daspect([100 5 2]); % change ratio
+%daspect([100 5 2]); % change ratio
 set(gcf,'color','white'); % white background. gcf = current figure handle
 
 % Ticks
