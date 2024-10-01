@@ -15,9 +15,10 @@ function [trg] = famvoice_triggers
 %      .stimulusB    -  types of stimulus events in version B of the
 %                        experiment
 %      .aux          -  types of auxiliary events (cell array)
-
+%      .all
 
 % Copyright (C) 2023 Maren Grigutsch, MPI CBS Leipzig, <grigu@cbs.mpg.de>
+% $Id: famvoice_triggers.m,v 1.2 2024/09/30 16:58:20 grigu Exp grigu $
 
 
 % stimulus triggers (version A)
@@ -53,6 +54,7 @@ trg.stimulus   = union(expATrigger,expBTrigger);
 trg.stimulusA  = expATrigger;
 trg.stimulusB  = expBTrigger;
 trg.aux        = auxTrigger; 
+trg.all        = {trg.stimulus{:},blockStartTrigger,blockEndTrigger,auxTrigger{:}};
 
 
 

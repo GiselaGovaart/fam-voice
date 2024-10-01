@@ -11,7 +11,6 @@ function [is_match, trg] = famvoice_check_triggers(EEG)
 % See also: famvoice_triggers
 
 % Copyright (C) 2023 Maren Grigutsch, MPI CBS Leipzig, <grigu@cbs.mpg.de>
-% $Id: famvoice_check_triggers.m,v 1.2 2024/09/30 17:10:19 grigu Exp grigu $
 
 %%
 

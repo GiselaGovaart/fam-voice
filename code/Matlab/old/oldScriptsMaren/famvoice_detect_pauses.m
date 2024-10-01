@@ -1,6 +1,6 @@
 function [pauses] = famvoice_detect_pauses(EEG,preSec,postSec)
 
-% FAMVOICE_DETECT_PAUSES - Detect stimulation pauses in an EEGLAB dataset.
+% FAMVOICE_detect_PAUSES - Detect stimulation pauses in an EEGLAB dataset.
 % 
 % Usage:
 %       pauses = famvoice_detect_pauses(EEG);
@@ -19,17 +19,17 @@ function [pauses] = famvoice_detect_pauses(EEG,preSec,postSec)
 %    pauses    -   N-by-2 array, where each row indicates the latency 
 %                   boundaries [start, end] (samples) of a stimulation pause 
 % Example:
-%    Pauses = famvoice_detect_pauses(EEG,10,10);
+%    Pauses = famvoice_pauses(EEG.event,{'S 11','S 12'},10,10);
 %   
 %
 % See also EEGLAB.
 
 % Copyright (C) 2023 Maren Grigutsch, MPI CBS Leipzig, <grigu@cbs.mpg.de>
 
-% $Id: famvoice_detect_pauses.m,v 1.2 2024/09/30 17:03:41 grigu Exp grigu $
-
 
 %%
+
+funcname = coder.mfunctionname;
 
 if nargin<3 || isempty(postSec)
     postSec = 10;
@@ -46,7 +46,7 @@ nPost = round(postSec*EEG.srate);
 
 %% Load FamVoice event types.
 
-trg = famvoice_triggers;
+[~, trg] = famvoice_check_triggers(EEG);
 
 %% Identify stimulation pauses; pay attention to recording pauses and restarts.
 
@@ -106,7 +106,7 @@ tmp([idx idx+1]) = [];
 pauses = reshape(tmp,2,[])';
 
 %%
-fprintf('%s(): Found n=%d pause(s):\n',mfilename,size(pauses,1))
+fprintf('%s(): Found n=%d pause(s):\n',funcname,size(pauses,1))
 arrayfun(@(x,y,x1,y1) fprintf('  %8d\t-%8d    |   %8.3f - %8.3f s\n',...
     x,y,x1,y1),pauses(:,1),pauses(:,2),...
     (pauses(:,1)-1)/EEG.srate,(pauses(:,2)-1)/EEG.srate);

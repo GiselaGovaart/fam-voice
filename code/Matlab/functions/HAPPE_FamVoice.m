@@ -1,18 +1,56 @@
 function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
-% Preprocessing for the FamVoice data, based on HAPPE 3.3 
-
-% set electrode location for the spectoplots:
-Fz_old = 1;
 Fz = 14;
 
 %% Load the data
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
+% Preprocessing for the FamVoice data, based on HAPPE 3.3 
+
+% set electrode location for the spectoplots:
+Fz_old = 1;
 close;
 
-[EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
+if ~ismember(pp, ["64", "43", "41", "38", "06"])
+    try
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '.vhdr']);
+    catch
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '.vhdr']);
+    end
+elseif ismember(pp, ["64", "43", "41", "38"])
+    try
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) 'b.vhdr']);
+    catch
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '_2.vhdr']);
+    end
+elseif ismember(pp, ["06"])
+    [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '_2.vhdr']);
+end
+
+% if ismember(pp, ["07", "16", "31", "39", "41", "44", "54", "55", "64", "68"])
+%     % Specify the path to your corrected events file
+%     eventFilePath = [DIR.RAWEEG_PATH '02-triggers/' convertStringsToChars(pp) '_corr_test.txt'];
+% 
+% %     fid = fopen(eventFilePath, 'r');
+% %     tline = fgetl(fid);
+% %     while ischar(tline)
+% %         disp(tline)
+% %         tline = fgetl(fid);
+% %     end
+% %     fclose(fid);
+%     % Import the events from the text file
+%     EEG = pop_importevent(EEG, 'event', eventFilePath, ...
+%         'fields', {'latency','duration','type' , 'code'}, ...
+%         'skipline',1,'append', 'no');
+%     % Import the events from the text file
+% %     EEG = pop_importevent(EEG, 'event', eventFilePath, ...
+% %         'fields', {'number', 'latency', 'duration','channel', 'bvtime', 'bvmknum','visible', 'type' ,'code', 'urevent'}, ...
+% %         'delim', '\t');
+% end
+
 EEG = eeg_hist(EEG,com);
 EEG = eeg_checkset( EEG );
+
+% pop_eegplot(EEG);
 
 % Vizualize
 % spectr
@@ -256,7 +294,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     101, 211, 221, 231, 241,... %testS1
     102, 212, 222, 232, 242,... %testS2
     103, 213, 223, 233, 243,...%testS3
-    104, 214, 224, 234, 244}; %testS4ss
+    104, 214, 224, 234, 244}; %testS4
 
 segmentStart = -0.2; 
 segmentEnd = 0.650;

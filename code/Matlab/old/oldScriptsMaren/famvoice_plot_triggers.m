@@ -8,16 +8,14 @@ function [fig] = famvoice_plot_triggers(EEG, segments, label)
 %
 % Inputs:
 %        EEG   -   [struct] an EEGLAB dataset struct
-%   segments   -   [N-by-2 array], where each row indicates the latency
-%                   boundaries [start, end] (samples) of a segment to highlight
+%   segments   -   [N-by-2 array] 
 %      label   -   [char|string] segment label to be shown in the legend
 %
-% Output:
+% output:
 %        fig   -   handle to the created figure
 
 % Copyright (C) 2023 Maren Grigutsch, MPI CBS Leipzig, <grigu@cbs.mpg.de>
 
-% $Id: famvoice_plot_triggers.m,v 1.2 2024/09/30 17:00:42 grigu Exp grigu $
 
 %%
 
@@ -27,9 +25,8 @@ if nargin<2
 end
 
 
-%% Load FamVoice trigger definitions.
-
-trg = famvoice_triggers;
+%% Load famVoice triggers and check consistency with EEG event types
+[~, trg] = famvoice_check_triggers(EEG);
 
 %% Get event indices and latencies.
 
@@ -40,33 +37,18 @@ iStimulus = find(ismember({EEG.event.type},trg.stimulus));
 iBlockStart = find(strcmp({EEG.event.type},trg.blockStart));
 iBlockEnd = find(strcmp({EEG.event.type},trg.blockEnd));
 
-iOdd = find(~ismember({EEG.event.type},trg.all) & ~strcmp({EEG.event.code},'Comment'));  % unexpected triggers
-
 stimTrg = {EEG.event(iStimulus).type};
 stimTrgVal = cell2mat(cellfun(@(x) sscanf(x,'S%d'),stimTrg,'UniformOutput',false));
-
-oddTrg = {EEG.event(iOdd).type};
-oddTrgVal = cell2mat(cellfun(@(x) sscanf(x,'S%d'),oddTrg,'UniformOutput',false));
 
 stimLatency = [EEG.event(iStimulus).latency];
 startLatency = [EEG.event(iBlockStart).latency];
 endLatency = [EEG.event(iBlockEnd).latency];
 boundaryLatency = [EEG.event(iBoundary).latency];
-oddLatency = [EEG.event(iOdd).latency];
-
-
 
 %% Display the event time series and mark the beginning and end of blocks by vertical lines.
 
 fig = figure; 
-plot((stimLatency-1)/EEG.srate,stimTrgVal,'b.');
-
-if iOdd
-    hold on
-    plot((oddLatency-1)/EEG.srate,oddTrgVal,'r*');
-    hold off
-end
-
+plot((stimLatency-1)/EEG.srate,stimTrgVal,'.');
 title(EEG.setname);
 xlim([0 EEG.xmax]);
 xlabel('Time (s)');
@@ -75,26 +57,14 @@ set(gca,'XMinorTick','on','YMinorTick','on');
 grid on;
 grid minor;
 hold on;
-if iBlockStart > 0
-    line(repmat((startLatency-1)./EEG.srate,2,1),get(gca,'Ylim'),'Color','g');
-end
-if iBlockEnd > 0
-    line(repmat(  (endLatency-1)./EEG.srate,2,1),get(gca,'Ylim'),'Color','r');
-end
-if iBoundary > 0
-    line(repmat((boundaryLatency-1)./EEG.srate,2,1),get(gca,'YLim'),'Color','c',...
+line(repmat((startLatency-1)./EEG.srate,2,1),get(gca,'Ylim'),'Color','g');
+line(repmat(  (endLatency-1)./EEG.srate,2,1),get(gca,'Ylim'),'Color','r');
+line(repmat((boundaryLatency-1)./EEG.srate,2,1),get(gca,'YLim'),'Color','c',...
     'LineStyle','--','LineWidth',2);
-end
-
 
 %% Create a legend.
 
 legendLabel = {'stimulus'};
-
-if iOdd
-    legendLabel{end+1} = '\color{red} unexpected';
-end
-
 for k=1:numel(iBlockStart)
     if k==1
         legendLabel{end+1} = 'block start';
@@ -109,9 +79,7 @@ for k=1:numel(iBlockEnd)
         legendLabel{end+1} = '';
     end
 end
-legendLabel{end+1} = 'boundary';   
-
-
+legendLabel{end+1} = 'boundary';    
 legend(legendLabel,'Location','west');
 
 

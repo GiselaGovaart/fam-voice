@@ -95,15 +95,15 @@ save(strcat(DIR.intermediateProcessing,'channelInfo_', pp),'original','selected'
 %    'FC5','FC6','C3','C4','TP9', 'TP10'}; 
 
 selected_long = cell(1,length(original_array));
-selected_long(1:length(selected_array)) = selected_array;
+selected_long(1:length(selected_array)) = selected_array; %make an array with the selected elecs plus space for the the nonb-selected ones (so length =26 but only filled with the selected elecs)
 
-totalRemoved = ~ismember(original_array,selected_array);
+totalRemoved = ~ismember(original_array,selected_array); 
 totalRemovedNames = original_array(totalRemoved);
 totalRemovedNames_long = cell(1,length(original_array));
 totalRemovedNames_long(1:length(totalRemovedNames)) = totalRemovedNames;
 
 removedROI = ~ismember(ROI,selected_array);
-if removedROI > 3
+if sum(removedROI) > 3
     moreThan3RemovedRoi = {'yes'};
 else
     moreThan3RemovedRoi = {'no'};

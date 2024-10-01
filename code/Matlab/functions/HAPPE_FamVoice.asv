@@ -1,18 +1,56 @@
 function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
+Fz = 14;
+
+%% Load the data
+% cd(DIR.EEGLAB_PATH);
+% [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 % Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 % set electrode location for the spectoplots:
 Fz_old = 1;
-Fz = 14;
-
-%% Load the data
-cd(DIR.EEGLAB_PATH);
-[ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 close;
 
-[EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
+if ~ismember(pp, ["64", "43", "41", "38", "06"])
+    try
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '.vhdr']);
+    catch
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '.vhdr']);
+    end
+elseif ismember(pp, ["64", "43", "41", "38"])
+    try
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) 'b.vhdr']);
+    catch
+        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '_2.vhdr']);
+    end
+elseif ismember(pp, ["06"])
+    [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '_2.vhdr']);
+ end
+
+if ismember(pp, ["07", "16", "31", "39", "41", "44", "54", "55", "64", "68"])
+    % Specify the path to your corrected events file
+    eventFilePath = [DIR.RAWEEG_PATH '02-triggers/' convertStringsToChars(pp) '_corr_test.txt'];
+
+%     fid = fopen(eventFilePath, 'r');
+%     tline = fgetl(fid);
+%     while ischar(tline)
+%         disp(tline)
+%         tline = fgetl(fid);
+%     end
+%     fclose(fid);
+    % Import the events from the text file
+    EEG = pop_importevent(EEG, 'event', eventFilePath, ...
+        'fields', {'latency','type' , 'duration'}, ...
+        'skipline',1,'append', 'no');
+    % Import the events from the text file
+%     EEG = pop_importevent(EEG, 'event', eventFilePath, ...
+%         'fields', {'number', 'latency', 'duration','channel', 'bvtime', 'bvmknum','visible', 'type' ,'code', 'urevent'}, ...
+%         'delim', '\t');
+end
+
 EEG = eeg_hist(EEG,com);
 EEG = eeg_checkset( EEG );
+
+% pop_eegplot(EEG);
 
 % Vizualize
 % spectr
@@ -56,20 +94,13 @@ elseif any(strcmp(Subj_char,(pp)))
 end
 
 % % Now make sure the chanlocs from both locations have the same order:
-% T = struct2table(EEG.chanlocs); % convert the struct array to a table
-% sortedT = sortrows(T, 'labels'); % sort the table
-% EEG.chanlocs = table2struct(sortedT); % change it back to struct array 
-
 % Sort the labels and corresponding data
 [sortedT, idx] = sortrows(struct2table(EEG.chanlocs), 'labels'); % sort the table and get the indices
 sortedEEGdata = EEG.data(idx, :); % rearrange the rows of EEG.data according to the sorted indices
-
 % Update the channel locations in EEG structure
 EEG.chanlocs = table2struct(sortedT);
-
 % Update EEG data
 EEG.data = sortedEEGdata;
-
 
 EEG = eeg_checkset(EEG);
 
@@ -253,65 +284,11 @@ exportgraphics(gcf, strcat(DIR.plotsQA, ...
     strcat('spectr_afterfiltering_',pp,'.png')));
 
 %% Segmentation
-% for trial=1:length(EEG.event)
-%     if strcmp(EEG.event(trial).type,'S 11')
-%         EEG.event(trial).type = '11';
-%     elseif strcmp(EEG.event(trial).type,'S 12')
-%         EEG.event(trial).type = '12';
-%     elseif strcmp(EEG.event(trial).type,'S 21')
-%         EEG.event(trial).type = '21';
-%     elseif strcmp(EEG.event(trial).type,'S 22')
-%         EEG.event(trial).type = '22';
-%     elseif strcmp(EEG.event(trial).type,'S101')
-%         EEG.event(trial).type = '101';
-%     elseif strcmp(EEG.event(trial).type,'S211')
-%         EEG.event(trial).type = '211';
-%     elseif strcmp(EEG.event(trial).type,'S221')
-%         EEG.event(trial).type = '221';
-%     elseif strcmp(EEG.event(trial).type,'S231')
-%         EEG.event(trial).type = '231';
-%     elseif strcmp(EEG.event(trial).type,'S241')
-%         EEG.event(trial).type = '241';        
-%     elseif strcmp(EEG.event(trial).type,'S102')
-%         EEG.event(trial).type = '102';
-%     elseif strcmp(EEG.event(trial).type,'S212')
-%         EEG.event(trial).type = '212';
-%     elseif strcmp(EEG.event(trial).type,'S222')
-%         EEG.event(trial).type = '222';
-%     elseif strcmp(EEG.event(trial).type,'S232')
-%         EEG.event(trial).type = '232';
-%     elseif strcmp(EEG.event(trial).type,'S242')
-%         EEG.event(trial).type = '242';  
-%     elseif strcmp(EEG.event(trial).type,'S103')
-%         EEG.event(trial).type = '103';
-%     elseif strcmp(EEG.event(trial).type,'S213')
-%         EEG.event(trial).type = '213';
-%     elseif strcmp(EEG.event(trial).type,'S223')
-%         EEG.event(trial).type = '223';
-%     elseif strcmp(EEG.event(trial).type,'S233')
-%         EEG.event(trial).type = '233';
-%     elseif strcmp(EEG.event(trial).type,'S243')
-%         EEG.event(trial).type = '243';  
-%     elseif strcmp(EEG.event(trial).type,'S104')
-%         EEG.event(trial).type = '104';
-%     elseif strcmp(EEG.event(trial).type,'S214')
-%         EEG.event(trial).type = '214';
-%     elseif strcmp(EEG.event(trial).type,'S224')
-%         EEG.event(trial).type = '224';
-%     elseif strcmp(EEG.event(trial).type,'S234')
-%         EEG.event(trial).type = '234';
-%     elseif strcmp(EEG.event(trial).type,'S244')
-%         EEG.event(trial).type = '244'; 
-%     end
-% end
-
 for trial = 1:length(EEG.event)
     EEG.event(trial).type = strrep(EEG.event(trial).type, 'S  ', '');
     EEG.event(trial).type = strrep(EEG.event(trial).type, 'S ', '');
     EEG.event(trial).type = strrep(EEG.event(trial).type, 'S', '');
 end 
-
-
 
 onsetTags = {11, 12, 21, 22, ... %training
     101, 211, 221, 231, 241,... %testS1
