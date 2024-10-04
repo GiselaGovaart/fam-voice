@@ -97,6 +97,7 @@ set(gcf,'color','white'); % white background. gcf = current figure handle
 % Ticks
 ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
 ax.XTickLabel = {'-100','0','','','','','','600',''};
+
 ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
 ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
 
@@ -452,6 +453,7 @@ set(gcf,'color','white'); % white background. gcf = current figure handle
 % Ticks
 ax.XTick = [-100 0 100 200 300 400 500 600 650]; % starting point, steps, end point
 ax.XTickLabel = {'-100','0','','','','','','600',''};
+
 ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
 ax.YTickLabel = {'-20','-15', '-10','-5','0','5', '10', '15'};
 

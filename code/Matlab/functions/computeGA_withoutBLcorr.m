@@ -9,13 +9,14 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
-DIR.processed_woBL = convertStringsToChars(strcat(DIR.processed,"withoutBLcorr/"));
-DIR.grandaverage_woBL = convertStringsToChars(strcat(DIR.grandaverage,"withoutBLcorr/"));
+DIR.processed_woBLcorr = convertStringsToChars(DIR.processed_woBLcorr);
+DIR.grandaverage_woBLcorr = convertStringsToChars(DIR.grandaverage_woBLcorr);
+
 
 %% Make GA for training speaker (1 or 2)
 % For FAM------------------------------------------------------------------
 Subj = Subj_Fam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -24,9 +25,9 @@ GAargS2 = cell(counter);
 for ipp = 1:length(Subj)
     setNameD1 = strcat(Subj(ipp),"_processed_101.set");
     setNameD2 = strcat(Subj(ipp),"_processed_102.set");
-    if isfile(strcat(DIR.processed_woBL,setNameD1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD1))
     setNameD = setNameD1;
-    elseif isfile(strcat(DIR.processed_woBL,setNameD2))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameD2))
     setNameD = setNameD2;
     else
         setNameD = 0;
@@ -35,9 +36,9 @@ for ipp = 1:length(Subj)
 
     setNameS11 = strcat(Subj(ipp),"_processed_221.set");
     setNameS12 = strcat(Subj(ipp),"_processed_222.set");
-    if isfile(strcat(DIR.processed_woBL,setNameS11))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS11))
     setNameS1 = setNameS11;
-    elseif isfile(strcat(DIR.processed_woBL,setNameS12))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameS12))
     setNameS1 = setNameS12;
     else
         setNameS1 = 0;
@@ -45,9 +46,9 @@ for ipp = 1:length(Subj)
 
     setNameS21 = strcat(Subj(ipp),"_processed_231.set");
     setNameS22 = strcat(Subj(ipp),"_processed_232.set");
-    if isfile(strcat(DIR.processed_woBL,setNameS21))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS21))
     setNameS2 = setNameS21;
-    elseif isfile(strcat(DIR.processed_woBL,setNameS22))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameS22))
     setNameS2 = setNameS22;
     else
         setNameS2 = 0;
@@ -57,20 +58,20 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -94,21 +95,21 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_2212 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_2212 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_2312 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_2312 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_2212, ga_2312);
 pop_saveset(GA_merged, 'filename', 'ga_fam_S12_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_1012, 'filename', 'ga_fam_S12_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 % For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -117,9 +118,9 @@ GAargS2 = cell(counter);
 for ipp = 1:length(Subj)
     setNameD1 = strcat(Subj(ipp),"_processed_101.set");
     setNameD2 = strcat(Subj(ipp),"_processed_102.set");
-    if isfile(strcat(DIR.processed_woBL,setNameD1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD1))
     setNameD = setNameD1;
-    elseif isfile(strcat(DIR.processed_woBL,setNameD2))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameD2))
     setNameD = setNameD2;
     else
         setNameD = 0;
@@ -127,9 +128,9 @@ for ipp = 1:length(Subj)
 
     setNameS11 = strcat(Subj(ipp),"_processed_221.set");
     setNameS12 = strcat(Subj(ipp),"_processed_222.set");
-    if isfile(strcat(DIR.processed_woBL,setNameS11))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS11))
     setNameS1 = setNameS11;
-    elseif isfile(strcat(DIR.processed_woBL,setNameS12))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameS12))
     setNameS1 = setNameS12;
     else
         setNameS1 = 0;
@@ -137,9 +138,9 @@ for ipp = 1:length(Subj)
 
     setNameS21 = strcat(Subj(ipp),"_processed_231.set");
     setNameS22 = strcat(Subj(ipp),"_processed_232.set");
-    if isfile(strcat(DIR.processed_woBL,setNameS21))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS21))
     setNameS2 = setNameS21;
-    elseif isfile(strcat(DIR.processed_woBL,setNameS22))
+    elseif isfile(strcat(DIR.processed_woBLcorr,setNameS22))
     setNameS2 = setNameS22;
     else
         setNameS2 = 0;
@@ -149,21 +150,21 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
 
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -187,23 +188,23 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_1012 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_2212 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_2212 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_2312 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_2312 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_2212, ga_2312);
 pop_saveset(GA_merged, 'filename', 'ga_unfam_S12_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_1012, 'filename', 'ga_unfam_S12_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 
 %% Make GA for Speaker 3
 % For FAM -----------------------------------------------------------------
 Subj = Subj_Fam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -218,21 +219,21 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -256,21 +257,21 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_103 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_103 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_223 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_223 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_233 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_233 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_223, ga_233);
 pop_saveset(GA_merged, 'filename', 'ga_fam_S3_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_103, 'filename', 'ga_fam_S3_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 % For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -285,21 +286,21 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
 
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -323,22 +324,22 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_103 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_103 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_223 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_223 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_233 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_233 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_223, ga_233);
 pop_saveset(GA_merged, 'filename', 'ga_unfam_S3_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_103, 'filename', 'ga_unfam_S3_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 %% Make GA for Speaker 4
 % For FAM -----------------------------------------------------------------
 Subj = Subj_Fam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -353,21 +354,21 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
 
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -391,22 +392,22 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_104 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_104 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_224 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_224 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_234 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_234 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_224, ga_234);
 
 pop_saveset(GA_merged, 'filename', 'ga_fam_S4_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_104, 'filename', 'ga_fam_S4_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 % For UNFAM ---------------------------------------------------------------
 Subj = Subj_Unfam;
-cd(DIR.processed_woBL)
+cd(DIR.processed_woBLcorr)
 counter = 1;
 GAargD = cell(counter);
 GAargS1 = cell(counter);
@@ -421,21 +422,21 @@ for ipp = 1:length(Subj)
     trialsD = 0;
     trialsS = 0;
 
-    if isfile(strcat(DIR.processed_woBL,setNameD))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameD))
         setD = pop_loadset(convertStringsToChars(setNameD));
         trialsD = setD.trials;
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS1))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1))
         setS1 = pop_loadset(convertStringsToChars(setNameS1));
         trialsS1 = setS1.trials;
 
     end
-    if isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         setS2 = pop_loadset(convertStringsToChars(setNameS2));
         trialsS2 = setS2.trials;
     end
 
-    if isfile(strcat(DIR.processed_woBL,setNameS1)) && isfile(strcat(DIR.processed_woBL,setNameS2))
+    if isfile(strcat(DIR.processed_woBLcorr,setNameS1)) && isfile(strcat(DIR.processed_woBLcorr,setNameS2))
         trialsS = trialsS1+trialsS2;
     end
 
@@ -459,17 +460,17 @@ for ipp = 1:length(Subj)
 end
 
 % Deviants
-ga_104 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBL);
+ga_104 = pop_grandaverage(GAargD, 'pathname', DIR.processed_woBLcorr);
 % S1
-ga_224 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBL);
+ga_224 = pop_grandaverage(GAargS1, 'pathname', DIR.processed_woBLcorr);
 % S2
-ga_234 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBL);
+ga_234 = pop_grandaverage(GAargS2, 'pathname', DIR.processed_woBLcorr);
 
 GA_merged = pop_mergeset(ga_224, ga_234);
 
 pop_saveset(GA_merged, 'filename', 'ga_unfam_S4_Stan.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 pop_saveset(ga_104, 'filename', 'ga_unfam_S4_Dev.set', ...
-        'filepath', DIR.grandaverage_woBL);
+        'filepath', DIR.grandaverage_woBLcorr );
 
 end

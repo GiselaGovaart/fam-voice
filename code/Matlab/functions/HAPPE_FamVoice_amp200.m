@@ -1,4 +1,4 @@
-function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
+function HAPPE_FamVoice_amp200(pp, DIR, blvalue, Subj_cbs, Subj_char)
 Fz = 14;
 
 %% Load the data
@@ -360,8 +360,8 @@ end
 % AMPLITUDE CRITERIA
 % HAPPE suggests 200 for infants and 150 for children and adults, MADE uses
 % 150 for infants. We use 150.
-minAmp = -150; 
-maxAmp = 150; 
+minAmp = -200; 
+maxAmp = 200; 
 
 EEG = pop_eegthresh(EEG, 1, ...
                       ROI_indxs, [minAmp], [maxAmp], ...

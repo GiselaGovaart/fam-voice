@@ -1,5 +1,8 @@
 function write_output_tables(Subj, DIR)
 
+cd(DIR.EEGLAB_PATH);
+[ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
+
 %% Trial overview
 %setlist = dir(strcat(DIR.processed,"*_processed_*"));
 CondNr = ["11" "21" "12" "22" "101" "102" "103" "104"  ...

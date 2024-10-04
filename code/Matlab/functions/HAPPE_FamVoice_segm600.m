@@ -1,4 +1,4 @@
-function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
+function HAPPE_FamVoice_segm600(pp, DIR, blvalue, Subj_cbs, Subj_char)
 Fz = 14;
 
 %% Load the data
@@ -315,7 +315,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     104, 214, 224, 234, 244}; %testS4
 
 segmentStart = -0.2; 
-segmentEnd = 0.650;
+segmentEnd = 0.600;
 
 EEG = pop_epoch(EEG, onsetTags, ...
     [segmentStart, segmentEnd], 'verbose', ...

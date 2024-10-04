@@ -13,7 +13,7 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
-cd(strcat(DIR.grandaverage,"withoutBLcorr/"));
+cd(DIR.grandaverage_woBLcorr);
 
 % Make GAs for ACQ:
 GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
@@ -83,7 +83,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer ACQ All')
+title('Collapsed localizer ACQ All - Without BL Correction')
 xlabel('msec')
 ylabel('µV')
 
@@ -120,7 +120,7 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
-cd(strcat(DIR.grandaverage,"withoutBLcorr/"));
+cd(DIR.grandaverage_woBLcorr);
 
 % Make GAs for RQ:
 GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
@@ -188,7 +188,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer REC')
+title('Collapsed localizer REC - Without BL Correction')
 xlabel('msec')
 ylabel('µV')
 

@@ -2,51 +2,123 @@ function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
 Fz = 14;
 
 %% Load the data
-% cd(DIR.EEGLAB_PATH);
-% [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
+cd(DIR.EEGLAB_PATH);
+[ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 % Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
 % set electrode location for the spectoplots:
 Fz_old = 1;
 close;
 
-if ~ismember(pp, ["64", "43", "41", "38", "06"])
-    try
-        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '.vhdr']);
-    catch
-        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '.vhdr']);
-    end
-elseif ismember(pp, ["64", "43", "41", "38"])
-    try
-        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) 'b.vhdr']);
-    catch
-        [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '_2.vhdr']);
-    end
-elseif ismember(pp, ["06"])
-    [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '_2.vhdr']);
- end
-
-if ismember(pp, ["07", "16", "31", "39", "41", "44", "54", "55", "64", "68"])
-    % Specify the path to your corrected events file
-    eventFilePath = [DIR.RAWEEG_PATH '02-triggers/' convertStringsToChars(pp) '_corr_test.txt'];
-
-%     fid = fopen(eventFilePath, 'r');
-%     tline = fgetl(fid);
-%     while ischar(tline)
-%         disp(tline)
-%         tline = fgetl(fid);
+% if ~ismember(pp, ["64", "43", "41", "38", "06", "68", "79"])
+%     try
+%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '.vhdr']);
+%     catch
+%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '.vhdr']);
 %     end
-%     fclose(fid);
-    % Import the events from the text file
-    EEG = pop_importevent(EEG, 'event', eventFilePath, ...
-        'fields', {'latency','type' , 'duration'}, ...
-        'skipline',1,'append', 'no');
-    % Import the events from the text file
-%     EEG = pop_importevent(EEG, 'event', eventFilePath, ...
-%         'fields', {'number', 'latency', 'duration','channel', 'bvtime', 'bvmknum','visible', 'type' ,'code', 'urevent'}, ...
-%         'delim', '\t');
+% elseif ismember(pp, ["64", "43", "41", "38"])
+%     try
+%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) 'b.vhdr']);
+%     catch
+%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '_2.vhdr']);
+%     end
+% elseif ismember(pp, ["06"])
+%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '_2.vhdr']);
+% elseif ismember(pp, ["68"])
+%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], '68gut.vhdr');
+% elseif ismember(pp, ["79"]) % here the eeg files was names wrongly, it is however the correct dataset
+%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], '76.vhdr');
+% end
+
+
+    
+datapath = fullfile(DIR.RAWEEG_PATH,pp);
+
+eegfile = dir([datapath '/*.vhdr']); 
+eegfile = eegfile.name;
+
+logfile = fullfile(datapath,[pp '_logfile.txt']);
+
+EEG = pop_loadbv(datapath, eegfile);
+
+EEGin = EEG;
+
+%% plot triggers
+
+fig0 = famvoice_plot_triggers(EEGin);
+title(pp);
+set(gcf,'Name',pp,'Units','Normalized','Position',[0.08 0.3 0.4 0.4]);
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
+    strcat('triggersCheck_beforeFixTriggers',pp,'.png')));
+
+%% fix triggers and detect pauses
+if isfile(logfile)
+    EEG = famvoice_fix_bit0(EEGin,logfile);
 end
 
+EEG = famvoice_fix_overlap(EEG);
+
+longEEG = EEG;
+longEEG.setname = [convertStringsToChars(pp)];
+[ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,longEEG);
+eeglab redraw;
+
+pauses = famvoice_detect_pauses(longEEG,10,10);
+
+fig1 = famvoice_plot_triggers(longEEG,pauses,'pause');
+title([pp ' fixed']);
+set(gcf,'Name',[pp ' fixed'],'Units','Normalized','Position',[0.52,0.3,0.4,0.4]);
+exportgraphics(gcf, strcat(DIR.plotsQA, ...
+    strcat('fixedTriggerTimeSeriesAndPauses',pp,'.png')));
+
+
+%% Detect stimulation pauses (code written by Maren Grigutsch)
+%% 
+if ~isempty(pauses)
+   %%Delete the pauses from the dataset
+
+    fprintf('Deleting n=%d pauses from the dataset.\n',size(pauses,1));
+    
+    [EEG,com] = pop_select(longEEG,'nopoint',pauses);
+    EEG = eeg_hist(EEG,com);
+    
+    EEG.setname = [convertStringsToChars(pp) ' without pauses'];
+    [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
+    eeglab redraw;
+    
+    % Display the trigger time series after pauses have been deleted.
+    fig2 = famvoice_plot_triggers(EEG);
+    exportgraphics(gcf, strcat(DIR.plotsQA, ...
+        strcat('triggerTimeSeriesAfterPausesDeleted',pp,'.png')));
+
+   %% Check consistency between datasets before and after deleting pauses.
+
+    fprintf('Checking consistency between datasets before and after deleting pauses...\n')
+    
+    trg = famvoice_triggers;
+    stimType = trg.stimulus;
+    n_long = sum(ismember({longEEG.event.type},stimType));
+    n = sum(ismember({EEG.event.type},stimType));
+    
+    if n_long ~= n
+        error('ERROR: Inconsistent number of stimulus events after deleting pauses: got %d; expected %d',n,n_long);
+    end
+    
+    % Cut epochs around each stimulus trigger and compare the data.
+    epoch_long = pop_epoch(longEEG,stimType,[-0.5 0.5]);
+    epoch = pop_epoch(EEG,stimType,[-0.5 0.5]);
+    m = max(abs(epoch.data(:)-epoch_long.data(:))); 
+
+    fprintf('Comparing data matrices...')
+    if m ~= 0
+        error('Found inconsistent data between datasets; max. diviation: %e uV',m)
+    end
+    
+    fprintf('...ok.\n')
+    clear trg stimTrg n_long n m epoch_long epoch
+%%
+end
+%% check and visualize
 EEG = eeg_hist(EEG,com);
 EEG = eeg_checkset( EEG );
 
@@ -104,65 +176,7 @@ EEG.data = sortedEEGdata;
 
 EEG = eeg_checkset(EEG);
 
-%% Detect stimulation pauses (code written by Maren Grigutsch)
-longEEG = EEG;
 
-longEEG.setname = [convertStringsToChars(pp)];
-[ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,longEEG);
-eeglab redraw;
-
-pauses = famvoice_detect_pauses(longEEG);
-
-% Display the trigger time series and the pauses.
-fig = famvoice_plot_triggers(longEEG,pauses,'pause');
-exportgraphics(gcf, strcat(DIR.plotsQA, ...
-    strcat('triggerTimeSeriesAndPauses',pp,'.png')));
-
-%% 
-if ~isempty(pauses)
-   %%Delete the pauses from the dataset
-
-    fprintf('Deleting n=%d pauses from the dataset.\n',size(pauses,1));
-    
-    [EEG,com] = pop_select(longEEG,'nopoint',pauses);
-    EEG = eeg_hist(EEG,com);
-    
-    EEG.setname = [convertStringsToChars(pp) ' without pauses'];
-    [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
-    eeglab redraw;
-    
-    % Display the trigger time series after pauses have been deleted.
-    fig2 = famvoice_plot_triggers(EEG);
-    exportgraphics(gcf, strcat(DIR.plotsQA, ...
-        strcat('triggerTimeSeriesAfterPausesDeleted',pp,'.png')));
-
-   %% Check consistency between datasets before and after deleting pauses.
-
-    fprintf('Checking consistency between datasets before and after deleting pauses...\n')
-    
-    trg = famvoice_triggers;
-    stimType = trg.stimulus;
-    n_long = sum(ismember({longEEG.event.type},stimType));
-    n = sum(ismember({EEG.event.type},stimType));
-    
-    if n_long ~= n
-        error('ERROR: Inconsistent number of stimulus events after deleting pauses: got %d; expected %d',n,n_long);
-    end
-    
-    % Cut epochs around each stimulus trigger and compare the data.
-    epoch_long = pop_epoch(longEEG,stimType,[-0.5 0.5]);
-    epoch = pop_epoch(EEG,stimType,[-0.5 0.5]);
-    m = max(abs(epoch.data(:)-epoch_long.data(:))); 
-
-    fprintf('Comparing data matrices...')
-    if m ~= 0
-        error('Found inconsistent data between datasets; max. diviation: %e uV',m)
-    end
-    
-    fprintf('...ok.\n')
-    clear trg stimTrg n_long n m epoch_long epoch
-%%
-end
 
 %% Filter data 
 % These  filters help the artifact correction later on.
@@ -294,7 +308,7 @@ onsetTags = {11, 12, 21, 22, ... %training
     101, 211, 221, 231, 241,... %testS1
     102, 212, 222, 232, 242,... %testS2
     103, 213, 223, 233, 243,...%testS3
-    104, 214, 224, 234, 244}; %testS4ss
+    104, 214, 224, 234, 244}; %testS4
 
 segmentStart = -0.2; 
 segmentEnd = 0.650;

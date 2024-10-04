@@ -13,10 +13,14 @@ mkdir(strcat(DIR.overallPath,"/04-segmenting/"));
 DIR.segmenting =  strcat(DIR.overallPath,"/04-segmenting/");
 mkdir(strcat(DIR.overallPath,"/05-processed/"));
 DIR.processed =  strcat(DIR.overallPath,"/05-processed/");
+mkdir(strcat(DIR.overallPath,"/05-processed/withoutBLcorr/"));
+DIR.processed_woBLcorr =  strcat(DIR.overallPath,"/05-processed/withoutBLcorr/");
 mkdir(strcat(DIR.overallPath,"/06-quality_assessment_outputs/"));
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
 mkdir(strcat(DIR.overallPath,"/07-grandaverage/"));
 DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
+mkdir(strcat(DIR.overallPath,"/07-grandaverage/withoutBLcorr/"));
+DIR.grandaverage_woBLcorr = strcat(DIR.overallPath,"/07-grandaverage/withoutBLcorr/");
 mkdir(strcat(DIR.overallPath,"/08-plots/"));
 DIR.plots = strcat(DIR.overallPath,"/08-plots");
 
