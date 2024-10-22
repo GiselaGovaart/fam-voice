@@ -97,7 +97,7 @@ for chan = 1:length(ROI_labels)
     ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
     box(ax, 'off'); % remove box
     ax.FontSize = 10;
-    daspect([100 5 2]); % change ratio
+    %daspect([100 5 2]); % change ratio
     set(gcf,'color','white'); % white background. gcf = current figure handle
 
     % Ticks
@@ -158,7 +158,7 @@ end
     ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
     box(ax, 'off'); % remove box
     ax.FontSize = 10;
-    %daspect([100 5 2]); % change ratio
+    %%daspect([100 5 2]); % change ratio
     set(gcf,'color','white'); % white background. gcf = current figure handle
 
     % Ticks
@@ -252,7 +252,7 @@ for chan = 1:length(ROI_labels)
     ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
     box(ax, 'off'); % remove box
     ax.FontSize = 10;
-    daspect([100 5 2]); % change ratio
+    %daspect([100 5 2]); % change ratio
     set(gcf,'color','white'); % white background. gcf = current figure handle
 
     % Ticks

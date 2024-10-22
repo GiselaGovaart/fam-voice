@@ -5,7 +5,7 @@ function plot_ERP_proc(DIR, twstartacq, twendacq, twstartrec, twendrec)
 % NB: if you add F7 and F8 to the ROI, add it here!
 
 %% Set up
-ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4', 'F7', 'F8'};
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -98,15 +98,15 @@ end
 %% TRAINING SPEAKER FAM
 fig = figure;
 h1 = plot(GA_dev12_fam.times, ...
-    mean(DIFF_12_fam(indices(1:8),:)), ...
+    mean(DIFF_12_fam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev12_fam.times, ...
-    mean(GA_dev12_fam.data(indices(1:8),:)), ...
+    mean(GA_dev12_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev12_fam.times, ...
-    mean(GA_stan12_fam.data(indices(1:8),:)), ...
+    mean(GA_stan12_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -125,7 +125,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Training speaker - Familiar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -157,15 +157,15 @@ exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
 %% TRAINING SPEAKER UNFAM
 fig = figure;
 h1 = plot(GA_dev12_unfam.times, ...
-    mean(DIFF_12_unfam(indices(1:8),:)), ...
+    mean(DIFF_12_unfam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev12_unfam.times, ...
-    mean(GA_dev12_unfam.data(indices(1:8),:)), ...
+    mean(GA_dev12_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev12_unfam.times, ...
-    mean(GA_stan12_unfam.data(indices(1:8),:)), ...
+    mean(GA_stan12_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -184,7 +184,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Training speaker - Unfamiliar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -213,18 +213,83 @@ exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
     'Trainingspeaker_UNFAM.jpeg'), ...
     'Resolution', 300);
 
+%% TRAINING SPEAKER COMBINED (FAM and UNFAM)
+fig = figure;
+
+% Combine FAM and UNFAM for Training Speaker
+combined_diff = (DIFF_12_fam + DIFF_12_unfam) / 2; % Average difference waves
+combined_data = (GA_dev12_fam.data + GA_dev12_unfam.data) / 2; % Average data waves
+combined_stan = (GA_stan12_fam.data + GA_stan12_unfam.data) / 2; % Average standard
+
+% Plot combined difference
+h1 = plot(GA_dev12_fam.times, ...
+    mean(combined_diff(indices(1:length(indices)),:)), ...
+    'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
+hold on;
+
+% Plot combined data
+h2 = plot(GA_dev12_fam.times, ...
+    mean(combined_data(indices(1:length(indices)),:)), ...
+    'Color', '#f78d95', 'Linewidth', 2);
+hold on;
+
+% Plot combined standard
+h3 = plot(GA_dev12_fam.times, ...
+    mean(combined_stan(indices(1:length(indices)),:)), ...
+    'Color', '#3b8dca', 'Linewidth', 2);
+hold on;
+
+% Set axes
+ylims = [-10 10]; 
+xlims = [-200 700];
+ylim(ylims);
+xlim(xlims);
+set(gca, 'YDir', 'reverse'); % reverse axes
+
+% Add lines
+hline = line(xlim, [0, 0], 'LineWidth', 1);
+hline.Color = 'black';
+vline = line([0 0], ylim, 'LineWidth', 1);
+vline.Color = 'black';
+
+% Title, labels, legend
+title('Training speaker - Combined FAM and UNFAM')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
+xlabel('msec')
+ylabel('µV')
+
+% General make prettier
+ax = gca; 
+box(ax, 'off'); 
+ax.FontSize = 10; 
+set(gcf, 'color', 'white'); 
+
+% Ticks
+ax.XTick = [-100 0 100 200 300 400 500 600 650]; 
+ax.XTickLabel = {'-100', '0', '', '', '', '', '', '600', ''};
+ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+ax.YTickLabel = {'-20', '-15', '-10', '-5', '0', '5', '10', '15'};
+
+% Save figure
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'Trainingspeaker_combined_FAM_UNFAM.jpeg'), ...
+    'Resolution', 300);
+
+
+
+
 %% SPEAKER 3 FAM
 fig = figure;
 h1 = plot(GA_dev3_fam.times, ...
-    mean(DIFF_3_fam(indices(1:8),:)), ...
+    mean(DIFF_3_fam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev3_fam.times, ...
-    mean(GA_dev3_fam.data(indices(1:8),:)), ...
+    mean(GA_dev3_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev3_fam.times, ...
-    mean(GA_stan3_fam.data(indices(1:8),:)), ...
+    mean(GA_stan3_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -243,7 +308,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Familiar non-training speaker - Familiar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -275,15 +340,15 @@ exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
 %% SPEAKER 3 UNFAM
 fig = figure;
 h1 = plot(GA_dev3_unfam.times, ...
-    mean(DIFF_3_unfam(indices(1:8),:)), ...
+    mean(DIFF_3_unfam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev3_unfam.times, ...
-    mean(GA_dev3_unfam.data(indices(1:8),:)), ...
+    mean(GA_dev3_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev3_unfam.times, ...
-    mean(GA_stan3_unfam.data(indices(1:8),:)), ...
+    mean(GA_stan3_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -302,7 +367,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Familiar non-training speaker - Unfamiliar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -335,15 +400,15 @@ exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
 %% SPEAKER 4 FAM
 fig = figure;
 h1 = plot(GA_dev4_fam.times, ...
-    mean(DIFF_4_fam(indices(1:8),:)), ...
+    mean(DIFF_4_fam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev4_fam.times, ...
-    mean(GA_dev4_fam.data(indices(1:8),:)), ...
+    mean(GA_dev4_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev4_fam.times, ...
-    mean(GA_stan4_fam.data(indices(1:8),:)), ...
+    mean(GA_stan4_fam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -362,7 +427,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Novel speaker - Familiar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -395,15 +460,15 @@ exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
 %% SPEAKER 4 UNFAM
 fig = figure;
 h1 = plot(GA_dev4_unfam.times, ...
-    mean(DIFF_4_unfam(indices(1:8),:)), ...
+    mean(DIFF_4_unfam(indices(1:length(indices)),:)), ...
     'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
 hold on;
 h2 = plot(GA_dev4_unfam.times, ...
-    mean(GA_dev4_unfam.data(indices(1:8),:)), ...
+    mean(GA_dev4_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#f78d95', 'Linewidth', 2);
 hold on;
 h3 = plot(GA_dev4_unfam.times, ...
-    mean(GA_stan4_unfam.data(indices(1:8),:)), ...
+    mean(GA_stan4_unfam.data(indices(1:length(indices)),:)), ...
     'Color', '#3b8dca', 'Linewidth', 2);
 hold on;
 
@@ -422,7 +487,7 @@ vline.Color = 'black';
 
 % Title, labels, legend
 title('Novel speaker - Unfamiliar voice condition')
-subtitle('F3, Fz, F4, FC5, FC6, Cz, C3, C4')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -450,6 +515,74 @@ set(gca,'LineWidth',1)
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
     'S4_UNFAM.jpeg'), ...
     'Resolution', 300);
+
+%% NOVEL SPEAKER COMBINED (FAM and UNFAM)
+fig = figure;
+
+% Combine FAM and UNFAM for Novel Speaker
+combined_diff_novel = (DIFF_4_fam + DIFF_4_unfam) / 2; % Average difference waves
+combined_data_novel = (GA_dev4_fam.data + GA_dev4_unfam.data) / 2; % Average data waves
+combined_stan_novel = (GA_stan4_fam.data + GA_stan4_unfam.data) / 2; % Average standard
+
+% Plot combined difference
+h1 = plot(GA_dev4_fam.times, ...
+    mean(combined_diff_novel(indices(1:length(indices)),:)), ...
+    'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
+hold on;
+
+% Plot combined data
+h2 = plot(GA_dev4_fam.times, ...
+    mean(combined_data_novel(indices(1:length(indices)),:)), ...
+    'Color', '#f78d95', 'Linewidth', 2);
+hold on;
+
+% Plot combined standard
+h3 = plot(GA_dev4_fam.times, ...
+    mean(combined_stan_novel(indices(1:length(indices)),:)), ...
+    'Color', '#3b8dca', 'Linewidth', 2);
+hold on;
+
+% Set axes
+ylims = [-11 11]; 
+xlims = [-250 700];
+ylim(ylims);
+xlim(xlims);
+set(gca, 'YDir', 'reverse'); % reverse axes
+
+% Add lines
+hline = line(xlim, [0, 0], 'LineWidth', 1);
+hline.Color = 'black';
+vline = line([0 0], ylim, 'LineWidth', 1);
+vline.Color = 'black';
+
+% Title, labels, legend
+title('Novel speaker - Combined FAM and UNFAM')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
+xlabel('msec')
+ylabel('µV')
+
+% General make prettier
+ax = gca; 
+box(ax, 'off'); % Remove outer box
+ax.FontSize = 10; 
+set(gcf, 'color', 'white'); 
+
+% Ticks
+ax.XTick = [-200 -100 0 100 200 300 400 500 600 650]; 
+ax.XTickLabel = {'-200','', '', '', '', '', '', '', '600', ''};
+ax.YTick = [-10 -5 0 5 10];
+ax.YTickLabel = {'-10', '', '', '', '10'};
+
+
+% Remove the box and set ticks to be on the axes
+set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+% Save figure
+exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
+    'Novelspeaker_combined_FAM_UNFAM_no_box.jpeg'), ...
+    'Resolution', 300);
+
 
 
 %% Topoplots

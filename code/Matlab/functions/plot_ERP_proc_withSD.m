@@ -2,7 +2,7 @@ function plot_ERP_proc_withSD(DIR)
 % Vizualization ERPs with standard diff to check whether the basline
 % correction induces artifacts
 
-ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4', 'F7','F8'};
 
 
 %% ACQ
