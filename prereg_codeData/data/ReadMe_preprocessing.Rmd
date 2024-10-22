@@ -1,0 +1,12 @@
+---
+title: "ReadMe for the preprocessing steps in the different pilot datasets"
+output: github_document
+---
+
+### Preprocessing settings
+## data_pilot.csv
+- high-pass filter: 0.4 Hz
+- time window: 200-500 ms
+- electrodes: Fz,F3,F4,FC5,FC6,Cz,C3,C4,F7,F8
+
+
