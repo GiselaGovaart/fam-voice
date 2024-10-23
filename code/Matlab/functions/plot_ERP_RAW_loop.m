@@ -9,112 +9,15 @@ function plot_ERP_raw_loop(pp,DIR, blvalue, Subj_cbs, Subj_char)
 % For now, it's only the first linenoise filter, and the waveletting
 
 
-%% Load the data
+%% Load the line noise-filtered data
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 close;
 
-[EEG, com] = pop_loadbv(DIR.RAWEEG_PATH, [convertStringsToChars(pp) '.vhdr']);
-EEG = eeg_hist(EEG,com);
-EEG = eeg_checkset( EEG );
+pp = convertStringsToChars(pp);
 
-
-%% Edit channel locations and remove non-used electrodes
-
-[EEG,com] = famvoice_fix_chanlocs(EEG);
-EEG = eeg_hist(EEG,com);
-
-if  any(strcmp(Subj_cbs,(pp)))
-    % Remove FC1 and FC2, because it is not included in the setup at the
-    % Charite
-    EEG = pop_select(EEG, 'nochannel', {'FC1'});
-    EEG = pop_select(EEG, 'nochannel', {'FC2'});
-elseif any(strcmp(Subj_char,(pp)))
-    % Remove Fp1, because it is not included in the setup at the CBS
-    EEG = pop_select(EEG, 'nochannel', {'Fp1'});
-end
-
-% % Now make sure the chanlocs from both locations have the same order:
-% Sort the labels and corresponding data
-[sortedT, idx] = sortrows(struct2table(EEG.chanlocs), 'labels'); % sort the table and get the indices
-sortedEEGdata = EEG.data(idx, :); % rearrange the rows of EEG.data according to the sorted indices
-% Update the channel locations in EEG structure
-EEG.chanlocs = table2struct(sortedT);
-% Update EEG data
-EEG.data = sortedEEGdata;
-
-% Already add new electrode posiitons here, because otherwise
-% pop_grandaverage in plot_ERP_raw_plot does not work. 
-fprintf('Adding electrode positions using spherical template...\n');
-EEG = pop_chanedit(EEG, 'lookup','Standard-10-5-Cap385_witheog.elp');
-EEG = eeg_checkset(EEG);
-
-EEG = eeg_checkset(EEG);
-
-%% Detect stimulation pauses (code written by Maren Grigutsch)
-longEEG = EEG;
-
-longEEG.setname = [convertStringsToChars(pp)];
-[ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,longEEG);
-eeglab redraw;
-
-pauses = famvoice_detect_pauses(longEEG);
-
-
-%% 
-if ~isempty(pauses)
-   %%Delete the pauses from the dataset
-
-    fprintf('Deleting n=%d pauses from the dataset.\n',size(pauses,1));
-    
-    [EEG,com] = pop_select(longEEG,'nopoint',pauses);
-    EEG = eeg_hist(EEG,com);
-    
-    EEG.setname = [convertStringsToChars(pp) ' without pauses'];
-    [ALLEEG,EEG,CURRENTSET] = eeg_store(ALLEEG,EEG);
-    eeglab redraw;
-    
-  
-   %% Check consistency between datasets before and after deleting pauses.
-
-    fprintf('Checking consistency between datasets before and after deleting pauses...\n')
-    
-    trg = famvoice_triggers;
-    stimType = trg.stimulus;
-    n_long = sum(ismember({longEEG.event.type},stimType));
-    n = sum(ismember({EEG.event.type},stimType));
-    
-    if n_long ~= n
-        error('ERROR: Inconsistent number of stimulus events after deleting pauses: got %d; expected %d',n,n_long);
-    end
-    
-    % Cut epochs around each stimulus trigger and compare the data.
-    epoch_long = pop_epoch(longEEG,stimType,[-0.5 0.5]);
-    epoch = pop_epoch(EEG,stimType,[-0.5 0.5]);
-    m = max(abs(epoch.data(:)-epoch_long.data(:))); 
-
-    fprintf('Comparing data matrices...')
-    if m ~= 0
-        error('Found inconsistent data between datasets; max. diviation: %e uV',m)
-    end
-    
-    fprintf('...ok.\n')
-    clear trg stimTrg n_long n m epoch_long epoch
-%%
-end
-
-%% Filter data 
-% These  filters help the artifact correction later on.
-% remove line noise 
-lineNoiseIn = struct('lineNoiseMethod', 'clean', 'lineNoiseChannels', ...
-    1:EEG.nbchan, 'Fs', EEG.srate, 'lineFrequencies', ...
-    [50,100], 'p', 0.01, 'fScanBandWidth', 2, ...
-    'taperBandWidth', 2, 'taperWindowSize', 4, 'taperWindowStep', 4, ...
-    'tau', 100, 'pad', 2, 'fPassBand', [0 EEG.srate/2], ...
-    'maximumIterations', 10) ;
-[EEG, ~] = cleanLineNoise(EEG, lineNoiseIn) ;
-
-EEG = eeg_checkset(EEG);
+EEG = pop_loadset( convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
+    convertStringsToChars(DIR.intermediateProcessing));
 
 %% Detect bad channels
 % % find ROI channels

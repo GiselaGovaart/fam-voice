@@ -68,25 +68,53 @@ t$Subj <- sub("^0", "", t$Subj)
 # Read csv demographics
 t_demo = read.delim(here("data", "demographic_data_FamVoice_exp.csv"), header = TRUE, sep = ",", dec = ".")
 
+## Add column with MMR
 # Create the new column MMR in t_demo
 t_demo <- t_demo %>%
   mutate(MMR = NA)  # Initialize MMR column with NA
-
 # Fill the MMR column based on values from t
 for (i in 1:nrow(t_demo)) {
   subjnr <- t_demo$Subj[i]
   speaker <- t_demo$Testspeaker[i]
-  
   # Check if the combination exists in t
   if (subjnr %in% t$Subj && speaker %in% colnames(t)) {
     t_demo$MMR[i] <- t[t$Subj == subjnr, speaker]
   }
 }
-
 # Move MMR to the second column
 t_demo <- t_demo %>%
   select(Subj, MMR, everything())  
 
+
+## Add column with mumDist
+# Create the new column mumDist in t_demo
+t_demo <- t_demo %>%
+  mutate(mumDist = NA)  # Initialize mumDist column with NA
+
+t_mumdist = read.delim(here("data", "mumDist_mean_of_means.csv"), header = TRUE, sep = ",", dec = ".")
+
+# Fill the mumDist column based on values from t
+for (i in 1:nrow(t_demo)){
+  subjnr <- as.character(t_demo$Subj[i])
+  speaker <- t_demo$Testspeaker[i]
+  testorder <- t_demo$TestOrder[i]
+  
+  if (is.na(speaker)){
+    t_demo$mumDist[i] <- NA
+  }else if (speaker == "S1"){
+    if (as.integer(substr(as.character(testorder), 1, 1)) == 1){ 
+      t_demo$mumDist[i] <- t_mumdist[t_mumdist$vp == subjnr, "mean_s1"]
+    }else{
+      t_demo$mumDist[i] <- t_mumdist[t_mumdist$vp == subjnr, "mean_s2"]
+    }
+  }else if (speaker =="S3"){
+    t_demo$mumDist[i] <- t_mumdist[t_mumdist$vp == subjnr, "mean_s3"]
+  }else if (speaker =="S4"){
+    t_demo$mumDist[i] <- t_mumdist[t_mumdist$vp == subjnr, "mean_s4"]
+  }else{
+    t_demo$mumDist[i] <- t_mumdist[t_mumdist$vp == subjnr, NA]
+  }
+}
 
 
 
