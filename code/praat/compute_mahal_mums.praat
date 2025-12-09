@@ -63,7 +63,9 @@ Remove column: "mahal"
 Down to TableOfReal: ""
 cov_s4_fi = To Covariance
 
-directoryList = Create Strings as directory list: "directoryList", "vowels_mums"
+# This is the output of the corrected WAVfiles, which is used here as an input
+directoryList = Create Strings as directory list: "directoryList", "../Output"
+
 selectObject: directoryList
 numDirs = Get number of strings
 
