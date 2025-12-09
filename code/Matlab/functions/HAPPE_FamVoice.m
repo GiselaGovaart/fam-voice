@@ -1,42 +1,18 @@
 function HAPPE_FamVoice(pp, DIR, blvalue, Subj_cbs, Subj_char)
-Fz = 14;
-
-%% Load the data
-cd(DIR.EEGLAB_PATH);
-[ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 % Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
+Fz = 14;
 % set electrode location for the spectoplots:
 Fz_old = 1;
 close;
+%% Load the data
+cd(DIR.EEGLAB_PATH);
+[ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
 
-% if ~ismember(pp, ["64", "43", "41", "38", "06", "68", "79"])
-%     try
-%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '.vhdr']);
-%     catch
-%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '.vhdr']);
-%     end
-% elseif ismember(pp, ["64", "43", "41", "38"])
-%     try
-%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) 'b.vhdr']);
-%     catch
-%         [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], [convertStringsToChars(pp) '_2.vhdr']);
-%     end
-% elseif ismember(pp, ["06"])
-%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], ['FamVoice' convertStringsToChars(pp) '_2.vhdr']);
-% elseif ismember(pp, ["68"])
-%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], '68gut.vhdr');
-% elseif ismember(pp, ["79"]) % here the eeg files was names wrongly, it is however the correct dataset
-%     [EEG, com] = pop_loadbv([DIR.RAWEEG_PATH convertStringsToChars(pp) '/'], '76.vhdr');
-% end
-
-pp = convertStringsToChars(pp);
-    
+pp = convertStringsToChars(pp); 
 datapath = fullfile(DIR.RAWEEG_PATH,pp);
-
 eegfile = dir([datapath '/*.vhdr']); 
 eegfile = eegfile.name;
-
 logfile = fullfile(datapath,[pp '_logfile.txt']);
 
 EEG = pop_loadbv(datapath, eegfile);

@@ -8,9 +8,11 @@ DIR.ERPfiltered =  strcat(DIR.overallPath,"/03-ERP_filtered/");
 DIR.segmenting =  strcat(DIR.overallPath,"/04-segmenting/");
 DIR.processed =  strcat(DIR.overallPath,"/05-processed/");
 DIR.processed_woBLcorr =  strcat(DIR.overallPath,"/05-processed/withoutBLcorr/");
+DIR.processed_raw =  strcat(DIR.overallPath,"/05-processed/raw/");
 DIR.qualityAssessment =  strcat(DIR.overallPath,"/06-quality_assessment_outputs/");
 DIR.grandaverage = strcat(DIR.overallPath,"/07-grandaverage/");
 DIR.grandaverage_woBLcorr = strcat(DIR.overallPath,"/07-grandaverage/withoutBLcorr/");
+DIR.grandaverage_raw = strcat(DIR.overallPath,"/07-grandaverage/raw/");
 DIR.plots = strcat(DIR.overallPath,"/08-plots");
 
 %subfolders plot
@@ -19,6 +21,7 @@ DIR.plotsCL = strcat(DIR.plots,"/02-collapsed_localizer/");
 DIR.plotsERPraw = strcat(DIR.plots,"/03-ERPs_raw/");
 DIR.plotsERPindiv = strcat(DIR.plots,"/04-ERPs_individual/");
 DIR.plotsERPproc = strcat(DIR.plots,"/05-ERPs_processed/");
+DIR.plotsMS = strcat(DIR.plots,"/05-Plots_Manuscript/");
 
 addpath(genpath(DIR.overallPath));
 

@@ -1,31 +1,30 @@
-function plot_ERP_raw_loop(pp,DIR, blvalue, Subj_cbs, Subj_char)
-% Preprocessing for the FamVoice data, based on HAPPE 3.3 
-% This is a copy of HAPPE_FamVoice.m, but with most preproc steps commented
-% out. Also, all the figures and inbetween data saves are deleted.
+function save_sets_raw(pp, DIR)
 
-% To check what's going on in other steps, you can take these steps in
-% again in this script.
+% this is basically the function HAPPE_FamVoice, with parts commented out,
+% to have a look at the plotted "raw" data.
+% The data is imported after the first line noise filtering.
+% then we do bad data detection and later on interpolation, because
+% otherwise the function pop_grandaverage does not accept the data channel
+% structure. We also waveletting on the data
 
-% For now, it's only the first linenoise filter, and the waveletting
 
+Fz = 14;
 
-%% Load the line noise-filtered data
+%% Load the data
 cd(DIR.EEGLAB_PATH);
 [ALLEEG EEG CURRENTSET ALLCOM] = eeglab;
-close;
+% Preprocessing for the FamVoice data, based on HAPPE 3.3 
 
-pp = convertStringsToChars(pp);
-
-EEG = pop_loadset( convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
-    convertStringsToChars(DIR.intermediateProcessing));
+EEG = pop_loadset('filename', convertStringsToChars(strcat(pp,'_filtered_lnreduced.set')), ...
+    'filepath', convertStringsToChars(DIR.intermediateProcessing));
 
 %% Detect bad channels
 % % find ROI channels
-% ROI = {'F7','F3','Fz','F4','F8',...
-%     'FC5','FC6','C3','C4', 'TP9', 'TP10'};  
-% % Here I cannot add Cz, that's a consequence of choosing to reref in the end
-% 
-% EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
+ROI = {'F7','F3','Fz','F4','F8',...
+    'FC5','FC6','C3','C4', 'TP9', 'TP10'};  
+% Here I cannot add Cz, that's a consequence of choosing to reref in the end
+
+EEG = happe_detectBadChannels(EEG,pp,DIR,ROI);
 
 %% Wavelet thresholding
 EEG = happe_waveletThreshold(EEG,'Hard',3);
@@ -87,7 +86,7 @@ EEG = eeg_checkset(EEG);
 % EEG = pop_firws(EEG, 'fcutoff', low_cutoff, 'ftype', 'lowpass', 'wtype', ...
 %     'hamming', 'forder', lp_fl_order, 'minphase', 0);
 % EEG = eeg_checkset( EEG );
-% 
+
 
 
 %% Segmentation
@@ -142,16 +141,16 @@ EEG = eeg_checkset(EEG);
 %             ROI_indxs, num, num, 0, 1,0) ;% second-to-last 1: reject labeled trials
 % 
 % EEG = eeg_checkset(EEG);
-% 
+
 
 %% Bad channel interpolation
-% EEG = happe_interpChan(EEG,pp,DIR);
-% 
-% EEG = eeg_checkset(EEG);
+EEG = happe_interpChan(EEG,pp,DIR);
+
+EEG = eeg_checkset(EEG);
 
 
 %% Rereferencing
-% % add Cz
+% add Cz
 % [EEG,com] = famvoice_add_reference_channel(EEG);
 % EEG = eeg_hist(EEG,com);
 % 
@@ -160,10 +159,16 @@ EEG = eeg_checkset(EEG);
 % EEG = pop_reref(EEG,refchan,'keepref','on');
 % EEG.setname = strcat(pp,' reref');
 % 
+% % Save the rereferenced data as an intermediate output
 % EEG = eeg_checkset(EEG);
 
-
 %% Split by onset tags
+onsetTags = {11, 12, 21, 22, ... %training
+    101, 211, 221, 231, 241,... %testS1
+    102, 212, 222, 232, 242,... %testS2
+    103, 213, 223, 233, 243,...%testS3
+    104, 214, 224, 234, 244}; %testS4
+
 fprintf('Creating EEGs by tags...\n') ;
 eegByTags = [] ;
 usedTags = [];
@@ -176,12 +181,10 @@ end
 
 %% Save dataset
 for i=1:length(eegByTags)
-    fileName = convertStringsToChars(strcat(DIR.processed,pp,'_RAW_', ...
+    fileName = convertStringsToChars(strcat(DIR.processed_raw,pp,'_processed_', ...
         int2str(usedTags(i)),'.set'));
     pop_saveset(eegByTags(i), 'filename', ...
          fileName);
 end
 
-
 end
-

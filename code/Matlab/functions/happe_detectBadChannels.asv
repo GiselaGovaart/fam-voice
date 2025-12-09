@@ -3,7 +3,7 @@ function EEG = happe_detectBadChannels(EEG,pp,DIR,ROI)
 
 %   This code is adapted from HAPPE by Katharina, and then adapted by
 %   Gisela
-%   Detects bad channels in the recording according to the algorithm
+%   Detects bad channels in the recording according to the algorithm 
 %   introduced in HAPPE 2.1, updated in HAPPELEE. It does so by first checking for flat channels,
 %   then assessing the Hurst gradient
 
@@ -20,7 +20,7 @@ for i = 1:length(EEG.chanlocs)
     elecName(i) = convertCharsToStrings(EEG.chanlocs(i).labels);
 end
 
-% Find index of crucial electrodes (eyes and mastoids)
+% Find index of crucial electrodes (eyes and mastoids) 
 % (F9 and F10 are used as horizonatal eye electrodes)
 % also the eye electrodes, because we want the wavelet thresholds to be
 % set accordingly, such that we have a higher chance to correct the trials
@@ -50,9 +50,7 @@ EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', 300, ...
 % Since we have low-density data, detect bad channels using the
 % methods optimized in HAPPILEE.
 
-% This parts is not reproducible with the original Clean Rawdata version, but the
-% problem is solved by downloading the latest version of clean_channels(), from
-% May 12, 2023 (https://github.com/sccn/clean_rawdata/blob/master/clean_channels.m)
+% THIS PART IS NOT REPRODUCIBLE:
 % see this thread: https://sccn.ucsd.edu/pipermail/eeglablist/2022/016321.html
 %remove channels that do not correlate with other channels
 EEG = pop_clean_rawdata(EEG, 'FlatlineCriterion', ...
@@ -94,7 +92,7 @@ for chan = 1:length(idxAdd)
 end
 
 % Go from index numbers to the electrode names
-crucialRemovedNames = crucialNames(removedCrucial);
+crucialRemovedNames = crucialNames(removedCrucial); 
 
 %% save the selected and original channel names for later interpolation
 %out = eeg_checkset(EEG);
@@ -105,15 +103,15 @@ selected_array = {selected(1:length(selected)).labels}; %take cell array with na
 original_array = {original(1:length(original)).labels}; %take cell array with names out of structure
 save(strcat(DIR.intermediateProcessing,'channelInfo_', pp),'original','selected','crucialRemovedNames');
 
-%% Save information
+%% Save information 
 
 % ROI = {'F7','F3','Fz','F4','F8',...
-%    'FC5','FC6','C3','C4','TP9', 'TP10'};
+%    'FC5','FC6','C3','C4','TP9', 'TP10'}; 
 
 selected_long = cell(1,length(original_array));
 selected_long(1:length(selected_array)) = selected_array; %make an array with the selected elecs plus space for the the nonb-selected ones (so length =26 but only filled with the selected elecs)
 
-totalRemoved = ~ismember(original_array,selected_array);
+totalRemoved = ~ismember(original_array,selected_array); 
 totalRemovedNames = original_array(totalRemoved);
 totalRemovedNames_long = cell(1,length(original_array));
 totalRemovedNames_long(1:length(totalRemovedNames)) = totalRemovedNames;
@@ -143,3 +141,4 @@ writetable(T,strcat(DIR.qualityAssessment,'InfoChannels_', pp, '.txt'),'Delimite
 
 
 end
+

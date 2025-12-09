@@ -1,0 +1,1317 @@
+function plot_ERP_proc_MS(DIR, roi, twstartacq, twendacq, twstartrec, twendrec, twstartrecfam, twendrecfam)
+
+%% Set up
+if roi == "normal"
+    ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
+elseif roi == "frontal"
+    ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6'};
+end
+
+% load EEGlab 
+DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
+rmpath(genpath(DIR.EEGLAB_PATH)); 
+cd(DIR.EEGLAB_PATH);
+eeglab; close;
+
+% Load GAs (differently than in other plot scripts, for no reason:) same
+% outcome though)
+cd(DIR.grandaverage);
+
+GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
+GA_dev12_fam.data = mean(GA_dev12_fam.data(:,:,:),3);
+GA_dev12_unfam = pop_loadset('ga_unfam_S12_Dev.set');
+GA_dev12_unfam.data = mean(GA_dev12_unfam.data(:,:,:),3);
+GA_dev3_fam = pop_loadset('ga_fam_S3_Dev.set');
+GA_dev3_fam.data = mean(GA_dev3_fam.data(:,:,:),3);
+GA_dev3_unfam = pop_loadset('ga_unfam_S3_Dev.set');
+GA_dev3_unfam.data = mean(GA_dev3_unfam.data(:,:,:),3);
+GA_dev4_fam = pop_loadset('ga_fam_S4_Dev.set');
+GA_dev4_fam.data = mean(GA_dev4_fam.data(:,:,:),3);
+GA_dev4_unfam = pop_loadset('ga_unfam_S4_Dev.set');
+GA_dev4_unfam.data = mean(GA_dev4_unfam.data(:,:,:),3);
+
+GA_stan12_fam = pop_loadset('ga_fam_S12_Stan.set');
+GA_stan12_fam.data = mean(GA_stan12_fam.data(:,:,:),3);
+GA_stan12_unfam = pop_loadset('ga_unfam_S12_Stan.set');
+GA_stan12_unfam.data = mean(GA_stan12_unfam.data(:,:,:),3);
+GA_stan3_fam = pop_loadset('ga_fam_S3_Stan.set');
+GA_stan3_fam.data = mean(GA_stan3_fam.data(:,:,:),3);
+GA_stan3_unfam = pop_loadset('ga_unfam_S3_Stan.set');
+GA_stan3_unfam.data = mean(GA_stan3_unfam.data(:,:,:),3);
+GA_stan4_fam = pop_loadset('ga_fam_S4_Stan.set');
+GA_stan4_fam.data = mean(GA_stan4_fam.data(:,:,:),3);
+GA_stan4_unfam = pop_loadset('ga_unfam_S4_Stan.set');
+GA_stan4_unfam.data = mean(GA_stan4_unfam.data(:,:,:),3);
+
+GA_dev_all_acq = pop_mergeset(GA_dev12_fam, GA_dev12_unfam);
+GA_dev_all_acq = pop_mergeset(GA_dev_all_acq, GA_dev4_fam);
+GA_dev_all_acq = pop_mergeset(GA_dev_all_acq, GA_dev4_unfam); 
+GA_dev_all_acq.data = mean(GA_dev_all_acq.data(:,:,:),3);
+
+GA_stan_all_acq = pop_mergeset(GA_stan12_fam, GA_stan12_unfam);
+GA_stan_all_acq = pop_mergeset(GA_stan_all_acq, GA_stan4_fam);
+GA_stan_all_acq = pop_mergeset(GA_stan_all_acq, GA_stan4_unfam); 
+GA_stan_all_acq.data = mean(GA_stan_all_acq.data(:,:,:),3);
+
+GA_dev_all_rec = pop_mergeset(GA_dev12_fam, GA_dev12_unfam);
+% GA_dev_all_rec = pop_mergeset(GA_dev_all_rec, GA_dev3_fam); 
+GA_dev_all_rec = pop_mergeset(GA_dev_all_rec, GA_dev3_unfam); 
+% GA_dev_all_rec = pop_mergeset(GA_dev_all_rec, GA_dev4_fam);
+GA_dev_all_rec = pop_mergeset(GA_dev_all_rec, GA_dev4_unfam);
+GA_dev_all_rec.data = mean(GA_dev_all_rec.data(:,:,:),3);
+
+GA_stan_all_rec = pop_mergeset(GA_stan12_fam, GA_stan12_unfam);
+% GA_stan_all_rec = pop_mergeset(GA_stan_all_rec, GA_stan3_fam);
+GA_stan_all_rec = pop_mergeset(GA_stan_all_rec, GA_stan3_unfam); 
+% GA_stan_all_rec = pop_mergeset(GA_stan_all_rec, GA_stan4_fam);
+GA_stan_all_rec = pop_mergeset(GA_stan_all_rec, GA_stan4_unfam);
+GA_stan_all_rec.data = mean(GA_stan_all_rec.data(:,:,:),3);
+
+GA_dev_all_recfam = pop_mergeset(GA_dev12_fam, GA_dev3_fam);
+GA_dev_all_recfam = pop_mergeset(GA_dev_all_recfam, GA_dev4_fam); 
+GA_dev_all_recfam.data = mean(GA_dev_all_recfam.data(:,:,:),3);
+
+GA_stan_all_recfam = pop_mergeset(GA_stan12_fam, GA_stan3_fam);
+GA_stan_all_recfam = pop_mergeset(GA_stan_all_recfam, GA_stan4_fam);
+GA_stan_all_recfam.data = mean(GA_stan_all_recfam.data(:,:,:),3);
+
+% Compute difference waves
+DIFF_12_fam = GA_dev12_fam.data - GA_stan12_fam.data;
+DIFF_12_unfam = GA_dev12_unfam.data - GA_stan12_unfam.data;
+DIFF_3_fam = GA_dev3_fam.data - GA_stan3_fam.data;
+DIFF_3_unfam = GA_dev3_unfam.data - GA_stan3_unfam.data;
+DIFF_4_fam = GA_dev4_fam.data - GA_stan4_fam.data;
+DIFF_4_unfam = GA_dev4_unfam.data - GA_stan4_unfam.data;
+
+DIFF_all_acq = GA_dev_all_acq.data - GA_stan_all_acq.data;
+DIFF_all_rec = GA_dev_all_rec.data - GA_stan_all_rec.data;
+DIFF_all_recfam = GA_dev_all_recfam.data - GA_stan_all_recfam.data;
+
+rmpath(genpath(DIR.EEGLAB_PATH));
+
+
+% find indices of ROI channels
+indices = zeros(1, numel(ROI_labels));
+
+% loop over labels and find indices
+for i = 1:numel(ROI_labels)
+    label = ROI_labels{i};
+    for j = 1:numel(GA_dev_all_acq.chanlocs)
+        if strcmp(GA_dev_all_acq.chanlocs(j).labels, label)
+            indices(i) = j;
+            break;
+        end
+    end
+end
+
+%% Plot Collocs
+% ACQ
+fig = figure;
+h1 = plot(GA_dev_all_acq.times, ...
+    mean(DIFF_all_acq(indices(1:length(indices)),:)), ...
+    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+hold on;
+h2 = plot(GA_dev_all_acq.times, ...
+    mean(GA_dev_all_acq.data(indices(1:length(indices)),:)), ...
+    'Color', '#f78d95', 'Linewidth', 2);
+hold on;
+h3 = plot(GA_dev_all_acq.times, ...
+    mean(GA_stan_all_acq.data(indices(1:length(indices)),:)), ...
+    'Color', '#3b8dca', 'Linewidth', 2);
+hold on;
+
+% Set axes
+ylims = [-10 10];
+xlims = [-200 650];
+ylim(ylims);
+xlim(xlims);
+set(gca,'YDir','reverse'); % reverse axes
+
+% Add lines
+hline = line(xlim, [0,0],'LineWidth',1);
+hline.Color = 'black';
+vline = line([0 0], ylim,'LineWidth',1);
+vline.Color = 'black';
+
+% Title, labels, legend
+% title('Collapsed localizer ACQ ')
+% subtitle(strjoin(ROI_labels, ' '));
+% xlabel('msec')
+% ylabel('µV')
+
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (/fɪ/)', ...
+%     'Standard (/fɛ/)'}, ...
+%     'Location','northeast');
+
+% General make prettier
+ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+box(ax, 'off'); % remove box
+ax.FontSize = 20;
+set(gcf,'color','white'); % white background. gcf = current figure handle
+
+% Add a grey transparent rectangle TIMEWINDOW
+x_rect = [twstartacq, twendacq, twendacq, twstartacq]; % x-coordinates of the rectangle
+y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+% Move the rectangle to the back
+uistack(hRect, 'bottom');
+
+% Add a dark grey vertical line at the middle of the rectangle
+x_middle = (twstartacq + twendacq) / 2;
+hLine = line([x_middle, x_middle], ylims, 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5, 'LineStyle', ':');
+% Move the line to the back
+uistack(hLine, 'bottom');
+
+% Ticks
+ax.XTick = [-200 -100 0 100 200 300 400 500 600 ]; % starting point, steps, end point
+ax.XTickLabel = {};
+ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+ax.YTickLabel = {};
+
+% Remove the box and set ticks to be on the axes
+set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+set(gca,'LineWidth',1)
+
+% Save figure
+exportgraphics(gca, strcat(DIR.plotsMS, ...
+    strcat('Colloc_ACQ_',roi,'.jpeg')), ...
+    'Resolution', 300);
+
+
+% REC
+fig = figure;
+h1 = plot(GA_dev_all_rec.times, ...
+    mean(DIFF_all_rec(indices(1:length(indices)),:)), ...
+    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+hold on;
+h2 = plot(GA_dev_all_rec.times, ...
+    mean(GA_dev_all_rec.data(indices(1:length(indices)),:)), ...
+    'Color', '#f78d95', 'Linewidth', 2);
+hold on;
+h3 = plot(GA_dev_all_rec.times, ...
+    mean(GA_stan_all_rec.data(indices(1:length(indices)),:)), ...
+    'Color', '#3b8dca', 'Linewidth', 2);
+hold on;
+
+% Set axes
+ylims = [-10 10];
+xlims = [-200 650];
+ylim(ylims);
+xlim(xlims);
+set(gca,'YDir','reverse'); % reverse axes
+
+% Add lines
+hline = line(xlim, [0,0],'LineWidth',1);
+hline.Color = 'black';
+vline = line([0 0], ylim,'LineWidth',1);
+vline.Color = 'black';
+
+% Title, labels, legend
+% title('Collapsed localizer REC ')
+% subtitle(strjoin(ROI_labels, ' '));
+% xlabel('msec')
+% ylabel('µV')
+
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (/fɪ/)', ...
+%     'Standard (/fɛ/)'}, ...
+%     'Location','northeast');
+
+% General make prettier
+ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+box(ax, 'off'); % remove box
+ax.FontSize = 20;
+set(gcf,'color','white'); % white background. gcf = current figure handle
+
+% Add a grey transparent rectangle TIMEWINDOW
+x_rect = [twstartrec, twendrec, twendrec, twstartrec]; % x-coordinates of the rectangle
+y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+% Move the rectangle to the back
+uistack(hRect, 'bottom');
+
+% Add a dark grey vertical line at the middle of the rectangle
+x_middle = (twstartrec + twendrec) / 2;
+hLine = line([x_middle, x_middle], ylims, 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5, 'LineStyle', ':');
+% Move the line to the back
+uistack(hLine, 'bottom');
+
+% Ticks
+ax.XTick = [-200 -100 0 100 200 300 400 500 600 ]; % starting point, steps, end point
+ax.XTickLabel = {};
+ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+ax.YTickLabel = {};
+
+% Remove the box and set ticks to be on the axes
+set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+set(gca,'LineWidth',1)
+
+% Save figure
+exportgraphics(gca, strcat(DIR.plotsMS, ...
+    strcat('Colloc_REC_',roi,'.jpeg')), ...
+    'Resolution', 300);
+
+% RECFAM
+fig = figure;
+h1 = plot(GA_dev_all_recfam.times, ...
+    mean(DIFF_all_recfam(indices(1:length(indices)),:)), ...
+    'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+hold on;
+h2 = plot(GA_dev_all_recfam.times, ...
+    mean(GA_dev_all_recfam.data(indices(1:length(indices)),:)), ...
+    'Color', '#f78d95', 'Linewidth', 2);
+hold on;
+h3 = plot(GA_dev_all_recfam.times, ...
+    mean(GA_stan_all_recfam.data(indices(1:length(indices)),:)), ...
+    'Color', '#3b8dca', 'Linewidth', 2);
+hold on;
+
+% Set axes
+ylims = [-10 10];
+xlims = [-200 650];
+ylim(ylims);
+xlim(xlims);
+set(gca,'YDir','reverse'); % reverse axes
+
+% Add lines
+hline = line(xlim, [0,0],'LineWidth',1);
+hline.Color = 'black';
+vline = line([0 0], ylim,'LineWidth',1);
+vline.Color = 'black';
+
+% Title, labels, legend
+% title('Collapsed localizer RECFAM ')
+% subtitle(strjoin(ROI_labels, ' '));
+% xlabel('msec')
+% ylabel('µV')
+
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (/fɪ/)', ...
+%     'Standard (/fɛ/)'}, ...
+%     'Location','northeast');
+
+% General make prettier
+ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+box(ax, 'off'); % remove box
+ax.FontSize = 20;
+set(gcf,'color','white'); % white background. gcf = current figure handle
+
+% Add a grey transparent rectangle TIMEWINDOW
+x_rect = [twstartrecfam, twendrecfam, twendrecfam, twstartrecfam]; % x-coordinates of the rectangle
+y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+% Move the rectangle to the back
+uistack(hRect, 'bottom');
+
+% Add a dark grey vertical line at the middle of the rectangle
+x_middle = (twstartrecfam + twendrecfam) / 2;
+hLine = line([x_middle, x_middle], ylims, 'Color', [0.5 0.5 0.5], 'LineWidth', 1.5, 'LineStyle', ':');
+% Move the line to the back
+uistack(hLine, 'bottom');
+
+% Ticks
+ax.XTick = [-200 -100 0 100 200 300 400 500 600 ]; % starting point, steps, end point
+ax.XTickLabel = {};
+ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+ax.YTickLabel = {};
+
+% Remove the box and set ticks to be on the axes
+set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+set(gca,'LineWidth',1)
+
+% Save figure
+exportgraphics(gca, strcat(DIR.plotsMS, ...
+    strcat('Colloc_RECFAM_',roi,'.jpeg')), ...
+    'Resolution', 300);
+
+%% Plot conditions
+% Loop through conditions and plot
+%conditions = {'acq', 'rec', 'recfam', 'recnotw'};
+conditions = {'acq'};
+
+time_windows = {
+    [twstartacq, twendacq], ...
+    [twstartrec, twendrec], ...
+    [twstartrecfam, twendrecfam], ...
+    [0, 0]
+    };
+
+for c = 1:length(conditions)
+    rq = conditions{c};
+    twstart = time_windows{c}(1);
+    twend = time_windows{c}(2);
+
+
+    %% TRAINING SPEAKER FAM
+    fig = figure;
+    h1 = plot(GA_dev12_fam.times, ...
+        mean(DIFF_12_fam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev12_fam.times, ...
+        mean(GA_dev12_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev12_fam.times, ...
+        mean(GA_stan12_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Training speaker - Familiar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % legend([h1, h2, h3], ...
+    %     {'Difference', ...
+    %     'Deviant (/fɪ/)', ...
+    %     'Standard (/fɛ/)'}, ...
+    %     'Location','northeast');
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 20;
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Add a grey transparent rectangle STIMULI
+    x_rect = [0, 65, 65, 0]; % x-coordinates of the rectangle
+    y_rect = [0, 0, 1, 1]; % y-coordinates of the rectangle
+    hRectstimf = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+    % Move the rectangle to the back
+    uistack(hRectstimf, 'bottom');
+
+    x_rect = [65, 140, 140, 65]; % x-coordinates of the rectangle
+    y_rect = [0, 0, 1, 1]; % y-coordinates of the rectangle
+    hRectstimv = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+    % Move the rectangle to the back
+    uistack(hRectstimv, 'bottom');
+
+    if ~strcmp(rq, 'recnotw')
+        % Add a grey transparent rectangle TIMEWINDOW
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600 ]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Trainingspeaker_FAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+
+    %% TRAINING SPEAKER UNFAM
+    fig = figure;
+    h1 = plot(GA_dev12_unfam.times, ...
+        mean(DIFF_12_unfam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev12_unfam.times, ...
+        mean(GA_dev12_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev12_unfam.times, ...
+        mean(GA_stan12_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Training speaker - Unfamiliar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    set(gcf,'color','none'); % white background. gcf = current figure handle
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Trainingspeaker_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+    %% TRAINING SPEAKER COMBINED (FAM and UNFAM)
+    fig = figure;
+
+    % Combine FAM and UNFAM for Training Speaker
+    combined_diff = (DIFF_12_fam + DIFF_12_unfam) / 2; % Average difference waves
+    combined_data = (GA_dev12_fam.data + GA_dev12_unfam.data) / 2; % Average data waves
+    combined_stan = (GA_stan12_fam.data + GA_stan12_unfam.data) / 2; % Average standard
+
+    % Plot combined difference
+    h1 = plot(GA_dev12_fam.times, ...
+        mean(combined_diff(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
+    hold on;
+
+    % Plot combined data
+    h2 = plot(GA_dev12_fam.times, ...
+        mean(combined_data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+
+    % Plot combined standard
+    h3 = plot(GA_dev12_fam.times, ...
+        mean(combined_stan(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca, 'YDir', 'reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0, 0], 'LineWidth', 1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim, 'LineWidth', 1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Training speaker - Combined FAM and UNFAM')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % % xlabel('msec')
+    % % ylabel('µV')
+
+    % Add a grey transparent rectangle STIMULI
+    x_rect = [0, 65, 65, 0]; % x-coordinates of the rectangle
+    y_rect = [0, 0, 1, 1]; % y-coordinates of the rectangle
+    hRectstimf = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+    % Move the rectangle to the back
+    uistack(hRectstimf, 'bottom');
+
+    x_rect = [65, 140, 140, 65]; % x-coordinates of the rectangle
+    y_rect = [0, 0, 1, 1]; % y-coordinates of the rectangle
+    hRectstimv = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+    % Move the rectangle to the back
+    uistack(hRectstimv, 'bottom');
+
+    % General make prettier
+    ax = gca;
+    box(ax, 'off');
+    ax.FontSize = 10;
+    set(gcf, 'color', 'white');
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Trainingspeaker_combined_FAM_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+
+    %% SPEAKER 3 FAM
+    fig = figure;
+    h1 = plot(GA_dev3_fam.times, ...
+        mean(DIFF_3_fam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev3_fam.times, ...
+        mean(GA_dev3_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev3_fam.times, ...
+        mean(GA_stan3_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Familiar non-training speaker - Familiar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('S3_FAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+    %% SPEAKER 3 UNFAM
+    fig = figure;
+    h1 = plot(GA_dev3_unfam.times, ...
+        mean(DIFF_3_unfam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev3_unfam.times, ...
+        mean(GA_dev3_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev3_unfam.times, ...
+        mean(GA_stan3_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Familiar non-training speaker - Unfamiliar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('S3_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+    %% SPEAKER 4 FAM
+    fig = figure;
+    h1 = plot(GA_dev4_fam.times, ...
+        mean(DIFF_4_fam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev4_fam.times, ...
+        mean(GA_dev4_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev4_fam.times, ...
+        mean(GA_stan4_fam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Novel speaker - Familiar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+
+    % Add a grey transparent rectangle STIMULI
+    if strcmp(rq, 'acq')
+        x_rect = [0, 65, 65, 0]; % x-coordinates of the rectangle
+        y_rect = [0, 0, -1, -1]; % y-coordinates of the rectangle
+        hRectstimf = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+        % Move the rectangle to the back
+        uistack(hRectstimf, 'bottom');
+
+        x_rect = [65, 140, 140, 65]; % x-coordinates of the rectangle
+        y_rect = [0, 0, -1, -1]; % y-coordinates of the rectangle
+        hRectstimv = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', [.7 .7 .7]);
+        % Move the rectangle to the back
+        uistack(hRectstimv, 'bottom');
+    end
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('S4_FAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+    %% SPEAKER 4 UNFAM
+    fig = figure;
+    h1 = plot(GA_dev4_unfam.times, ...
+        mean(DIFF_4_unfam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle',':');
+    hold on;
+    h2 = plot(GA_dev4_unfam.times, ...
+        mean(GA_dev4_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+    h3 = plot(GA_dev4_unfam.times, ...
+        mean(GA_stan4_unfam.data(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca,'YDir','reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0,0],'LineWidth',1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim,'LineWidth',1);
+    vline.Color = 'black';
+
+    % Title, labels, legend
+    % title('Novel speaker - Unfamiliar voice condition')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca; % ax = gca returns the current axes (or standalone visualization) in the current figure.
+    box(ax, 'off'); % remove box
+    ax.FontSize = 10;
+    set(gcf,'color','white'); % white background. gcf = current figure handle
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('S4_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+    %% NOVEL SPEAKER COMBINED (FAM and UNFAM)
+    fig = figure;
+
+    % Combine FAM and UNFAM for Novel Speaker
+    combined_diff_novel  = (DIFF_4_fam + DIFF_4_unfam) / 2; % Average difference waves
+    combined_data_novel = (GA_dev4_fam.data + GA_dev4_unfam.data) / 2; % Average data waves
+    combined_stan_novel = (GA_stan4_fam.data + GA_stan4_unfam.data) / 2; % Average standard
+
+    % Plot combined difference
+    h1 = plot(GA_dev4_fam.times, ...
+        mean(combined_diff_novel(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
+    hold on;
+
+    % Plot combined data
+    h2 = plot(GA_dev4_fam.times, ...
+        mean(combined_data_novel(indices(1:length(indices)),:)), ...
+        'Color', '#f78d95', 'Linewidth', 2);
+    hold on;
+
+    % Plot combined standard
+    h3 = plot(GA_dev4_fam.times, ...
+        mean(combined_stan_novel(indices(1:length(indices)),:)), ...
+        'Color', '#3b8dca', 'Linewidth', 2);
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca, 'YDir', 'reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0, 0], 'LineWidth', 1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim, 'LineWidth', 1);
+    vline.Color = 'black';
+
+    % % Title, labels, legend
+    % title('Novel speaker - Combined FAM and UNFAM')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca;
+    box(ax, 'off'); % Remove outer box
+    ax.FontSize = 10;
+    set(gcf, 'color', 'white');
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Novelspeaker_combined_FAM_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+    %% COMBINED SPEAKERS DIFFWAVES OVERLAYED (TRAINING SPEAKER and NOVEL SPEAKER)
+    fig = figure;
+
+    % Plot diff FAM
+    h1 = plot(GA_dev4_fam.times, ...
+        mean(combined_diff(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-');
+    hold on;
+
+    % Plot diff UNFAM
+    h2 = plot(GA_dev4_fam.times, ...
+        mean(combined_diff_novel(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-.');
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca, 'YDir', 'reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0, 0], 'LineWidth', 1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim, 'LineWidth', 1);
+    vline.Color = 'black';
+
+    % % Title, labels, legend
+    % title('Novel speaker - Combined FAM and UNFAM')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+%     legend([h1, h2], ...
+%     {'Test Speaker = Training Speaker', ...
+%     'Test Spealer = Novel Speaker'}, ...
+%     'Location','northwest', ...
+%      'FontSize', 15);
+
+    % General make prettier
+    ax = gca;
+    box(ax, 'off'); % Remove outer box
+    ax.FontSize = 10;
+    set(gcf, 'color', 'white');
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none', 'HandleVisibility','off');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Combinedspeakers_diffwavesoverlayed_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+
+    %% TRAINING SPEAKER DIFFWAVES OVERLAYED (FAM and UNFAM)
+    fig = figure;
+
+    % Plot diff FAM
+    h1 = plot(GA_dev4_fam.times, ...
+        mean(DIFF_12_fam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-');
+    hold on;
+
+    % Plot diff UNFAM
+    h2 = plot(GA_dev4_fam.times, ...
+        mean(DIFF_12_unfam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-.');
+    hold on;
+
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca, 'YDir', 'reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0, 0], 'LineWidth', 1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim, 'LineWidth', 1);
+    vline.Color = 'black';
+
+    % % Title, labels, legend
+    % title('Novel speaker - Combined FAM and UNFAM')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % legend([h1, h2], ...
+    % {'Familiar Training Speaker', ...
+    % 'Unfamiliar Training Speaker'}, ...
+    % 'Location','northwest', ...
+    %  'FontSize', 15);
+
+    % General make prettier
+    ax = gca;
+    box(ax, 'off'); % Remove outer box
+    ax.FontSize = 10;
+    set(gcf, 'color', 'white');
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none', 'HandleVisibility','off');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Trainingspeaker_diffwavesoverlayed_FAM_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+    %% NOVEL SPEAKER DIFFWAVES OVERLAYED (FAM and UNFAM)
+    fig = figure;
+
+    % Plot diff FAM
+    h1 = plot(GA_dev4_fam.times, ...
+        mean(DIFF_4_fam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-');
+    hold on;
+
+    % Plot diff UNFAM
+    h2 = plot(GA_dev4_fam.times, ...
+        mean(DIFF_4_unfam(indices(1:length(indices)),:)), ...
+        'Color', 'black', 'Linewidth', 3, 'LineStyle', '-.');
+    hold on;
+
+ 
+    % Set axes
+    ylims = [-10 10];
+    xlims = [-200 650];
+    ylim(ylims);
+    xlim(xlims);
+    set(gca, 'YDir', 'reverse'); % reverse axes
+
+    % Add lines
+    hline = line(xlim, [0, 0], 'LineWidth', 1);
+    hline.Color = 'black';
+    vline = line([0 0], ylim, 'LineWidth', 1);
+    vline.Color = 'black';
+
+    % % Title, labels, legend
+    % title('Novel speaker - Combined FAM and UNFAM')
+    % subtitle(strjoin(ROI_labels, ' '));
+    % xlabel('msec')
+    % ylabel('µV')
+
+    % General make prettier
+    ax = gca;
+    box(ax, 'off'); % Remove outer box
+    ax.FontSize = 10;
+    set(gcf, 'color', 'white');
+
+    % Add a grey transparent rectangle TIMEWINDOW
+    if ~strcmp(rq, 'recnotw')
+        x_rect = [twstart, twend, twend, twstart]; % x-coordinates of the rectangle
+        y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)]; % y-coordinates of the rectangle
+        hRect = fill(x_rect, y_rect, 'k', 'FaceAlpha', 0.1, 'EdgeColor', 'none');
+        % Move the rectangle to the back
+        uistack(hRect, 'bottom');
+    end
+
+    % Add a grey transparent shaded rectangle TIMEWINDOW EARLY
+    % Rectangle 
+    x_rect = [140, 334, 334, 140];
+    if ~exist('ylims','var') || numel(ylims)~=2
+        ylims = get(gca,'YLim');
+    end
+    y_rect = [ylims(1), ylims(1), ylims(2), ylims(2)];
+    % Light base fill (capture handle)
+    hFill = fill(x_rect, y_rect, [0.92 0.92 0.92], ...
+        'FaceAlpha', 0.15, 'EdgeColor', 'none');
+    hold on
+    % Hatch parameters
+    spacing = 3;            % line spacing
+    theta   = 25;           % hatch angle
+    lw      = 1.0;          % hatch line width
+    col     = [0.8 0.8 0.8];% hatch and outline color
+    % Bounds and center
+    xMin = min(x_rect); xMax = max(x_rect);
+    yMin = min(y_rect); yMax = max(y_rect);
+    cx = mean(x_rect); cy = mean(y_rect);
+    % Direction vectors
+    d = [cosd(theta), sind(theta)];    % hatch direction
+    p = [-sind(theta), cosd(theta)];   % perpendicular
+    % Large margin to ensure full coverage
+    diagLen = hypot(xMax - xMin, yMax - yMin);
+    margin  = 10 * diagLen;
+    % Offsets across the rectangle
+    halfSpan = hypot(xMax - cx, yMax - cy) + margin;
+    offsets = -halfSpan : spacing : halfSpan;
+    % Resolution for sampling along each line
+    N = 30000;
+    % Pre-create a group for hatches so we can push them back together
+    hGroup = hggroup; % container for hatch lines
+    for k = 1:numel(offsets)
+        % A long line through the rectangle
+        c0 = [cx, cy] + offsets(k) * p;
+        A = c0 - margin * d;
+        B = c0 + margin * d;
+        xs = linspace(A(1), B(1), N);
+        ys = linspace(A(2), B(2), N);
+        in = inpolygon(xs, ys, x_rect, y_rect);
+        if any(in)
+            % Connect the first and last in-polygon samples to get one full segment
+            ii = find(in);
+            i1 = ii(1); i2 = ii(end);
+            line('XData',[xs(i1) xs(i2)], 'YData',[ys(i1) ys(i2)], ...
+                 'Color', col, 'LineWidth', lw, 'Parent', hGroup);
+        end
+    end
+    % Thin outline around the shaded area in same color as hatch lines
+    hOutline = line('XData',[x_rect x_rect(1)], 'YData',[y_rect y_rect(1)], ...
+        'Color', col, 'LineWidth', 0.75, 'Clipping','on');
+    % Send everything to the back
+    uistack(hFill,   'bottom');
+    uistack(hGroup,  'bottom');
+    uistack(hOutline,'bottom');
+    hold off
+
+    % Ticks
+    ax.XTick = [-200 -100 0 100 200 300 400 500 600]; % starting point, steps, end point
+    ax.XTickLabel = {};
+    ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
+    ax.YTickLabel = {};
+
+    % Remove the box and set ticks to be on the axes
+    set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
+        'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
+
+    set(gca,'LineWidth',1)
+
+    % Save figure
+    exportgraphics(gca, strcat(DIR.plotsMS, ...
+        strcat('Novelspeaker_diffwavesoverlayed_FAM_UNFAM_',rq,'_',roi,'.jpeg')), ...
+        'Resolution', 300);
+
+
+end
+
+%% Topoplots
+% % Note: EEGlabs colors for the topoplot are horrible, because it overwrites
+% % the systems standard. I set it back by changing in
+% % eeglab2021.0/functions/sigprocfunc/icadefs.m line 70 from
+% % DEFAULT_COLORMAP = 'jet; ; to
+% % DEFAULT_COLORMAP = cmap_rdylbu
+% % that is a functions from colorbrewer, adapted by Benedikt Ehringer
+% 
+% cd(DIR.EEGLAB_PATH);
+% eeglab; close;
+% 
+% % Define chanlocs (same everywhere!)
+% chanlocs = GA_dev12_fam.chanlocs;
+% 
+% % All speakers ACQ --------------------------------------------------------
+% TIME1   = twstartacq/1000; % time after stimulus onset (in seconds)
+% TIME2   = twendacq/1000; % time after Stimulus onset (in seconds)
+% sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
+% sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
+% 
+% DIFF1 = DIFF_all_acq; % difference across mean of all subjects
+% DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
+% DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+% 
+% fig = figure;
+% %topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+% EEG.chaninfo.plotrad = 0.5;
+% topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
+%     'electrodes', 'labels', 'plotrad', 0.5);
+% 
+% colorbar
+% title(strcat('All speakers ACQ (Difference): ', int2str(twstartacq), '-', int2str(twendacq), ' ms'));
+% exportgraphics(gcf, strcat(DIR.plotsMS, 'AllspeakersACQ_topo.jpeg'), 'Resolution', 300);
+% 
+% 
+% % All speakers REC --------------------------------------------------------
+% TIME1   = twstartrec/1000; % time after stimulus onset (in seconds)
+% TIME2   = twendrec/1000; % time after Stimulus onset (in seconds)
+% sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
+% sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
+% 
+% DIFF1 = DIFF_all_rec; % difference across mean of all subjects
+% DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
+% DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+% 
+% fig = figure;
+% %topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+% topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
+%     'electrodes', 'labels');
+% colorbar
+% title(strcat('All speakers REC (Difference): ', int2str(twstartrec), '-', int2str(twendrec), ' ms'));
+% exportgraphics(gcf, strcat(DIR.plotsMS, 'AllspeakersREC_topo.jpeg'), 'Resolution', 300);
+% 
+% % You can add the rest of the topoplots later, if needed.
+% 
+
+% %% Make empty head plot for legend
+% % to make this plot, I increased the fontsize in topoplot.m:
+% % p_02453/packages/eeglab2021.0/functions/sigprocfunctions, change line 257
+% % to EFSIZE = 15; % use current default fontsize for electrode labels
+% 
+% % remove functional electrodes (watch out: the numbers change after
+% % removing one:)
+% % load EEGlab 
+% DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
+% rmpath(genpath(DIR.EEGLAB_PATH)); 
+% cd(DIR.EEGLAB_PATH);
+% eeglab; close;
+% GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
+% GA_dev12_fam.chanlocs(26)=[]; %V2
+% GA_dev12_fam.chanlocs(13)=[];%Fp2
+% GA_dev12_fam.chanlocs(10)=[];%F9
+% GA_dev12_fam.chanlocs(5)=[];%F10
+% 
+% fig = figure;
+% topoplot(300:500,GA_dev12_fam.chanlocs, 'style', 'blank', 'nosedir', '+X', ...
+%     'electrodes', 'labels');
+% 
+% exportgraphics(gcf, strcat(DIR.plotsMS, 'EmptyHead_20.jpeg'), 'Resolution', 300);
+
+%% To add legend to the ERP plots, make one plot with this added, and copy to the other plots:
+% legend([h1, h2, h3], ...
+%     {'Difference', ...
+%     'Deviant (fɪ)', ...
+%     'Standard (fɛ)'}, ...
+%     'Location','northeast');
+
+
+
+
+end
+

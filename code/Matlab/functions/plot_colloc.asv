@@ -390,9 +390,9 @@ GA_dev4_fam = pop_loadset('ga_fam_S4_Dev.set');
 GA_dev4_unfam = pop_loadset('ga_unfam_S4_Dev.set');
 
 GA_dev_all = pop_mergeset(GA_dev12_fam, GA_dev12_unfam);
-%GA_dev_all = pop_mergeset(GA_dev_all, GA_dev3_fam); 
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev3_fam); 
 GA_dev_all = pop_mergeset(GA_dev_all, GA_dev3_unfam); 
-%GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_fam);
+GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_fam);
 GA_dev_all = pop_mergeset(GA_dev_all, GA_dev4_unfam);
 
 GA_dev_all.data = mean(GA_dev_all.data(:,:,:),3);
@@ -405,9 +405,9 @@ GA_stan4_fam = pop_loadset('ga_fam_S4_Stan.set');
 GA_stan4_unfam = pop_loadset('ga_unfam_S4_Stan.set');
 
 GA_stan_all = pop_mergeset(GA_stan12_fam, GA_stan12_unfam);
-%GA_stan_all = pop_mergeset(GA_stan_all, GA_stan3_fam); 
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan3_fam); 
 GA_stan_all = pop_mergeset(GA_stan_all, GA_stan3_unfam); 
-%GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_fam);
+GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_fam);
 GA_stan_all = pop_mergeset(GA_stan_all, GA_stan4_unfam);
 
 GA_stan_all.data = mean(GA_stan_all.data(:,:,:),3);

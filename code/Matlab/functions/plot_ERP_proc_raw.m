@@ -1,16 +1,10 @@
-function plot_ERP_proc(DIR, twstartacq, twendacq, twstartrec, twendrec)
+function plot_ERP_proc_raw(DIR, twstartacq, twendacq, twstartrec, twendrec)
 
 % Plot the ERP per TestSpeaker per Group (FAM-UNFAM)
 
-% NB: if you add F7 and F8 to the ROI, add it here!
 
 %% Set up
-if roi == "normal"
-    ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
-elseif roi == "frontal"
-    ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6'};
-end
-
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4','F7','F8'};
 
 % load EEGlab 
 DIR.EEGLAB_PATH = '/data/p_02453/packages/eeglab2021.0';
@@ -20,7 +14,7 @@ eeglab; close;
 
 % Load GAs (differently than in other plot scripts, for no reason:) same
 % outcome though)
-cd(DIR.grandaverage);
+cd(DIR.grandaverage_raw);
 
 GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
 GA_dev12_fam.data = mean(GA_dev12_fam.data(:,:,:),3);
@@ -129,8 +123,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Training speaker - Familiar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Training speaker - Familiar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -156,7 +150,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'Trainingspeaker_FAM.jpeg'), ...
+    'Trainingspeaker_FAM_raw.jpeg'), ...
     'Resolution', 300);
 
 %% TRAINING SPEAKER UNFAM
@@ -188,8 +182,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Training speaker - Unfamiliar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Training speaker - Unfamiliar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -215,73 +209,8 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'Trainingspeaker_UNFAM.jpeg'), ...
+    'Trainingspeaker_UNFAM_raw.jpeg'), ...
     'Resolution', 300);
-
-%% TRAINING SPEAKER COMBINED (FAM and UNFAM)
-fig = figure;
-
-% Combine FAM and UNFAM for Training Speaker
-combined_diff = (DIFF_12_fam + DIFF_12_unfam) / 2; % Average difference waves
-combined_data = (GA_dev12_fam.data + GA_dev12_unfam.data) / 2; % Average data waves
-combined_stan = (GA_stan12_fam.data + GA_stan12_unfam.data) / 2; % Average standard
-
-% Plot combined difference
-h1 = plot(GA_dev12_fam.times, ...
-    mean(combined_diff(indices(1:length(indices)),:)), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
-hold on;
-
-% Plot combined data
-h2 = plot(GA_dev12_fam.times, ...
-    mean(combined_data(indices(1:length(indices)),:)), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-
-% Plot combined standard
-h3 = plot(GA_dev12_fam.times, ...
-    mean(combined_stan(indices(1:length(indices)),:)), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-10 10]; 
-xlims = [-200 700];
-ylim(ylims);
-xlim(xlims);
-set(gca, 'YDir', 'reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0, 0], 'LineWidth', 1);
-hline.Color = 'black';
-vline = line([0 0], ylim, 'LineWidth', 1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Training speaker - Combined FAM and UNFAM')
-subtitle(strjoin(ROI_labels, ' ')); 
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; 
-box(ax, 'off'); 
-ax.FontSize = 10; 
-set(gcf, 'color', 'white'); 
-
-% Ticks
-ax.XTick = [-100 0 100 200 300 400 500 600 650]; 
-ax.XTickLabel = {'-100', '0', '', '', '', '', '', '600', ''};
-ax.YTick = [-20 -15 -10 -5 0 5 10 15 20];
-ax.YTickLabel = {'-20', '-15', '-10', '-5', '0', '5', '10', '15'};
-
-% Save figure
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'Trainingspeaker_combined_FAM_UNFAM.jpeg'), ...
-    'Resolution', 300);
-
-
-
 
 %% SPEAKER 3 FAM
 fig = figure;
@@ -312,8 +241,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Familiar non-training speaker - Familiar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Familiar non-training speaker - Familiar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -339,7 +268,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'S3_FAM.jpeg'), ...
+    'S3_FAM_raw.jpeg'), ...
     'Resolution', 300);
 
 %% SPEAKER 3 UNFAM
@@ -371,8 +300,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Familiar non-training speaker - Unfamiliar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Familiar non-training speaker - Unfamiliar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -398,75 +327,9 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'S3_UNFAM.jpeg'), ...
+    'S3_UNFAM_raw.jpeg'), ...
     'Resolution', 300);
 
-%% FAmNonTrain SPEAKER COMBINED (FAM and UNFAM)
-fig = figure;
-
-% Combine FAM and UNFAM for Novel Speaker
-combined_diff_novel = (DIFF_3_fam + DIFF_3_unfam) / 2; % Average difference waves
-combined_data_novel = (GA_dev3_fam.data + GA_dev3_unfam.data) / 2; % Average data waves
-combined_stan_novel = (GA_stan3_fam.data + GA_stan3_unfam.data) / 2; % Average standard
-
-% Plot combined difference
-h1 = plot(GA_dev4_fam.times, ...
-    mean(combined_diff_novel(indices(1:length(indices)),:)), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
-hold on;
-
-% Plot combined data
-h2 = plot(GA_dev4_fam.times, ...
-    mean(combined_data_novel(indices(1:length(indices)),:)), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-
-% Plot combined standard
-h3 = plot(GA_dev4_fam.times, ...
-    mean(combined_stan_novel(indices(1:length(indices)),:)), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-11 11]; 
-xlims = [-250 700];
-ylim(ylims);
-xlim(xlims);
-set(gca, 'YDir', 'reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0, 0], 'LineWidth', 1);
-hline.Color = 'black';
-vline = line([0 0], ylim, 'LineWidth', 1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('FamNonTrain speaker - Combined FAM and UNFAM')
-subtitle(strjoin(ROI_labels, ' ')); 
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; 
-box(ax, 'off'); % Remove outer box
-ax.FontSize = 10; 
-set(gcf, 'color', 'white'); 
-
-% Ticks
-ax.XTick = [-200 -100 0 100 200 300 400 500 600 650]; 
-ax.XTickLabel = {'-200','', '', '', '', '', '', '', '600', ''};
-ax.YTick = [-10 -5 0 5 10];
-ax.YTickLabel = {'-10', '', '', '', '10'};
-
-
-% Remove the box and set ticks to be on the axes
-set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
-    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
-
-% Save figure
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'FamNonTrain_combined_FAM_UNFAM_no_box.jpeg'), ...
-    'Resolution', 300);
 
 %% SPEAKER 4 FAM
 fig = figure;
@@ -497,8 +360,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Novel speaker - Familiar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Novel speaker - Familiar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -524,7 +387,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'S4_FAM.jpeg'), ...
+    'S4_FAM_raw.jpeg'), ...
     'Resolution', 300);
 
 
@@ -557,8 +420,8 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Novel speaker - Unfamiliar voice condition')
-subtitle(strjoin(ROI_labels, ' ')); 
+title('Novel speaker - Unfamiliar voice condition RAW')
+subtitle('F3, Fz, F4, F7, F8, FC5, FC6, Cz, C3, C4')
 xlabel('msec')
 ylabel('µV')
 
@@ -584,155 +447,87 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none')
 exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'S4_UNFAM.jpeg'), ...
+    'S4_UNFAM_raw.jpeg'), ...
     'Resolution', 300);
-
-%% NOVEL SPEAKER COMBINED (FAM and UNFAM)
-fig = figure;
-
-% Combine FAM and UNFAM for Novel Speaker
-combined_diff_novel = (DIFF_4_fam + DIFF_4_unfam) / 2; % Average difference waves
-combined_data_novel = (GA_dev4_fam.data + GA_dev4_unfam.data) / 2; % Average data waves
-combined_stan_novel = (GA_stan4_fam.data + GA_stan4_unfam.data) / 2; % Average standard
-
-% Plot combined difference
-h1 = plot(GA_dev4_fam.times, ...
-    mean(combined_diff_novel(indices(1:length(indices)),:)), ...
-    'Color', 'black', 'Linewidth', 3, 'LineStyle', ':');
-hold on;
-
-% Plot combined data
-h2 = plot(GA_dev4_fam.times, ...
-    mean(combined_data_novel(indices(1:length(indices)),:)), ...
-    'Color', '#f78d95', 'Linewidth', 2);
-hold on;
-
-% Plot combined standard
-h3 = plot(GA_dev4_fam.times, ...
-    mean(combined_stan_novel(indices(1:length(indices)),:)), ...
-    'Color', '#3b8dca', 'Linewidth', 2);
-hold on;
-
-% Set axes
-ylims = [-11 11]; 
-xlims = [-250 700];
-ylim(ylims);
-xlim(xlims);
-set(gca, 'YDir', 'reverse'); % reverse axes
-
-% Add lines
-hline = line(xlim, [0, 0], 'LineWidth', 1);
-hline.Color = 'black';
-vline = line([0 0], ylim, 'LineWidth', 1);
-vline.Color = 'black';
-
-% Title, labels, legend
-title('Novel speaker - Combined FAM and UNFAM')
-subtitle(strjoin(ROI_labels, ' ')); 
-xlabel('msec')
-ylabel('µV')
-
-% General make prettier
-ax = gca; 
-box(ax, 'off'); % Remove outer box
-ax.FontSize = 10; 
-set(gcf, 'color', 'white'); 
-
-% Ticks
-ax.XTick = [-200 -100 0 100 200 300 400 500 600 650]; 
-ax.XTickLabel = {'-200','', '', '', '', '', '', '', '600', ''};
-ax.YTick = [-10 -5 0 5 10];
-ax.YTickLabel = {'-10', '', '', '', '10'};
-
-
-% Remove the box and set ticks to be on the axes
-set(gca, 'Box', 'off', 'TickDir', 'both', 'TickLength', [0.01 0.01], ...
-    'XColor', 'k', 'YColor', 'k', 'XAxisLocation', 'origin', 'YAxisLocation', 'origin');
-
-% Save figure
-exportgraphics(gcf, strcat(DIR.plotsERPproc, ...
-    'Novelspeaker_combined_FAM_UNFAM_no_box.jpeg'), ...
-    'Resolution', 300);
-
 
 
 %% Topoplots
-% % Note: EEGlabs colors for the topoplot are horrible, because it overwrites
-% % the systems standard. I set it back by changing in
-% % eeglab2021.0/functions/sigprocfunc/icadefs.m line 70 from
-% % DEFAULT_COLORMAP = 'jet; ; to
-% % DEFAULT_COLORMAP = cmap_rdylbu
-% % that is a functions from colorbrewer, adapted by Benedikt Ehringer
-% 
-% cd(DIR.EEGLAB_PATH);
-% eeglab; close;
-% 
-% % Define chanlocs (same everywhere!)
-% chanlocs = GA_dev12_fam.chanlocs;
-% 
-% % All speakers ACQ --------------------------------------------------------
-% TIME1   = twstartacq/1000; % time after stimulus onset (in seconds)
-% TIME2   = twendacq/1000; % time after Stimulus onset (in seconds)
-% sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
-% sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
-% 
-% DIFF1 = DIFF_all_acq; % difference across mean of all subjects
-% DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
-% DIFF_TW1 = mean(DIFF_T1,2); % calculate average
-% 
-% fig = figure;
-% %topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
-% EEG.chaninfo.plotrad = 0.5;
-% topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
-%     'electrodes', 'labels', 'plotrad', 0.5);
-% 
-% colorbar
-% title(strcat('All speakers ACQ (Difference): ', int2str(twstartacq), '-', int2str(twendacq), ' ms'));
-% exportgraphics(gcf, strcat(DIR.plotsERPproc, 'AllspeakersACQ_topo.jpeg'), 'Resolution', 300);
-% 
-% 
-% % All speakers REC --------------------------------------------------------
-% TIME1   = twstartrec/1000; % time after stimulus onset (in seconds)
-% TIME2   = twendrec/1000; % time after Stimulus onset (in seconds)
-% sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
-% sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
-% 
-% DIFF1 = DIFF_all_rec; % difference across mean of all subjects
-% DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
-% DIFF_TW1 = mean(DIFF_T1,2); % calculate average
-% 
-% fig = figure;
-% %topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
-% topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
-%     'electrodes', 'labels');
-% colorbar
-% title(strcat('All speakers REC (Difference): ', int2str(twstartrec), '-', int2str(twendrec), ' ms'));
-% exportgraphics(gcf, strcat(DIR.plotsERPproc, 'AllspeakersREC_topo.jpeg'), 'Resolution', 300);
-% 
-% % You can add the rest of the topoplots later, if needed.
-% 
+% Note: EEGlabs colors for the topoplot are horrible, because it overwrites
+% the systems standard. I set it back by changing in
+% eeglab2021.0/functions/sigprocfunc/icadefs.m line 70 from
+% DEFAULT_COLORMAP = 'jet; ; to
+% DEFAULT_COLORMAP = cmap_rdylbu
+% that is a functions from colorbrewer, adapted by Benedikt Ehringer
+
+cd(DIR.EEGLAB_PATH);
+eeglab; close;
+
+% Define chanlocs (same everywhere!)
+chanlocs = GA_dev12_fam.chanlocs;
+
+% All speakers ACQ --------------------------------------------------------
+TIME1   = twstartacq/1000; % time after stimulus onset (in seconds)
+TIME2   = twendacq/1000; % time after Stimulus onset (in seconds)
+sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
+sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
+
+DIFF1 = DIFF_all_acq; % difference across mean of all subjects
+DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
+DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+
+fig = figure;
+%topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+EEG.chaninfo.plotrad = 0.5;
+topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
+    'electrodes', 'labels', 'plotrad', 0.5);
+
+colorbar
+title(strcat('RAW All speakers ACQ (Difference): ', int2str(twstartacq), '-', int2str(twendacq), ' ms'));
+exportgraphics(gcf, strcat(DIR.plotsERPproc, 'AllspeakersACQ_topo_raw.jpeg'), 'Resolution', 300);
+
+
+% All speakers REC --------------------------------------------------------
+TIME1   = twstartrec/1000; % time after stimulus onset (in seconds)
+TIME2   = twendrec/1000; % time after Stimulus onset (in seconds)
+sample1 = round(eeg_lat2point(TIME1,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax]));% convert TIME into EEG sampling point:
+sample2 = round(eeg_lat2point(TIME2,1,GA_dev12_fam.srate,[GA_dev12_fam.xmin GA_dev12_fam.xmax])); % convert TIME into EEG sampling point:
+
+DIFF1 = DIFF_all_rec; % difference across mean of all subjects
+DIFF_T1 = DIFF1(:,sample1:sample2); % new matrix with values from TIME1-TIME2 ms
+DIFF_TW1 = mean(DIFF_T1,2); % calculate average
+
+fig = figure;
+%topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-5 5], 'style', 'fill', 'nosedir', '+X');
+topoplot(DIFF_TW1(:,:), chanlocs, 'maplimits',[-8 8], 'style', 'straight', 'nosedir', '+X', ...
+    'electrodes', 'labels');
+colorbar
+title(strcat('RAW All speakers REC (Difference): ', int2str(twstartrec), '-', int2str(twendrec), ' ms'));
+exportgraphics(gcf, strcat(DIR.plotsERPproc, 'AllspeakersREC_topo_raw.jpeg'), 'Resolution', 300);
+
+% You can add the rest of the topoplots later, if needed.
+
 
 %% Make empty head plot for legend
 % to make this plot, I increased the fontsize in topoplot.m:
 % p_02453/packages/eeglab2021.0/functions/sigprocfunctions, change line 257
 % to EFSIZE = 15; % use current default fontsize for electrode labels
 
-% remove functional electrodes (watch out: the numbers change after
+% % remove functional electrodes (watch out: the numbers change after
 % removing one:)
-GA_dev12 = pop_loadset('ga_101-102.set');
-GA_dev12.chanlocs(1)=[]; %EOG
-GA_dev12.chanlocs(1)=[];%Fp1
-GA_dev12.chanlocs(1)=[];%FP2
-GA_dev12.chanlocs(6)=[];%F9
-GA_dev12.chanlocs(6)=[];%F10
-GA_dev12.chanlocs(14)=[];%FP9
-GA_dev12.chanlocs(14)=[];%FP10
-
-fig = figure;
-topoplot(DIFF_TW1(:,:),GA_dev12.chanlocs, 'style', 'blank', 'nosedir', '+X', ...
-    'electrodes', 'labels');
-
-exportgraphics(gcf, strcat(DIR.plotsERPproc, 'EmptyHead.jpeg'), 'Resolution', 300);
+% GA_dev12 = pop_loadset('ga_101-102.set');
+% GA_dev12.chanlocs(1)=[]; %EOG
+% GA_dev12.chanlocs(1)=[];%Fp1
+% GA_dev12.chanlocs(1)=[];%FP2
+% GA_dev12.chanlocs(6)=[];%F9
+% GA_dev12.chanlocs(6)=[];%F10
+% GA_dev12.chanlocs(14)=[];%FP9
+% GA_dev12.chanlocs(14)=[];%FP10
+% 
+% fig = figure;
+% topoplot(DIFF_TW1(:,:),GA_dev12.chanlocs, 'style', 'blank', 'nosedir', '+X', ...
+%     'electrodes', 'labels');
+% 
+% exportgraphics(gcf, strcat(DIR.plotsERPproc, 'EmptyHead.jpeg'), 'Resolution', 300);
 
 %% To add legend to the ERP plots, make one plot with this added, and copy to the other plots:
 % legend([h1, h2, h3], ...

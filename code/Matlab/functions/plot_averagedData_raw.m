@@ -1,8 +1,8 @@
-function plot_averagedData_woBLcor(DIR)
+function plot_averagedData_raw(DIR)
 
 
 %% Set up
-ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4','F7', 'F8'};
+ROI_labels = {'Fz', 'F3', 'F4', 'FC5', 'FC6', 'Cz', 'C3', 'C4'};
 maybeROI_labels = { 'F9', 'F10', 'V2', 'Fp2'};
 
 
@@ -13,7 +13,7 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
-cd(DIR.grandaverage_woBLcorr);
+cd(DIR.grandaverage_raw);
 
 % Make GAs for ACQ:
 GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
@@ -83,7 +83,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer ACQ All - Without BL Correction')
+title('Collapsed localizer ACQ All - RAW')
 xlabel('msec')
 ylabel('µV')
 
@@ -108,7 +108,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
 exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_ACQ_all_woBLcorr.jpeg'), ...
+    'ERP_Colloc_ACQ_all_RAW.jpeg'), ...
     'Resolution', 300);
 
 
@@ -120,7 +120,7 @@ rmpath(genpath(DIR.EEGLAB_PATH));
 cd(DIR.EEGLAB_PATH);
 eeglab; close;
 
-cd(DIR.grandaverage_woBLcorr);
+cd(DIR.grandaverage_raw);
 
 % Make GAs for RQ:
 GA_dev12_fam = pop_loadset('ga_fam_S12_Dev.set');
@@ -188,7 +188,7 @@ vline = line([0 0], ylim,'LineWidth',1);
 vline.Color = 'black';
 
 % Title, labels, legend
-title('Collapsed localizer REC - Without BL Correction')
+title('Collapsed localizer REC - RAW')
 xlabel('msec')
 ylabel('µV')
 
@@ -213,7 +213,7 @@ set(gca,'LineWidth',1)
 
 % Save figure (for transparent figure, add 'BackgroundColor', 'none'
 exportgraphics(gcf, strcat(DIR.plotsCL, ...
-    'ERP_Colloc_REC_all_woBLcorr.jpeg'), ...
+    'ERP_Colloc_REC_all_raw.jpeg'), ...
     'Resolution', 300);
 
 
