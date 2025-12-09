@@ -1,0 +1,5 @@
+Group,fam,unfam
+n,37,35
+age_mean,98.43,98.83
+age_sd,8.86,8.43
+num_females,17,17

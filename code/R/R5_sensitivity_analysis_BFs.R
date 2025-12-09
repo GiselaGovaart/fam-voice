@@ -1,3 +1,7 @@
+## This entire script is not relevant because there are no effects. 
+
+
+
 # sensitivity analysis for BF
 
 # code adapted from Nicenboim, Bruno, Daniel Schad, and Shravan Vasishth. "An introduction to Bayesian data analysis for cognitive science.

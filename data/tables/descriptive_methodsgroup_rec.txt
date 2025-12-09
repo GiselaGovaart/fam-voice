@@ -1,0 +1,5 @@
+Group,fam,unfam
+nrSpeakersDaily_mean,10.45, 9.35
+nrSpeakersDaily_sd,15.98,11.99
+daysVoicetraining_mean,20.11,20.68
+daysVoicetraining_sd,2.51,2.64

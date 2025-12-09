@@ -1,0 +1,11 @@
+Parameter,p_MAP,p < .05,log_BF,interpretation
+b_Intercept,0.249,,-1.376,positive evidence (BF = 1/3.96) against
+b_TestSpeaker1,0.376,,-0.605,weak evidence (BF = 1/1.83) against
+b_TestSpeaker2,0.046,*,1.134,positive evidence (BF = 3.11) in favour of
+b_mumDist,0.995,,-2.456,positive evidence (BF = 1/11.65) against
+b_nrSpeakersDaily,0.531,,-2.015,positive evidence (BF = 1/7.50) against
+b_sleepState1,0.596,,-0.798,weak evidence (BF = 1/2.22) against
+b_age,0.575,,-1.981,positive evidence (BF = 1/7.25) against
+fam1-fam4,0.024,*,2.052,positive evidence (BF = 7.79) in favour of
+fam3-fam4,0.376,,-0.603,weak evidence (BF = 1/1.83) against
+fam1-fam3,0.536,,-1.153,positive evidence (BF = 1/3.17) against

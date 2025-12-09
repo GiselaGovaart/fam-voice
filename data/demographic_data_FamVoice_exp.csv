@@ -1,214 +1,217 @@
-Subj,Group,Testspeaker,VoiceTrain,TestOrder,age,sex,nrSpeakersDaily,sleepState,BlocksAsleep,Lab,daysVoicetraining,Anmerkungen,CommentsProtokoll
-10,Unfam,S1,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
-10,Unfam,S4,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
-10,Unfam,S3,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
-11,Fam,S1,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
-11,Fam,S4,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
-11,Fam,S3,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
-12,Fam,S1,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
-12,Fam,S4,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
-12,Fam,S3,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
-14,Unfam,S1,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
-14,Unfam,S4,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
-14,Unfam,S3,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
-15,Fam,S1,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
-15,Fam,S4,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
-15,Fam,S3,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
-16,Fam,S1,23_2,2423,81,m,12,awake,0,Charité,19,,0
-16,Fam,S4,23_2,2423,81,m,12,awake,0,Charité,19,,0
-16,Fam,S3,23_2,2423,81,m,12,awake,0,Charité,19,,0
-20,Unfam,S1,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
-20,Unfam,S4,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
-20,Unfam,S3,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
-22,Fam,S1,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
-22,Fam,S4,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
-22,Fam,S3,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
-25,Unfam,S1,32_1,1143,94,m,66,awake,0,CBS,20,,
-25,Unfam,S4,32_1,1143,94,m,66,awake,0,CBS,20,,
-25,Unfam,S3,32_1,1143,94,m,66,awake,0,CBS,20,,
-26,Unfam,S1,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
-26,Unfam,S4,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
-26,Unfam,S3,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
-28,Fam,S1,32_1,2423,99,f,101,awake,0,CBS,18,,
-28,Fam,S4,32_1,2423,99,f,101,awake,0,CBS,18,,
-28,Fam,S3,32_1,2423,99,f,101,awake,0,CBS,18,,
-30,Unfam,S1,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
-30,Unfam,S4,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
-30,Unfam,S3,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
-31,Fam,S1,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
-31,Fam,S4,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
-31,Fam,S3,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
-32,Fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,Abbruch nach Block 2
-32,Fam,S4,32_2,2423,108,f,6,awake,0,CBS,20,only first test block,Abbruch nach Block 2
-32,Fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,Abbruch nach Block 2
-33,Fam,S1,31_1,1143,94,m,7,awake,0,Charité,23,,0
-33,Fam,S4,31_1,1143,94,m,7,awake,0,Charité,23,,0
-33,Fam,S3,31_1,1143,94,m,7,awake,0,Charité,23,,0
-34,Fam,S1,31_1,1413,94,m,6,awake,0,Charité,24,,0
-34,Fam,S4,31_1,1413,94,m,6,awake,0,Charité,24,,0
-34,Fam,S3,31_1,1413,94,m,6,awake,0,Charité,24,,0
-35,Fam,S1,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
-35,Fam,S4,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
-35,Fam,S3,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
-68,Unfam,S1,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
-68,Unfam,S4,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
-68,Unfam,S3,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
-69,Unfam,S1,31_2,2243,89,f,4,awake,4,CBS,21,,
-69,Unfam,S4,31_2,2243,89,f,4,awake,4,CBS,21,,
-69,Unfam,S3,31_2,2243,89,f,4,asleep,4,CBS,21,,
-71,Unfam,S1,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
-71,Unfam,S4,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
-71,Unfam,S3,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
-72,Fam,S1,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
-72,Fam,S4,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
-72,Fam,S3,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
-76,Unfam,S1,32_2,1143,107,f,6,awake,0,Charité,18,,0
-76,Unfam,S4,32_2,1143,107,f,6,awake,0,Charité,18,,0
-76,Unfam,S3,32_2,1143,107,f,6,awake,0,Charité,18,,0
-77,Fam,S1,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
-77,Fam,S4,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
-77,Fam,S3,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
-78,Fam,S1,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
-78,Fam,S4,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
-78,Fam,S3,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
-79,Fam,S1,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
-79,Fam,S4,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
-79,Fam,S3,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
-81,Fam,S1,13_1,1413,85,f,12,asleep,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
-81,Fam,S4,13_1,1413,85,f,12,awake,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
-81,Fam,S3,13_1,1413,85,f,12,asleep,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
-82,Unfam,S1,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
-82,Unfam,S4,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
-82,Unfam,S3,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
-83,Unfam,S1,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
-83,Unfam,S4,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
-83,Unfam,S3,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
-84,Fam,S1,13_1,2243,104,m,4,awake,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
-84,Fam,S4,13_1,2243,104,m,4,awake,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
-84,Fam,S3,13_1,2243,104,m,4,asleep,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
-85,Unfam,S1,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
-85,Unfam,S4,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
-85,Unfam,S3,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
-87,Unfam,S1,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
-87,Unfam,S4,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
-87,Unfam,S3,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
-01,Fam,S1,13_1,1143,91,m,9,awake,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
-01,Fam,S4,13_1,1143,91,m,9,asleep,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
-01,Fam,S3,13_1,1143,91,m,9,awake,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
-02,Fam,S1,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
-02,Fam,S4,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
-02,Fam,S3,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
-03,Unfam,S1,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
-03,Unfam,S4,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
-03,Unfam,S3,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
-04,Unfam,S1,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
-04,Unfam,S4,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
-04,Unfam,S3,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
-05,Fam,S1,13_2,1143,104,f,2,awake,0,Charité,21,,0
-05,Fam,S4,13_2,1143,104,f,2,awake,0,Charité,21,,0
-05,Fam,S3,13_2,1143,104,f,2,awake,0,Charité,21,,0
-06,Fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
-06,Fam,S4,13_2,1413,99,f,6,awake,0,Charité,20,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
-06,Fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
-07,Unfam,S1,13_2,2243,91,m,7,awake,0,Charité,23,,0
-07,Unfam,S4,13_2,2243,91,m,7,awake,0,Charité,23,,0
-07,Unfam,S3,13_2,2243,91,m,7,awake,0,Charité,23,,0
-08,Unfam,S1,13_2,2423,94,m,7,awake,0,Charité,21,,
-08,Unfam,S4,13_2,2423,94,m,7,awake,0,Charité,21,,
-08,Unfam,S3,13_2,2423,94,m,7,awake,0,Charité,21,,
-09,Unfam,S1,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
-09,Unfam,S4,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
-09,Unfam,S3,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
-36,Fam,S1,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
-36,Fam,S4,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
-36,Fam,S3,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
-37,Fam,S1,13_1,1413,85,f,11,awake,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
-37,Fam,S4,13_1,1413,85,f,11,awake,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
-37,Fam,S3,13_1,1413,85,f,11,asleep,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
-39,Unfam,S1,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
-39,Unfam,S4,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
-39,Unfam,S3,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
-40,Fam,S1,13_2,1143,108,m,7,awake,0,Charité,18,,0
-40,Fam,S4,13_2,1143,108,m,7,awake,0,Charité,18,,0
-40,Fam,S3,13_2,1143,108,m,7,awake,0,Charité,18,,0
-41,Fam,S1,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
-41,Fam,S4,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
-41,Fam,S3,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
-42,Unfam,S1,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
-42,Unfam,S4,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
-42,Unfam,S3,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
-43,Unfam,S1,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
-43,Unfam,S4,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
-43,Unfam,S3,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
-44,Unfam,S1,23_1,1143,108,m,2,awake,0,Charité,25,,0
-44,Unfam,S4,23_1,1143,108,m,2,awake,0,Charité,25,,0
-44,Unfam,S3,23_1,1143,108,m,2,awake,0,Charité,25,,0
-45,Unfam,S1,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
-45,Unfam,S4,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
-45,Unfam,S3,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
-46,Fam,S1,23_1,2243,102,f,9.5,awake,"3,4",Charité,19,,0
-46,Fam,S4,23_1,2243,102,f,9.5,asleep,"3,4",Charité,19,,0
-46,Fam,S3,23_1,2243,102,f,9.5,asleep,"3,4",Charité,19,,0
-47,Fam,S1,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
-47,Fam,S4,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
-47,Fam,S3,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
-48,Unfam,S1,23_2,1143,107,m,11,awake,0,CBS,18,,
-48,Unfam,S4,23_2,1143,107,m,11,awake,0,CBS,18,,
-48,Unfam,S3,23_2,1143,107,m,11,awake,0,CBS,18,,
-49,Unfam,S1,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
-49,Unfam,S4,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
-49,Unfam,S3,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
-50,Fam,S1,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
-50,Fam,S4,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
-50,Fam,S3,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
-51,Fam,S1,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
-51,Fam,S4,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
-51,Fam,S3,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
-52,Fam,S1,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
-52,Fam,S4,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
-52,Fam,S3,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
-54,Unfam,S1,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
-54,Unfam,S4,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
-54,Unfam,S3,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
-55,Unfam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,"Block 3 Abbruch, quängelig"
-55,Unfam,S4,31_1,2423,104,m,4,awake,0,Charité,16,only first test block,"Block 3 Abbruch, quängelig"
-55,Unfam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,"Block 3 Abbruch, quängelig"
-56,Fam,S1,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
-56,Fam,S4,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
-56,Fam,S3,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
-57,Fam,S1,31_2,1413,107,m,14,awake,0,CBS,18,,
-57,Fam,S4,31_2,1413,107,m,14,awake,0,CBS,18,,
-57,Fam,S3,31_2,1413,107,m,14,awake,0,CBS,18,,
-58,Unfam,S1,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
-58,Unfam,S4,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
-58,Unfam,S3,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
-60,Unfam,S1,32_1,1143,104,m,2,awake,0,Charité,20,,0
-60,Unfam,S4,32_1,1143,104,m,2,awake,0,Charité,20,,0
-60,Unfam,S3,32_1,1143,104,m,2,awake,0,Charité,20,,0
-62,Fam,S1,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
-62,Fam,S4,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
-62,Fam,S3,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
-64,Unfam,S1,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
-64,Unfam,S4,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
-64,Unfam,S3,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
-65,Unfam,S1,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
-65,Unfam,S4,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
-65,Unfam,S3,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
-66,Fam,S1,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
-66,Fam,S4,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
-66,Fam,S3,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
-67,Fam,S1,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
-67,Fam,S4,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
-67,Fam,S3,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
-73,Unfam,S1,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
-73,Unfam,S4,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
-73,Unfam,S3,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
-74,Fam,S1,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
-74,Fam,S4,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
-74,Fam,S3,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
-75,Unfam,S1,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
-75,Unfam,S4,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
-75,Unfam,S3,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
-80,Unfam,S1,31_2,2243,100,m,6,awake,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"
-80,Unfam,S4,31_2,2243,100,m,6,awake,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"
-80,Unfam,S3,31_2,2243,100,m,6,asleep,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"
+Subj,Group,TestSpeaker,VoiceTrain,TestOrder,age,sex,nrSpeakersDaily,sleepState,BlocksAsleep,Lab,daysVoicetraining,Anmerkungen,CommentsProtokoll
+10,unfam,S1,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
+10,unfam,S4,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
+10,unfam,S3,23_1,1413,87,f,10,awake,0,Charité,20,,Block 4 gestillt und schläft leicht
+11,fam,S1,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
+11,fam,S4,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
+11,fam,S3,23_1,2243,90,m,22,awake,0,Charité,23,,immer wieder unruhig
+12,fam,S1,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
+12,fam,S4,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
+12,fam,S3,23_1,2423,111,m,6,awake,0,Charité,18,Mutter bulgarisch Muttersprachesprecherin,"Mutter Bulgarisch Muttersprache, spricht Deutsch mit dem Kind"
+14,unfam,S1,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
+14,unfam,S4,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
+14,unfam,S3,23_2,1413,106,m,2,awake,0,Charité,15,,"vor messung geschlafen daher müde, F6 und C4 wackelt, Block 2 Pause, TP10nKontakt zu Mutter, Block 4 Artefakt P8 und TP10 + Strom P7, TP9 und CP5 Kontakt Mutter, kurze Störungen"
+15,fam,S1,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
+15,fam,S4,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
+15,fam,S3,23_2,2243,105,m,8,awake,0,Charité,17,,"Kurze Wickelpause Blck 1 und 2, Block 3 gestillt"
+16,fam,S1,23_2,2423,81,m,12,awake,0,Charité,19,,0
+16,fam,S4,23_2,2423,81,m,12,awake,0,Charité,19,,0
+16,fam,S3,23_2,2423,81,m,12,awake,0,Charité,19,,0
+20,unfam,S1,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
+20,unfam,S4,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
+20,unfam,S3,31_1,2423,94,f,11,awake,0,CBS,NA,Blatt voicefam fehlt,
+22,fam,S1,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
+22,fam,S4,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
+22,fam,S3,31_2,1413,104,f,11,awake,0,Charité,18,,"Block 2 mehr Artefakte, müde"
+25,unfam,S1,32_1,1143,94,m,66,awake,0,CBS,20,,
+25,unfam,S4,32_1,1143,94,m,66,awake,0,CBS,20,,
+25,unfam,S3,32_1,1143,94,m,66,awake,0,CBS,20,,
+26,unfam,S1,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
+26,unfam,S4,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
+26,unfam,S3,32_1,1413,110,m,2,awake,0,CBS,21,,Signal zwischendruch mal ganz weg in block 3
+28,fam,S1,32_1,2423,99,f,101,awake,0,CBS,18,,
+28,fam,S4,32_1,2423,99,f,101,awake,0,CBS,18,,
+28,fam,S3,32_1,2423,99,f,101,awake,0,CBS,18,,
+30,unfam,S1,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
+30,unfam,S4,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
+30,unfam,S3,32_2,1413,83,m,2,awake,0,CBS,21,,am anfang datenquali schlecht
+31,fam,S1,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
+31,fam,S4,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
+31,fam,S3,32_2,2243,103,f,9,awake,0,Charité,20,,"Block 1 kurze Pause, wird müde Block 2 oberflächlicher Schlaf, Block 3 P4 EKG mutter, Block 4 Korrektur P4"
+32,fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,Abbruch nach Block 2
+32,fam,S4,32_2,2423,108,f,6,awake,0,CBS,20,only first test block,Abbruch nach Block 2
+32,fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,Abbruch nach Block 2
+33,fam,S1,31_1,1143,94,m,7,awake,0,Charité,23,,0
+33,fam,S4,31_1,1143,94,m,7,awake,0,Charité,23,,0
+33,fam,S3,31_1,1143,94,m,7,awake,0,Charité,23,,0
+34,fam,S1,31_1,1413,94,m,6,awake,0,Charité,24,,0
+34,fam,S4,31_1,1413,94,m,6,awake,0,Charité,24,,0
+34,fam,S3,31_1,1413,94,m,6,awake,0,Charité,24,,0
+35,fam,S1,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
+35,fam,S4,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
+35,fam,S3,32_1,2243,94,f,2,awake,0,Charité,21,,"Block 1 Stillpause und schläft ein, Block 4 dezente M-Pot"
+68,unfam,S1,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
+68,unfam,S4,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
+68,unfam,S3,23_2,1143,79,f,18,awake,0,CBS,19,schlechte qualität!,Schlechte Qualität
+69,unfam,S1,31_2,2243,89,f,4,awake,4,CBS,21,,
+69,unfam,S4,31_2,2243,89,f,4,awake,4,CBS,21,,
+69,unfam,S3,31_2,2243,89,f,4,asleep,4,CBS,21,,
+71,unfam,S1,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
+71,unfam,S4,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
+71,unfam,S3,32_1,1413,93,m,19,awake,0,Charité,21,,Block 4 letzte Minute geweint
+72,fam,S1,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
+72,fam,S4,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
+72,fam,S3,32_2,2423,100,m,6.5,awake,0,Charite,21,,Block 2 schreit kurz
+76,unfam,S1,32_2,1143,107,f,6,awake,0,Charité,18,,0
+76,unfam,S4,32_2,1143,107,f,6,awake,0,Charité,18,,0
+76,unfam,S3,32_2,1143,107,f,6,awake,0,Charité,18,,0
+77,fam,S1,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
+77,fam,S4,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
+77,fam,S3,23_2,2423,86,f,12,awake,0,Charité,17,gedoppelt mit 51,Fp1 und Fp2 Brücke
+78,fam,S1,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
+78,fam,S4,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
+78,fam,S3,31_2,1143,111,m,6,awake,0,Charité,23,,"V2 gelb, Block 3 und 4 einige Pausen"
+79,fam,S1,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
+79,fam,S4,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
+79,fam,S3,31_1,1413,91,m,8,awake,0,Charité,21,,"Fp1 und Fp2 Brücke (ab Block 3 OK), zwischen Block 2 und 3 gewickelt, Block 4 abgebrochen"
+81,fam,S1,13_1,1413,85,f,12,asleep,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
+81,fam,S4,13_1,1413,85,f,12,awake,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
+81,fam,S3,13_1,1413,85,f,12,asleep,"3,4",Charité,21,,"Fp1 und Fp2 Brücke, kurze Pause in Block 3"
+82,unfam,S1,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
+82,unfam,S4,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
+82,unfam,S3,13_2,1413,111,f,26,awake,0,Charité,19,,"Block 4 auf Bauch gelegt, Lärm von Windel+ Kissen; Fp1 problematisch, V2 besserte sich"
+83,unfam,S1,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
+83,unfam,S4,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
+83,unfam,S3,23_1,1413,103,m,10.25,awake,0,Charité,17,,"Alles grün am Anfang ausser F2 (orange), aber gutes Signal. Kind hat nur letzte Minute geweint,"
+84,fam,S1,13_1,2243,104,m,4,awake,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
+84,fam,S4,13_1,2243,104,m,4,awake,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
+84,fam,S3,13_1,2243,104,m,4,asleep,4,Charité,26,,"Tp10 anfangs orange, Block 4: Data waves im Signal + rhythmische Aktivität"
+85,unfam,S1,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
+85,unfam,S4,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
+85,unfam,S3,13_2,2243,108,f,4,awake,0,Charité,22,,"Schluckauf bei allen Blocks, f2 und c2 anfangs orange"
+87,unfam,S1,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
+87,unfam,S4,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
+87,unfam,S3,32_1,1143,83,m,2,awake,0,Charité,18,,"Schluckauf in Block 3 und 4, F2 nicht grün/orange, O1 teilweise komisch"
+01,fam,S1,13_1,1143,91,m,9,awake,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
+01,fam,S4,13_1,1143,91,m,9,asleep,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
+01,fam,S3,13_1,1143,91,m,9,awake,4,Charité,19,,"Block 2 oberklächlicher Schlaf, Block 3 schläft im Arm ein, Block 4 oberflächlicher Schlaf"
+02,fam,S1,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
+02,fam,S4,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
+02,fam,S3,13_1,1413,100,m,4,awake,0,Charité,18,,"technische Probleme Lautsprecher, Block 4 weint"
+03,unfam,S1,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
+03,unfam,S4,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
+03,unfam,S3,13_1,2243,105,f,7,awake,0,Charité,21,,kurze Pause in Block 1
+04,unfam,S1,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
+04,unfam,S4,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
+04,unfam,S3,13_1,2423,98,f,2,awake,0,Charité,21,,"erkältet, hustet"
+05,fam,S1,13_2,1143,104,f,2,awake,0,Charité,21,,0
+05,fam,S4,13_2,1143,104,f,2,awake,0,Charité,21,,0
+05,fam,S3,13_2,1143,104,f,2,awake,0,Charité,21,,0
+06,fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
+06,fam,S4,13_2,1413,99,f,6,awake,0,Charité,20,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
+06,fam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only block 1,"Kind wurde am 05.10 schon einmal getestet, da war ab block 2 der Ton weg. Deswegen sind sie dann nochmal gekommen"
+07,unfam,S1,13_2,2243,91,m,7,awake,0,Charité,23,,0
+07,unfam,S4,13_2,2243,91,m,7,awake,0,Charité,23,,0
+07,unfam,S3,13_2,2243,91,m,7,awake,0,Charité,23,,0
+08,unfam,S1,13_2,2423,94,m,7,awake,0,Charité,21,,
+08,unfam,S4,13_2,2423,94,m,7,awake,0,Charité,21,,
+08,unfam,S3,13_2,2423,94,m,7,awake,0,Charité,21,,
+09,unfam,S1,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
+09,unfam,S4,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
+09,unfam,S3,23_1,1143,99,f,5.5,awake,0,Charité,26,,Brücke Fp1 zu FP2 mit ground
+36,fam,S1,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
+36,fam,S4,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
+36,fam,S3,13_1,1143,100,m,12,awake,0,Charité,22,,"Block 1 M-Pot, Block 4 Artefakt FC6, P10 Muskel-Potenzial wird besser"
+37,fam,S1,13_1,1413,85,f,11,awake,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
+37,fam,S4,13_1,1413,85,f,11,awake,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
+37,fam,S3,13_1,1413,85,f,11,asleep,4,Charité,22,,"Block 1 FP1 + FP2 nStrom (Gelstrom), Fz + F4 + C4 + CP6 + C3 hohe Impedanzen (auch noch am Ende)"
+39,unfam,S1,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
+39,unfam,S4,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
+39,unfam,S3,13_1,2423,98,m,27.5,awake,0,Charité,21,,"Zwischen Block 3 und 4 Pause, Block 4 wird müde"
+40,fam,S1,13_2,1143,108,m,7,awake,0,Charité,18,,0
+40,fam,S4,13_2,1143,108,m,7,awake,0,Charité,18,,0
+40,fam,S3,13_2,1143,108,m,7,awake,0,Charité,18,,0
+41,fam,S1,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
+41,fam,S4,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
+41,fam,S3,13_2,1413,101,m,14.5,awake,0,Charité,20,,"Abbruch Beginn Block 2, Neustart (bei Wiederholung Block 1 Ton aus), Block 4 TP10 Artefakt korrigiert"
+42,unfam,S1,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
+42,unfam,S4,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
+42,unfam,S3,13_2,2243,98,f,2,awake,0,Charité,23,,Block 4 kurz vor Ende Abbruch aufgrund technischen Problems
+43,unfam,S1,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
+43,unfam,S4,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
+43,unfam,S3,13_2,2423,100,f,9,awake,0,Charité,21,,"Block 1 Feueralarm geht an, alle müssen raus; nach der langen Pause wird bei Block 2 weitergemacht (bzw.ab dem Ende der Testphase)"
+44,unfam,S1,23_1,1143,108,m,2,awake,0,Charité,25,,0
+44,unfam,S4,23_1,1143,108,m,2,awake,0,Charité,25,,0
+44,unfam,S3,23_1,1143,108,m,2,awake,0,Charité,25,,0
+45,unfam,S1,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
+45,unfam,S4,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
+45,unfam,S3,23_1,1413,102,f,4,awake,0,Charité,20,,"Block 4 schläft leicht ein und wird wach, Block 3 Pause weil es weint"
+46,fam,S1,23_1,2243,102,f,9.5,awake,"3,4",Charité,19,,0
+46,fam,S4,23_1,2243,102,f,9.5,asleep,"3,4",Charité,19,,0
+46,fam,S3,23_1,2243,102,f,9.5,asleep,"3,4",Charité,19,,0
+47,fam,S1,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
+47,fam,S4,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
+47,fam,S3,23_1,2423,104,f,2,awake,0,Charité,18,,"Block 1 T8 Kontakt Mutter, starke Artefakte; Block 2 wird müde, EEG wird hytmisch"
+48,unfam,S1,23_2,1143,107,m,11,awake,0,CBS,18,,
+48,unfam,S4,23_2,1143,107,m,11,awake,0,CBS,18,,
+48,unfam,S3,23_2,1143,107,m,11,awake,0,CBS,18,,
+49,unfam,S1,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
+49,unfam,S4,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
+49,unfam,S3,23_2,1413,94,f,3,awake,0,Charité,23,,schwitzt und ist ab und zu quängelig
+50,fam,S1,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
+50,fam,S4,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
+50,fam,S3,23_2,2243,94,m,18,awake,0,CBS,20,,Impedanzen am Ende komplett rot
+51,fam,S1,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
+51,fam,S4,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
+51,fam,S3,23_2,2423,108,f,7,awake,0,Charité,19,gedoppelt mit 77,Fp1. Fp2 - Brücke; Block 1 kurze Pause wegen weinen
+52,fam,S1,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
+52,fam,S4,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
+52,fam,S3,31_1,1143,81,m,6,asleep,"2,3,4",CBS,19,,
+53,fam,S1,31_1,1413,111,f,7,awake,0,Charité,28,,an Brust
+53,fam,S4,31_1,1413,111,f,7,awake,0,Charité,28,,an Brust
+53,fam,S3,31_1,1413,111,f,7,awake,0,Charité,28,,an Brust
+54,unfam,S1,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
+54,unfam,S4,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
+54,unfam,S3,31_1,2243,88,f,3,awake,0,Charité,23,,"bewegungsfreudig, meckert nicht, Block 3 neue Windel"
+55,unfam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,"Block 3 Abbruch, quängelig"
+55,unfam,S4,31_1,2423,104,m,4,awake,0,Charité,16,only first test block,"Block 3 Abbruch, quängelig"
+55,unfam,NA,NA,NA,NA,NA,NA,NA,NA,NA,NA,only first test block,"Block 3 Abbruch, quängelig"
+56,fam,S1,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
+56,fam,S4,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
+56,fam,S3,31_2,1143,108,m,2,awake,0,Charité,18,,Block 2 und 3 Nuckel
+57,fam,S1,31_2,1413,107,m,14,awake,0,CBS,18,,
+57,fam,S4,31_2,1413,107,m,14,awake,0,CBS,18,,
+57,fam,S3,31_2,1413,107,m,14,awake,0,CBS,18,,
+58,unfam,S1,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
+58,unfam,S4,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
+58,unfam,S3,31_2,2243,102,m,7.5,awake,0,Charité,21,gedoppelt mit 80,"Block 1 weint am Ende, Block 2 wird gestillt, Probleme mit den Zähnen"
+60,unfam,S1,32_1,1143,104,m,2,awake,0,Charité,20,,0
+60,unfam,S4,32_1,1143,104,m,2,awake,0,Charité,20,,0
+60,unfam,S3,32_1,1143,104,m,2,awake,0,Charité,20,,0
+62,fam,S1,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
+62,fam,S4,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
+62,fam,S3,32_1,2243,103,f,2,awake,0,CBS,20,,"impedanzmessung hat nicht funktioniert, signal war aber okay"
+64,unfam,S1,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
+64,unfam,S4,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
+64,unfam,S3,32_2,1143,111,m,3,asleep,"2,3,4",CBS,24,technical problems,only use 64_2.eeg
+65,unfam,S1,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
+65,unfam,S4,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
+65,unfam,S3,32_2,1413,100,f,8,awake,0,Charité,21,,Fp2 problematisch
+66,fam,S1,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
+66,fam,S4,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
+66,fam,S3,32_2,2243,82,f,2,awake,0,Charité,16,,Fp2 Brücke mit Ground
+67,fam,S1,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
+67,fam,S4,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
+67,fam,S3,32_2,2423,94,m,10,awake,0,Charité,20,,"letzte Minute fallen Augen zu, seit Block 3 müde"
+73,unfam,S1,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
+73,unfam,S4,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
+73,unfam,S3,31_1,2423,106,f,21,awake,0,Charité,16,,"v2 am anfang noch orange, sonst alles gelb/grün. Am ende alles grün und V2 gelb. TP9 etwas rauschig"
+74,fam,S1,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
+74,fam,S4,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
+74,fam,S3,32_1,2423,100,f,3,awake,0,Charité,19,same as 28,"Block 2 Pause weil Kind schreit, Block 3 trinkt Milch, manchmal F10 problematisch und O2 kurz rausgefallen"
+75,unfam,S1,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
+75,unfam,S4,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
+75,unfam,S3,23_2,1143,103,m,3.5,awake,0,Charité,26,,am Anfang F2 und P2 noch orange
+80,unfam,S1,31_2,2243,100,m,6,awake,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"
+80,unfam,S4,31_2,2243,100,m,6,awake,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"
+80,unfam,S3,31_2,2243,100,m,6,asleep,4,Charité,21,gedoppelt mit 58,"vorher angefangen, 45 sec. Schon gehört, Block 2 Flasche, Block 4 Nuckel, alpha wegen Schlaf"

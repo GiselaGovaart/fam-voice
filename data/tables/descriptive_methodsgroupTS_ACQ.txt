@@ -1,0 +1,5 @@
+TestSpeaker,S1,S1,S4,S4
+Group,fam,unfam,fam,unfam
+mumDist_mean,4.08,4.12,3.09,3.12
+mumDist_sd,1.29,1.17,0.60,0.75
+num_asleep,2,1,3,1

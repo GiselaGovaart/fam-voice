@@ -1,0 +1,6 @@
+TestSpeaker,S1,S1,S4,S4
+Group,fam,unfam,fam,unfam
+TrialsDev_mean,23.79,23.10,23.89,23.41
+TrialsDev_sd,5.99,5.65,6.52,6.15
+TrialsStan_mean,47.18,46.52,46.83,47.88
+TrialsStan_sd,10.89,11.72,12.81,13.37

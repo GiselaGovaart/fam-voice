@@ -8,15 +8,12 @@ library(tidyverse)
 library(brms)
 library(easystats) # Small tidyverse only for stats
 library(bayesplot)
-library(viridis) # just a color palette
 library(corrplot)
 
-# cividis color palette for bayesplot
-#color_scheme_set("viridisE")
 
-# load and prepare data --------------------------------------------------------------------
-dat_exp_rec <-
-  dat_exp_rec %>%
+## load and prepare data --------------------------------------------------------------------
+data_rec_modeldiag <-
+  data_rec %>%
   unite( # unite columns for posterior predictive checks
     # unites the two columns TestSpeaker and Group Because brms made a posterior distribution
     # with TestSpeaker_Group, because it looks at an interaction. 
@@ -29,19 +26,25 @@ dat_exp_rec <-
   select(Subj, TestSpeaker_Group, TestSpeaker, Group, MMR)
 
 # results of model fit
-model_rec <- readRDS(here("data", "model_output", "A2_model_rec.rds"))
+model_rec <- readRDS(here("data", "model_output", "R2_model_rec.rds"))
 
-# model diagnostics: trace plots of MCMC draws --------------------------------------------------------
+## model diagnostics: trace plots of MCMC draws --------------------------------------------------------
 # these are the caterpillar plots. It gives you a caterpillar for each effect
 # it takes that samples that were shown in ESS
 # Here you have all your samples (the ones from ESS). 
-MCMC_model_rec <-
-  plot(model_rec, ask = FALSE) 
+# MCMC_model_rec <-
+#  plot(model_rec, ask = FALSE) 
+# Save
+pdf(file = here("data", "model_output", "R3_modeldiagnostics_traceplots.pdf"),
+    width = 12, height = 8)  
+plot(model_rec, ask = FALSE)
+dev.off()
+
 
 # here you get only the density plots without the caterpillars. and you can specify which ones
-mcmc_dens(model_rec, pars = variables(model_rec)[1:9])
+#mcmc_dens(model_rec, pars = variables(model_rec)[1:9])
 
-# model diagnostics: posterior predictive checks --------------------------------------------------------
+## model diagnostics: posterior predictive checks --------------------------------------------------------
 # If you extract the post pred samples from your posterior distributions 
 # “predictive”: this is the range of values that you would expect if you run the exp very often.
 # The yellow stuff: the sampling points. The violet line: the actual value you observed (the 
@@ -64,20 +67,25 @@ posterior_predict_model_rec <-
 PPS_rec <-
   posterior_predict_model_rec %>%
   ppc_stat_grouped(
-    y = pull(dat_exp_rec, MMR),
-    group = pull(dat_exp_rec, TestSpeaker_Group),
+    y = pull(data_rec_modeldiag, MMR),
+    group = pull(data_rec_modeldiag, TestSpeaker_Group),
     stat = "mean"
   ) +
   ggtitle("Posterior predictive samples")
 
 PPS_rec
+# Save
+plot(PPS_rec)
+png(file=here("data", "model_output", "R3_modeldiagnostics_posteriorsamples.png"),
+    width=4500, height=3000,res=600)
+plot(PPS_rec)
+dev.off()
 
-# model performance: Bayesian R2 --------------------------------------------------------
-
+## model performance: Bayesian R2 --------------------------------------------------------
 # Conditional R2 takes into account both fixed and random effects
 # Marginal R2 only considers the variance of the fixed effects (without the random effects)
-R2_rec <- r2(model_rec)
-R2_rec
+# R2_rec <- r2(model_rec)
+# R2_rec
 # If marginal is very low, that means if you only look at the fixed effects, your model 
 # does not explain a lot of your data. 
 # You would always expect marginal to be lower than Conditional, but not so much lower.
@@ -85,7 +93,7 @@ R2_rec
 # conditional and marginal is small in my simdata, which is good: it means that the random stuff is not explaining everyhing. 
 # It does not tell us much, so we leave it out
 
-# summary of posterior distributions of model parameters + model diagnostics: Rhat --------------------------------------------------------
+## summary of posterior distributions of model parameters + model diagnostics: Rhat --------------------------------------------------------
 # This is just a nice and fast way to create your table for the paper.
 params_model_rec <-
   model_parameters(
@@ -97,13 +105,15 @@ params_model_rec <-
     ci = .95,
     ci_method = "eti",
     test = NULL,
-    diagnostic = c("Rhat", "ESS"), # options: "ESS", "Rhat", "MCSE", "all". 
+    diagnostic = c("Rhat", "ESS"),, # options: "ESS", "Rhat", "MCSE", "all". 
     effects = "fixed" # options: "fixed", "random", "all". 
-  )
+  ) %>%
+  mutate(across(where(is.numeric), ~ round(.x, 2)))
 
 params_model_rec
+write.table(params_model_rec, file = here("data","tables","R3_params_model_rec.txt"), sep = ",", quote = FALSE, row.names = FALSE, col.names = TRUE)
 
-# save as .RData (compressed)
+## save as .RData (compressed)
 save(
   params_model_rec,
   file = here("data", "model_output", "params_model_rec.RData")

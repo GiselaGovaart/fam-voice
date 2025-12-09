@@ -1,0 +1,10 @@
+Parameter,Component,Mean,SD,CI,CI_low,CI_high,Rhat,ESS
+b_Intercept,conditional,1.37,1.26,0.95,-1.11,3.85,1,147146.74
+b_TestSpeaker1,conditional,1.25,1.16,0.95,-1.02,3.54,1,146638.19
+b_Group1,conditional,-1.52,1.13,0.95,-3.73,0.69,1,133772.03
+b_mumDist,conditional,-0.4,0.64,0.95,-1.65,0.85,1,117413.62
+b_nrSpeakersDaily,conditional,0.41,0.57,0.95,-0.72,1.53,1,147721.2
+b_sleepState1,conditional,-1.46,2.52,0.95,-6.41,3.47,1,142840.05
+b_age,conditional,0.24,0.57,0.95,-0.88,1.36,1,143783.71
+b_TestSpeaker1:Group1,conditional,-4.99,2,0.95,-8.9,-1.04,1,188877.46
+sigma,sigma,5.31,0.93,0.95,2.56,6.59,1.01,920
