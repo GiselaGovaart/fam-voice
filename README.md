@@ -36,8 +36,8 @@ materials/                | extra materials                  | Read only
 <!--  * How people can offer to contribute to the project                    -->
 <!--  * A contributor code of conduct, https://www.contributor-covenant.org/ -->
 
-# Questions 
-Contact: govaart@cbs.mpg.de
+# Questions/Comments
+Contact: g.h.govaart@gmail.com
 
 # Reproducibility
 
