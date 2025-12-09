@@ -9,7 +9,7 @@ Scripts that are specific to paper 1 are marked with "acq" or "A", whereas scrip
 ## Preregistration
 Both papers were preregistered (under embargo) on 15 August 2024 on the OSF. Upon publication, the pregistration will become public.
 
-The code for the preregistration can be found in prereg_codeData.
+The code for the preregistration can be found in prereg_codeData. Please note that also here, files that are specific to paper 1 are marked with "acq" or "A", whereas files that are specific to paper 2 are marked with "rec" or "R". 
 
 ## Where do I start?
 You can load this project in RStudio by opening the file called 'FamVoiceWORCS.Rproj'.
