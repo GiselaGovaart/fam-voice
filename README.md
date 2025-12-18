@@ -1,7 +1,8 @@
 # Readme <a href='https://osf.io/zcvbs/'><img src='worcs_icon.png' align="right" height="139" /></a>
 
 This repository contains the scripts for two papers:
-1. Govaart, G. H., Chladkova, K., Schettino, A., & Männel, C. (subm.). The Influence of Voice Information on Phoneme Learning in Infancy
+1. Govaart, G. H., Chladkova, K., Schettino, A., & Männel, C. (subm.). Does the Speaker Matter: EEG Evidence on the Influence of 
+Voice Information on Phoneme Learning in Infancy.
 2. Govaart, G. H., Chladkova, K., Schettino, A., & Männel, C. (in prep.). Is there a Voice-Familiarity Benefit for Phoneme Recognition in Infancy?
 
 Scripts that are specific to paper 1 are marked with "acq" or "A", whereas scripts that are specific to paper 2 are marked with "rec" (or "recfam" for the exploratory analysis) or "R". In folders where this distinction applies, a dedicated README is included.
