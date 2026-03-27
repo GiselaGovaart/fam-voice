@@ -7,6 +7,9 @@ Voice Information on Phoneme Learning in Infancy.
 
 Scripts that are specific to paper 1 are marked with "acq" or "A", whereas scripts that are specific to paper 2 are marked with "rec" (or "recfam" for the exploratory analysis) or "R". In folders where this distinction applies, a dedicated README is included.
 
+## Analysis
+The code for the analysis, including model checks and a complete model report, can be found in fam-voice/code/R/ExpAnalysisFamVoice_ACQ for paper 1, and in fam-voice/code/R/ExpAnalysisFamVoice_REC for paper 2.
+
 ## Preregistration
 Both papers were preregistered (under embargo) on 15 August 2024 on the OSF. Upon publication, the pregistration will become public.
 
