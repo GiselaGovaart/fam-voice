@@ -1,6 +1,6 @@
-[![DOI](https://zenodo.org/badge/591321250.svg)](https://doi.org/10.5281/zenodo.20081809)
-
 # Readme <a href='https://osf.io/zcvbs/'><img src='worcs_icon.png' align="right" height="139" /></a>
+
+[![DOI](https://zenodo.org/badge/591321250.svg)](https://doi.org/10.5281/zenodo.20081809)
 
 This repository contains the scripts for two papers:
 1. Govaart, G. H., Chladkova, K., Schettino, A., & Männel, C. (subm.). Does the Speaker Matter: EEG Evidence on the Influence of 
