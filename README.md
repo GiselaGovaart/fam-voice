@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/591321250.svg)](https://doi.org/10.5281/zenodo.20081809)
+
 # Readme <a href='https://osf.io/zcvbs/'><img src='worcs_icon.png' align="right" height="139" /></a>
 
 This repository contains the scripts for two papers:
